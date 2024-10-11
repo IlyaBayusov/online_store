@@ -1,3 +1,5 @@
+"use client";
+
 import { useModalStore } from "@/stores/useModalStore";
 import React from "react";
 import { CgProfile } from "react-icons/cg";
@@ -14,15 +16,20 @@ export default function Header({}: Props) {
   };
 
   return (
-    <div className="py-1 bg-black w-full">
+    <div className="py-2 bg-black w-full">
       <div className="container px-2">
         <div className="flex justify-between items-center">
-          <div onClick={handleModal}>
-            <FiMenu size={"1.3rem"} />
+          <div onClick={() => handleModal()}>
+            <FiMenu className="h-6 w-6" />
           </div>
 
-          <h1 className="text-lg text-white font-bold">MAN'S</h1>
-          <CgProfile size={"1.2rem"} />
+          <h1
+            id="headerTitle"
+            className="text-xl text-white font-bold leading-5"
+          >
+            MAN'S
+          </h1>
+          <CgProfile className="h-5 w-5" />
           {/* <div className="flex items-center text-[#969696] text-base">
             <button>Log in</button>
             <span>/</span>

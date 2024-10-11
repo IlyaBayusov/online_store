@@ -17,7 +17,7 @@ export default function Home() {
         className="py-10 flex justify-center items-center"
       >
         <div className="flex justify-center items-center border-white border-2 w-24 h-24">
-          <p id="textIntroBlock" className="relative text-xl">
+          <p id="textIntroBlock" className="relative text-2xl">
             MAN'S
           </p>
         </div>

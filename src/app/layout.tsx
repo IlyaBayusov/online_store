@@ -24,15 +24,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={oswald.className}>
-      <body className="wrapper">
-        <Header />
-        {/* <Nav /> */}
+      <body>
+        <div className="wrapper">
+          <Header />
+          {/* <Nav /> */}
 
-        <main>{children}</main>
+          <main>{children}</main>
 
-        <ModalNav />
+          <ModalNav />
 
-        <Footer />
+          <Footer />
+        </div>
       </body>
     </html>
   );

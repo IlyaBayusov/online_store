@@ -12,7 +12,7 @@ body {
   margin: 0;
   /* font-family: "Montserrat", sans-serif;
   font-weight: 400; */
-  font-size: 16px;
+  font-size: 18px;
   /* font-optical-sizing: auto;
   font-style: normal;
   line-height: normal; */
@@ -52,12 +52,20 @@ button {
   margin: 0 auto;
 }
 
+#headerTitle {
+  font-family: "Post No Bills Jaffna Bold", sans-serif;
+}
+
 #mainIntroBlock {
   background-image: url(../../public/main/img_mainIntro.png);
 
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+#textIntroBlock {
+  font-family: "Post No Bills Jaffna Bold", sans-serif;
 }
 
 #textIntroBlock::after {
@@ -85,6 +93,13 @@ button {
   height: 1px;
   width: 120%;
   background: #fff;
+}
+
+@font-face {
+  font-family: "Post No Bills Jaffna Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: url("./fonts/PostNoBillsJaffna-Bold.ttf") format("woff");
 }
 
 @layer base {
