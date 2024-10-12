@@ -5,7 +5,6 @@ import Nav from "@/components/Nav";
 import { Oswald } from "next/font/google";
 import Footer from "@/components/Footer";
 import ModalNav from "@/components/Modals/ModalNav";
-import ModalNavCategory from "@/components/Modals/ModalNavCategory";
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -25,18 +24,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={oswald.className}>
-      <body>
-        <div className="wrapper">
-          <Header />
-          {/* <Nav /> */}
+      <body className="wrapper">
+        <Header />
+        {/* <Nav /> */}
 
-          <main>{children}</main>
+        <main>{children}</main>
 
-          <ModalNav />
-          <ModalNavCategory />
+        <ModalNav />
 
-          <Footer />
-        </div>
+        <Footer />
       </body>
     </html>
   );

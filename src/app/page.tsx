@@ -1,15 +1,31 @@
+"use client";
+
 import CategoryList from "@/components/Category/CategoryList/CategoryList";
 import img_tg from "../../public/main/img_tg.png";
 import Image from "next/image";
 import NewArrivalsList from "@/components/NewArrivals/NewArrivalsList/NewArrivalsList";
 import EmblaCarousel from "@/components/Carousels/EmblaCarousel";
 import { EmblaOptionsType } from "embla-carousel";
+import { useEffect, useState } from "react";
 
 const OPTIONS: EmblaOptionsType = {};
 const SLIDE_COUNT = 5;
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
 export default function Home() {
+  const [newArrivals, setNewArrivals] = useState([]);
+
+  useEffect(() => {
+    const fetchNewArrivals = async () => {
+      const response = await fetch("http://localhost:3000/");
+      const data = await response.json();
+
+      setNewArrivals(data);
+    };
+
+    fetchNewArrivals();
+  }, []);
+
   return (
     <div className="w-full">
       <div
@@ -17,12 +33,14 @@ export default function Home() {
         className="py-10 flex justify-center items-center"
       >
         <div className="flex justify-center items-center border-white border-2 w-24 h-24">
-          <p id="textIntroBlock" className="relative text-2xl">
+          <p id="textIntroBlock" className="relative text-xl">
             MAN'S
           </p>
         </div>
       </div>
+
       <CategoryList />
+
       <div className="bg-black w-full py-3">
         <div className="container px-3 marker:">
           <div className="flex flex-col justify-center items-center">
@@ -40,7 +58,8 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <NewArrivalsList />
+
+      <NewArrivalsList newArrivals={newArrivals} />
 
       <div className="container px-3">
         <div className="flex justify-center mt-3 mb-5">

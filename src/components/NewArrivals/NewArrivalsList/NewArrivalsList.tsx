@@ -1,11 +1,11 @@
 import Link from "next/link";
 import React from "react";
 import NewArrivalsItem from "../NewArrivalsItem/NewArrivalsItem";
-import { newArrivals } from "@/constans";
+// import { newArrivals } from "@/constans";
 
-type Props = {};
+type Props = { newArrivals: [] };
 
-export default function NewArrivalsList({}: Props) {
+export default function NewArrivalsList({ newArrivals }: Props) {
   return (
     <div className="container px-3">
       <div className="flex justify-center mt-3 mb-5">
