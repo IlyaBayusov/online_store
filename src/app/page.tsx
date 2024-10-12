@@ -1,15 +1,31 @@
+"use client";
+
 import CategoryList from "@/components/Category/CategoryList/CategoryList";
 import img_tg from "../../public/main/img_tg.png";
 import Image from "next/image";
 import NewArrivalsList from "@/components/NewArrivals/NewArrivalsList/NewArrivalsList";
 import EmblaCarousel from "@/components/Carousels/EmblaCarousel";
 import { EmblaOptionsType } from "embla-carousel";
+import { useEffect, useState } from "react";
 
 const OPTIONS: EmblaOptionsType = {};
 const SLIDE_COUNT = 5;
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
 export default function Home() {
+  const [newArrivals, setNewArrivals] = useState([]);
+
+  useEffect(() => {
+    const fetchNewArrivals = async () => {
+      const response = await fetch("http://localhost:3000/");
+      const data = await response.json();
+
+      setNewArrivals(data);
+    };
+
+    fetchNewArrivals();
+  }, []);
+
   return (
     <div className="w-full">
       <div
@@ -43,7 +59,7 @@ export default function Home() {
         </div>
       </div>
 
-      <NewArrivalsList />
+      <NewArrivalsList newArrivals={newArrivals} />
 
       <div className="container px-3">
         <div className="flex justify-center mt-3 mb-5">
