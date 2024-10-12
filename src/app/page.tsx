@@ -15,16 +15,16 @@ const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 export default function Home() {
   const [newArrivals, setNewArrivals] = useState([]);
 
-  useEffect(() => {
-    const fetchNewArrivals = async () => {
-      const response = await fetch("http://localhost:3000/");
-      const data = await response.json();
+  // useEffect(() => {
+  //   const fetchNewArrivals = async () => {
+  //     const response = await fetch("http://localhost:3000/");
+  //     const data = await response.json();
 
-      setNewArrivals(data);
-    };
+  //     setNewArrivals(data);
+  //   };
 
-    fetchNewArrivals();
-  }, []);
+  //   fetchNewArrivals();
+  // }, []);
 
   return (
     <div className="w-full">
