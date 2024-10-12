@@ -41,7 +41,7 @@ export default function Home() {
         </div>
       </div>
       <NewArrivalsList />
-      test
+
       <div className="container px-3">
         <div className="flex justify-center mt-3 mb-5">
           <h2 id="subTitleLine" className="relative uppercase font-medium">
