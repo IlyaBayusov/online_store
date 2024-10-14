@@ -3,7 +3,7 @@ import React from "react";
 import NewArrivalsItem from "../NewArrivalsItem/NewArrivalsItem";
 // import { newArrivals } from "@/constans";
 
-type Props = { newArrivals: [] };
+type Props = { newArrivals: object[] };
 
 export default function NewArrivalsList({ newArrivals }: Props) {
   return (
@@ -15,11 +15,11 @@ export default function NewArrivalsList({ newArrivals }: Props) {
       </div>
       <div className="my-2 w-full grid grid-cols-3 grid-rows-2 gap-2 gap-y-2">
         {newArrivals.map((arrival) => (
-          <Link key={arrival.id} href="#">
+          <Link key={arrival.productId} href="#">
             <NewArrivalsItem
-              id={arrival.id}
+              id={arrival.productId}
               name={arrival.name}
-              img={arrival.img}
+              img={arrival.image}
               price={arrival.price}
             />
           </Link>

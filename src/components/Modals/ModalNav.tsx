@@ -17,8 +17,6 @@ export default function ModalNav() {
     closeModal(modalNav);
   };
 
-  console.log(modals);
-
   return (
     <div
       className={

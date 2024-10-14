@@ -17,8 +17,6 @@ export default function ModalNavCategory() {
     openModal(modalNav);
   };
 
-  console.log(modalsProps[modalNavCategory]);
-
   return (
     <div
       className={
@@ -46,7 +44,7 @@ export default function ModalNavCategory() {
 
             <nav className="mt-6">
               <ul className="flex flex-col gap-3">
-                {modalsProps[modalNavCategory].map((category, index) => (
+                {modalsProps[modalNavCategory]?.map((category, index) => (
                   <li
                     key={index}
                     className="bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center"

@@ -6,6 +6,58 @@ import img_test_shoes1 from "../../public/testImg/img_test_shoes1.png";
 export const modalNav = "modalNav";
 export const modalNavCategory = "modalNavCategory";
 
+// Chelsea - id - 1
+// Sneakers - id - 2
+// Pants - id - 3
+// Shirts - id -4
+// Ties - id - 5
+// Belts - id - 6
+
+export const categoriesPages = [
+  {
+    id: 1,
+    name: "Брюки",
+    urlName: "Pants",
+    img: img_shoes,
+    path: "/pants",
+  },
+  {
+    id: 2,
+    name: "Рубашки",
+    urlName: "Shirts",
+    img: img_shoes,
+    path: "/shirts",
+  },
+  {
+    id: 3,
+    name: "Кеды",
+    urlName: "Sneakers",
+    img: img_shoes,
+    path: "/sneakers",
+  },
+  {
+    id: 4,
+    name: "Челси",
+    urlName: "Chelsea",
+    img: img_shoes,
+    path: "/chelsea",
+  },
+  {
+    id: 5,
+    name: "Галстуки",
+    urlName: "Ties",
+    img: img_shoes,
+    path: "/ties",
+  },
+  {
+    id: 6,
+    name: "Ремни",
+    urlName: "Belts",
+    img: img_shoes,
+    path: "/belts",
+  },
+];
+
 export const categories = [
   {
     id: 1,
@@ -19,12 +71,14 @@ export const categories = [
     next: [
       {
         id: 1,
-        name: "Костюмы",
+        name: "Брюки",
+        urlName: "Pants",
         img: img_shoes,
       },
       {
         id: 2,
-        name: "Пальто",
+        name: "Рубашки",
+        urlName: "Shirts",
         img: img_shoes,
       },
     ],
@@ -37,11 +91,13 @@ export const categories = [
       {
         id: 1,
         name: "Кеды",
+        urlName: "Sneakers",
         img: img_shoes,
       },
       {
         id: 2,
-        name: "Кроссовки",
+        name: "Челси",
+        urlName: "Chelsea",
         img: img_shoes,
       },
     ],
@@ -53,12 +109,14 @@ export const categories = [
     next: [
       {
         id: 1,
-        name: "Бабочки",
+        name: "Галстуки",
+        urlName: "Ties",
         img: img_shoes,
       },
       {
         id: 2,
-        name: "Галстуки",
+        name: "Ремни",
+        urlName: "Belts",
         img: img_shoes,
       },
     ],
