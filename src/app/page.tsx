@@ -14,17 +14,29 @@ const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
 export default function Home() {
   const [newArrivals, setNewArrivals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchNewArrivals = async () => {
-      const response = await fetch("http://localhost:3000/");
-      const data = await response.json();
+      try {
+        const response = await fetch(
+          "http://localhost:8080/api/v1/products?size=6"
+        );
+        const data = await response.json();
 
-      setNewArrivals(data);
+        console.log(data);
+
+        setNewArrivals(data.products);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     fetchNewArrivals();
   }, []);
+
+  console.log(newArrivals);
 
   return (
     <div className="w-full">
@@ -34,7 +46,7 @@ export default function Home() {
       >
         <div className="flex justify-center items-center border-white border-2 w-24 h-24">
           <p id="textIntroBlock" className="relative text-xl">
-            MAN'S
+            MAN`S
           </p>
         </div>
       </div>
@@ -59,7 +71,11 @@ export default function Home() {
         </div>
       </div>
 
-      <NewArrivalsList newArrivals={newArrivals} />
+      {isLoading ? (
+        <h1>Loading</h1>
+      ) : (
+        <NewArrivalsList newArrivals={newArrivals} />
+      )}
 
       <div className="container px-3">
         <div className="flex justify-center mt-3 mb-5">

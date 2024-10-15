@@ -1,11 +1,9 @@
-"use client";
-
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import React from "react";
 
 type Props = { id: number; name: string; img: string; price: string };
 
-export default function NewArrivalsItem({ id, name, img, price }: Props) {
+export default function ProductsItem({ id, name, img, price }: Props) {
   return (
     <div className="flex flex-col justify-center">
       <div>

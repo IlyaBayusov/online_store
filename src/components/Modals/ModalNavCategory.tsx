@@ -1,33 +1,37 @@
 "use client";
 
-import { INextCategoryProps, useModalStore } from "@/stores/useModalStore";
+import { useModalStore } from "@/stores/useModalStore";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { IoClose } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
-import { categories, modalNav, modalNavCategory } from "@/constans";
+import { modalNav, modalNavCategory } from "@/constans";
 
-export default function ModalNav() {
-  const { modals, openModal, closeModal, addModalProps } = useModalStore();
+export default function ModalNavCategory() {
+  const { modals, modalsProps, openModal, closeModal } = useModalStore();
 
-  const handleModalNav = (nextCategory: INextCategoryProps[]) => {
-    addModalProps(modalNavCategory, nextCategory);
-    openModal(modalNavCategory);
+  const handleModalNavCategory = () => {
+    closeModal(modalNavCategory);
+    openModal(modalNav);
+  };
+
+  const handleCloseModals = () => {
+    closeModal(modalNavCategory);
     closeModal(modalNav);
   };
 
   return (
     <div
       className={
-        `fixed top-0 -left-full z-[1000] w-full h-full transition-transform duration-700 overflow-y-hidden ` +
-        (modals[modalNav] ? "translate-x-full" : "")
+        `fixed top-0 -right-full z-[1000] w-full h-full transition-transform duration-700 overflow-y-hidden ` +
+        (modals[modalNavCategory] ? "-translate-x-full" : "")
       }
     >
       <div className={"container absolute top-0 left-0 z-10 h-full"}>
         <div className="flex flex-col h-full w-full bg-[#121212] p-3">
           <div className="flex justify-end">
-            <div onClick={() => closeModal(modalNav)}>
+            <div onClick={() => handleModalNavCategory()}>
               <IoClose
                 className="text-[#B3B3B3] w-5 h-5"
                 viewBox="75 75 350 350"
@@ -44,29 +48,22 @@ export default function ModalNav() {
 
             <nav className="mt-6">
               <ul className="flex flex-col gap-3">
-                <Link
-                  href="/"
-                  className="mb-3 bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
-                  onClick={() => closeModal(modalNav)}
-                >
-                  Главная
-                </Link>
-
-                {categories.map((category, index) => (
-                  <li
+                {modalsProps[modalNavCategory]?.map((category, index) => (
+                  <Link
+                    href={`${category.urlName}`}
                     key={index}
-                    className="bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center"
-                    onClick={() =>
-                      category.next ? handleModalNav(category.next) : null
-                    }
+                    className=""
+                    onClick={() => handleCloseModals()}
                   >
-                    <p className="uppercase">{category.name}</p>
-                    <Image
-                      src={category.img}
-                      alt={category.name}
-                      className="max-w-10 max-h-10"
-                    />
-                  </li>
+                    <li className="bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center">
+                      <p className="uppercase">{category.name}</p>
+                      <Image
+                        src={category.img}
+                        alt={category.name}
+                        className="max-w-10 max-h-10"
+                      />
+                    </li>
+                  </Link>
                 ))}
               </ul>
             </nav>
