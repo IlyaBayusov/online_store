@@ -46,7 +46,7 @@ export default function Home() {
       >
         <div className="flex justify-center items-center border-white border-2 w-24 h-24">
           <p id="textIntroBlock" className="relative text-xl">
-            MAN'S
+            MAN`S
           </p>
         </div>
       </div>

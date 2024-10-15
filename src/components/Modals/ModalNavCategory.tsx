@@ -6,7 +6,6 @@ import Link from "next/link";
 import React from "react";
 import { IoClose } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
-import img_test_shoes1 from "../../../public/testImg/img_test_shoes1.png";
 import { modalNav, modalNavCategory } from "@/constans";
 
 export default function ModalNavCategory() {
@@ -15,6 +14,11 @@ export default function ModalNavCategory() {
   const handleModalNavCategory = () => {
     closeModal(modalNavCategory);
     openModal(modalNav);
+  };
+
+  const handleCloseModals = () => {
+    closeModal(modalNavCategory);
+    closeModal(modalNav);
   };
 
   return (
@@ -45,17 +49,21 @@ export default function ModalNavCategory() {
             <nav className="mt-6">
               <ul className="flex flex-col gap-3">
                 {modalsProps[modalNavCategory]?.map((category, index) => (
-                  <li
+                  <Link
+                    href={`${category.urlName}`}
                     key={index}
-                    className="bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center"
+                    className=""
+                    onClick={() => handleCloseModals()}
                   >
-                    <p className="uppercase">{category.name}</p>
-                    <Image
-                      src={category.img}
-                      alt={category.name}
-                      className="max-w-10 max-h-10"
-                    />
-                  </li>
+                    <li className="bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center">
+                      <p className="uppercase">{category.name}</p>
+                      <Image
+                        src={category.img}
+                        alt={category.name}
+                        className="max-w-10 max-h-10"
+                      />
+                    </li>
+                  </Link>
                 ))}
               </ul>
             </nav>

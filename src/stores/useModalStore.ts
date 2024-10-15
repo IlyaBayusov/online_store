@@ -14,6 +14,7 @@ export interface INextCategoryProps {
   id: number;
   name: string;
   img: StaticImageData;
+  urlName: string;
 }
 
 export const useModalStore = create<IModalStore>((set) => ({

@@ -1,6 +1,8 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import { categories } from "@/constans";
+import ProductsList from "@/components/Products/ProductsList/ProductsList";
+
 // Chelsea - id - 1
 // Sneakers - id - 2
 // Pants - id - 3
@@ -8,10 +10,28 @@ import { categories } from "@/constans";
 // Ties - id - 5
 // Belts - id - 6
 
-export default function Products({ params }: { params: { products: string } }) {
-  const { products } = params;
+const fetchProducts = async (products: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/v1/products/${products}/category`
+    );
+    const data = await response.json();
 
-  console.log(products);
+    return data;
+  } catch (error) {
+    console.error("ERROR PRODUCTS", error);
+  }
+};
+
+export default async function Products({
+  params,
+}: {
+  params: { products: string };
+}) {
+  const { products } = params;
+  const productsData = await fetchProducts(products);
+
+  console.log(productsData);
 
   if (
     !categories
@@ -22,5 +42,9 @@ export default function Products({ params }: { params: { products: string } }) {
     return notFound();
   }
 
-  return <div>products</div>;
+  return (
+    <div>
+      <ProductsList category={products} products={productsData.products} />
+    </div>
+  );
 }

@@ -44,6 +44,14 @@ export default function ModalNav() {
 
             <nav className="mt-6">
               <ul className="flex flex-col gap-3">
+                <Link
+                  href="/"
+                  className="mb-3 bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
+                  onClick={() => closeModal(modalNav)}
+                >
+                  Главная
+                </Link>
+
                 {categories.map((category, index) => (
                   <li
                     key={index}

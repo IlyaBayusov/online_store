@@ -10,7 +10,7 @@ export default function CategoryList({}: Props) {
     <div className="container px-3">
       <div className="my-3 w-full grid grid-cols-2 grid-rows-2 gap-3">
         {categoriesPages.map((category) => (
-          <Link key={category.id} href={category.path}>
+          <Link key={category.id} href={category.urlName}>
             <CategoryItem
               id={category.id}
               name={category.name}
