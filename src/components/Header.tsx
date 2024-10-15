@@ -13,7 +13,7 @@ export default function Header({}: Props) {
 
   return (
     <div className="py-2 bg-black w-full">
-      <div className="container px-2">
+      <div className="container px-3">
         <div className="flex justify-between items-center">
           <div onClick={() => openModal(modalNav)}>
             <FiMenu className="h-6 w-6" />

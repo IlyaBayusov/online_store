@@ -5,7 +5,7 @@ import ProductsList from "@/components/Products/ProductsList/ProductsList";
 
 // Chelsea - id - 1
 // Sneakers - id - 2
-// Pants - id - 3
+// Trousers - id - 3
 // Shirts - id -4
 // Ties - id - 5
 // Belts - id - 6
@@ -30,8 +30,6 @@ export default async function Products({
 }) {
   const { products } = params;
   const productsData = await fetchProducts(products);
-
-  console.log(productsData);
 
   if (
     !categories

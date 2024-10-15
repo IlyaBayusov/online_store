@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-type Props = { id: number; name: string; img: string; price: string };
+type Props = { id: number; name: string; img: string; price: number };
 
 export default function ProductsItem({ id, name, img, price }: Props) {
   return (

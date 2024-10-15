@@ -3,11 +3,12 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import ProductsItem from "../ProductsItem/ProductsItem";
+import { IProductCategory } from "@/interfaces/Index";
 
-type Props = { category: string; products: object[] };
+type Props = { category: string; products: IProductCategory[] };
 
 export default function ProductsList({ category, products }: Props) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); //--------------------------------------
 
   console.log(products);
 
@@ -20,7 +21,10 @@ export default function ProductsList({ category, products }: Props) {
       </div>
       <div className="my-2 w-full grid grid-cols-3 grid-rows-2 gap-2 gap-y-2">
         {products.map((product) => (
-          <Link key={product.productId} href="#">
+          <Link
+            key={product.productId}
+            href={`/${category}/${product.productId}`}
+          >
             <ProductsItem
               id={product.productId}
               name={product.name}

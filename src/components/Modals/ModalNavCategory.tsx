@@ -50,7 +50,7 @@ export default function ModalNavCategory() {
               <ul className="flex flex-col gap-3">
                 {modalsProps[modalNavCategory]?.map((category, index) => (
                   <Link
-                    href={`${category.urlName}`}
+                    href={`/${category.urlName}`}
                     key={index}
                     className=""
                     onClick={() => handleCloseModals()}
