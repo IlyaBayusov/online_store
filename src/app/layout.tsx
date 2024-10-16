@@ -7,11 +7,11 @@ import Footer from "@/components/Footer";
 import ModalNav from "@/components/Modals/ModalNav";
 import ModalNavCategory from "@/components/Modals/ModalNavCategory";
 
-const oswald = Oswald({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700"],
-  display: "swap", // Оптимизация отображения шрифта
-});
+// const oswald = Oswald({
+//   subsets: ["latin"],
+//   weight: ["200", "300", "400", "500", "600", "700"],
+//   display: "swap", // Оптимизация отображения шрифта
+// });
 
 export const metadata: Metadata = {
   title: "Main",
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={oswald.className}>
+    <html lang="ru">
       <body>
         <div className="wrapper">
           <Header />

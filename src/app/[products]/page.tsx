@@ -40,6 +40,8 @@ export default async function Products({
     return notFound();
   }
 
+  console.log(productsData);
+
   return (
     <div>
       <ProductsList category={products} products={productsData.products} />

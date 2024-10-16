@@ -1,17 +1,18 @@
 "use client";
 
-import { IProductInfo } from "@/interfaces/Index";
+import { IProductInfo } from "@/interfaces/index";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import img_test_shoes1 from "../../../public/testImg/img_test_shoes1.png";
 import Loader from "../Loader/Loader";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { getCodeColor } from "@/utils";
 
 type Props = {
   id: number;
   arrProduct: IProductInfo[];
   productIdInArray: number;
-  category: string;
 };
 
 // для описания класс whitespace-pre-line
@@ -25,16 +26,16 @@ export default function ProductInfo({
   const [nowProduct, setNowProduct] = useState<IProductInfo>(
     arrProduct[productIdInArray]
   );
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // useEffect(() => {
-  //   setArrProducts(arrProduct);
-  //   setNowProduct(arrProduct[productIdInArray]);
-  // }, [id, arrProduct]);
+  const [selectedSize, setSelectedSize] = useState<number>(
+    Number(nowProduct.sizes[0])
+  );
+  const [selectedColor, setSelectedColor] = useState<string>(nowProduct.color);
 
-  console.log(id, arrProduct, nowProduct, arrProducts);
+  const params = useParams();
 
-  if (!nowProduct) return <Loader />;
+  console.log(arrProduct);
 
   return (
     <div className="container px-3">
@@ -45,61 +46,78 @@ export default function ProductInfo({
               Main / Shoes / Chelsea /{" "}
               <span className="text-orange-200">Chelsea suede brown</span>
             </div>
-            <Image src={img_test_shoes1} alt="" className="rounded-md" />
+            <Image
+              src={nowProduct.images[0]}
+              width={351}
+              height={494}
+              alt={nowProduct.name}
+              className="rounded-md max-w-[75%]"
+            />
 
             <div className="w-full flex justify-between items-center">
-              <Image
-                src={img_test_shoes1}
-                alt=""
-                className="max-w-16 max-h-16 rounded-md"
-              />
-              <Image
-                src={img_test_shoes1}
-                alt=""
-                className="max-w-16 max-h-16 rounded-md"
-              />
-              <Image
-                src={img_test_shoes1}
-                alt=""
-                className="max-w-16 max-h-16 rounded-md"
-              />
-              <Image
-                src={img_test_shoes1}
-                alt=""
-                className="max-w-16 max-h-16 rounded-md"
-              />
-              <Image
-                src={img_test_shoes1}
-                alt=""
-                className="max-w-16 max-h-16 rounded-md"
-              />
+              {nowProduct.images.map((item, index) => (
+                <Image
+                  key={index}
+                  src={item}
+                  width={351}
+                  height={494}
+                  alt={nowProduct.name}
+                  className="max-w-16 rounded-md"
+                />
+              ))}
             </div>
           </div>
 
-          <div className="flex flex-col items-center">
-            <div className="flex flex-col items-center gap-2 text-[#FFE4E4] text-center">
+          <div className="flex flex-col w-full">
+            <div className="flex flex-col items-center text-[#FFE4E4] text-center">
               <h1>{nowProduct.name}</h1>
               <p>{`${nowProduct.price} РУБ`}</p>
             </div>
 
-            <div>
-              <div>
-                <p>Цвет: ЦВЕТ</p>
-                <div>
-                  {/* {arrProducts.map((item) => (
-                    <Link href={`/`} className="" />
-                  ))} */}
+            <div className="flex flex-col items-start mt-3">
+              <div className="full">
+                <p>Цвет: {selectedColor}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  {arrProducts.map((item) => (
+                    <Link
+                      key={item.id}
+                      href={`/${params.products}/${item.id}`}
+                      className=""
+                    >
+                      <div
+                        style={{
+                          background: getCodeColor(item.color.toLowerCase()),
+                        }}
+                        className={
+                          "w-6 h-6 rounded-full " +
+                          (item.color == selectedColor
+                            ? "border-2 border-white"
+                            : "")
+                        }
+                        onClick={() => setSelectedColor(nowProduct.color)}
+                      ></div>
+                    </Link>
+                  ))}
                 </div>
               </div>
 
-              <div>
-                <p>Размер: РАЗМЕР</p>
-                <div>
-                  <button></button>
-                  <button></button>
-                  <button></button>
-                  <button></button>
-                  <button></button>
+              <div className="mt-1 w-full">
+                <p>Размер: {selectedSize}</p>
+                <div className="flex justify-between items-center mt-1 w-full">
+                  {nowProduct.sizes.map((size, index) => (
+                    <button
+                      key={index}
+                      className={
+                        "py-2 px-5 rounded-md text-base " +
+                        (Number(size) == selectedSize
+                          ? "bg-[#895D5D] text-white"
+                          : "bg-white text-black")
+                      }
+                      onClick={() => setSelectedSize(Number(size))}
+                    >
+                      {size}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>

@@ -1,8 +1,6 @@
 import ProductInfo from "@/components/ProductInfo/ProductInfo";
-import { IProductInfo } from "@/interfaces/Index";
+import { IProductInfo } from "@/interfaces/index";
 import React from "react";
-
-type Props = {};
 
 const fetchProducts = async (productId: string) => {
   try {
@@ -51,7 +49,7 @@ export default async function Product({
   const arrProduct: IProductInfo[] = await fetchProducts(product);
   console.log(arrProduct);
 
-  const productIdInArray = await arrProduct
+  const productIdInArray = arrProduct
     .map((item) => item.id)
     .indexOf(Number(product));
 
