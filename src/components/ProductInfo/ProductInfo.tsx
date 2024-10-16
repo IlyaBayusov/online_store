@@ -3,19 +3,16 @@
 import { IProductInfo } from "@/interfaces/index";
 import Image from "next/image";
 import React, { useState } from "react";
-import img_test_shoes1 from "../../../public/testImg/img_test_shoes1.png";
-import Loader from "../Loader/Loader";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getCodeColor } from "@/utils";
+import ProductTabs from "../Tabs/ProductTabs";
 
 type Props = {
   id: number;
   arrProduct: IProductInfo[];
   productIdInArray: number;
 };
-
-// для описания класс whitespace-pre-line
 
 export default function ProductInfo({
   id,
@@ -32,15 +29,15 @@ export default function ProductInfo({
     Number(nowProduct.sizes[0])
   );
   const [selectedColor, setSelectedColor] = useState<string>(nowProduct.color);
+  const [selectedTab, setSelectedTab] = useState<string>();
 
   const params = useParams();
-
-  console.log(arrProduct);
 
   return (
     <div className="container px-3">
       <div className="flex flex-col items-center">
         <div className="flex flex-col items-center gap-3">
+          {/* 1 блок */}
           <div className="flex flex-col items-center gap-3 mt-3">
             <div>
               Main / Shoes / Chelsea /{" "}
@@ -68,6 +65,7 @@ export default function ProductInfo({
             </div>
           </div>
 
+          {/* 2 блок */}
           <div className="flex flex-col w-full">
             <div className="flex flex-col items-center text-[#FFE4E4] text-center">
               <h1>{nowProduct.name}</h1>
@@ -122,6 +120,9 @@ export default function ProductInfo({
               </div>
             </div>
           </div>
+
+          {/* 3 блок */}
+          <ProductTabs description={nowProduct.description} />
         </div>
       </div>
     </div>

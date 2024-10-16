@@ -10,8 +10,6 @@ type Props = { category: string; products: IProductCategory[] };
 export default function ProductsList({ category, products }: Props) {
   const [isLoading, setIsLoading] = useState(true); //--------------------------------------
 
-  console.log(products);
-
   return (
     <div className="container px-3">
       <div className="flex justify-center mt-3 mb-5">

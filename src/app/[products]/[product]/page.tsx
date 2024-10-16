@@ -47,7 +47,6 @@ export default async function Product({
   const { product } = params;
 
   const arrProduct: IProductInfo[] = await fetchProducts(product);
-  console.log(arrProduct);
 
   const productIdInArray = arrProduct
     .map((item) => item.id)

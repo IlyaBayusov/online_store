@@ -24,8 +24,6 @@ export default function Home() {
         );
         const data = await response.json();
 
-        console.log(data);
-
         setNewArrivals(data.products);
         setIsLoading(false);
       } catch (error) {
@@ -35,8 +33,6 @@ export default function Home() {
 
     fetchNewArrivals();
   }, []);
-
-  console.log(newArrivals);
 
   return (
     <div className="w-full">

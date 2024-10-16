@@ -7,15 +7,23 @@ import React from "react";
 import { IoClose } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 import { categories, modalNav, modalNavCategory } from "@/constans";
+import { useCategoryStore } from "@/stores/useCategoryStore";
 
 export default function ModalNav() {
   const { modals, openModal, closeModal, addModalProps } = useModalStore();
+  const { category, updateCategory } = useCategoryStore();
 
-  const handleModalNav = (nextCategory: INextCategoryProps[]) => {
+  const handleModalNav = (
+    nextCategory: INextCategoryProps[],
+    category: string
+  ) => {
+    updateCategory(category.toLowerCase());
     addModalProps(modalNavCategory, nextCategory);
     openModal(modalNavCategory);
     closeModal(modalNav);
   };
+
+  console.log(category);
 
   return (
     <div
@@ -57,7 +65,9 @@ export default function ModalNav() {
                     key={index}
                     className="bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center"
                     onClick={() =>
-                      category.next ? handleModalNav(category.next) : null
+                      category.next
+                        ? handleModalNav(category.next, category.name)
+                        : null
                     }
                   >
                     <p className="uppercase">{category.name}</p>
