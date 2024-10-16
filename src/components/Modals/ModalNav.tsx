@@ -23,8 +23,6 @@ export default function ModalNav() {
     closeModal(modalNav);
   };
 
-  console.log(category);
-
   return (
     <div
       className={
