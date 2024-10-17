@@ -7,6 +7,8 @@ import NewArrivalsList from "@/components/NewArrivals/NewArrivalsList/NewArrival
 import EmblaCarousel from "@/components/Carousels/EmblaCarousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { api } from "@/axios";
 
 const OPTIONS: EmblaOptionsType = {};
 const SLIDE_COUNT = 5;
@@ -19,15 +21,13 @@ export default function Home() {
   useEffect(() => {
     const fetchNewArrivals = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8080/api/v1/products?size=6"
-        );
-        const data = await response.json();
+        const response = await api.get("/v1/products?size=6");
+        const data = await response.data;
 
         setNewArrivals(data.products);
         setIsLoading(false);
       } catch (error) {
-        console.log(error);
+        console.log("главная страница: ", error);
       }
     };
 

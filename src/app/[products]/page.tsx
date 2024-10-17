@@ -1,7 +1,11 @@
-import React from "react";
-import { notFound } from "next/navigation";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { notFound, useParams } from "next/navigation";
 import { categories } from "@/constans";
 import ProductsList from "@/components/Products/ProductsList/ProductsList";
+import { api } from "@/axios";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 // Chelsea - id - 1
 // Sneakers - id - 2
@@ -12,10 +16,9 @@ import ProductsList from "@/components/Products/ProductsList/ProductsList";
 
 const fetchProducts = async (products: string) => {
   try {
-    const response = await fetch(
-      `http://localhost:8080/api/v1/products/${products}/category`
-    );
-    const data = await response.json();
+    const response = await api.get(`/v1/products/${products}/category`);
+
+    const data = await response.data;
 
     return data;
   } catch (error) {
@@ -23,26 +26,32 @@ const fetchProducts = async (products: string) => {
   }
 };
 
-export default async function Products({
-  params,
-}: {
-  params: { products: string };
-}) {
-  const { products } = params;
-  const productsData = await fetchProducts(products);
+export default function Products() {
+  const [data, setData] = useState([]);
+
+  const params: Params = useParams();
+
+  useEffect(() => {
+    const getProducts = async () => {
+      const productsData = await fetchProducts(params.products);
+
+      setData(productsData.products);
+    };
+
+    getProducts();
+  }, [params.products]);
 
   if (
     !categories
       .map((item) => item.next)
       .flat()
-      .find((item) => item?.urlName == products)
+      .find((item) => item?.urlName == params.products)
   ) {
     return notFound();
   }
-
   return (
     <div>
-      <ProductsList category={products} products={productsData.products} />
+      <ProductsList category={params.products} products={data} />
     </div>
   );
 }

@@ -26,11 +26,11 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body>
-        <div className="wrapper">
+        <div className="wrapper flex flex-col">
           <Header />
           {/* <Nav /> */}
 
-          <main>{children}</main>
+          <main className="flex-grow">{children}</main>
 
           <ModalNav />
           <ModalNavCategory />

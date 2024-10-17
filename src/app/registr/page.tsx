@@ -2,6 +2,8 @@
 
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { useRouter } from "next/navigation";
 
 //
 // ------------------------------------ форму сделать в отдельном компоненте
@@ -17,6 +19,7 @@ export default function Registr() {
     secondPassword: "",
   });
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,30 +46,31 @@ export default function Registr() {
     setError("");
 
     try {
-      const response = await fetch(
+      const response: AxiosResponse = await axios.post(
         "http://localhost:8080/api/auth/registration",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(formData),
-        }
+        formData
       );
 
-      if (!response.ok) {
-        const data = await response.json();
+      if (response.status !== 200) {
+        const data = await response.data;
         setError(data.message || "Ошибка регистрации");
       } else {
-        const data = await response.json();
-        localStorage.setItem("accsessToken", data.accessToken);
+        const data = await response.data;
+        localStorage.setItem("accessToken", data.accessToken);
         decodeToken(data.accessToken);
         console.log("Регистрация прошла успешно", data);
       }
+
+      router.push("/auth");
     } catch (error) {
-      console.error("Ошибка при регистрации:", error);
-      setError("Ошибка при регистрации");
+      const axiosError = error as AxiosError;
+
+      console.error("Ошибка при регистрации", error);
+      if (axiosError.response && axiosError.response.status === 500) {
+        setError("Ошибка валидации");
+      } else {
+        setError("Ошибка при регистрации");
+      }
     }
   };
 
