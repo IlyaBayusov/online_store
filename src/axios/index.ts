@@ -37,11 +37,15 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
+    console.log("ответ пришел: ", response);
+
     return response;
   },
   async (error) => {
     const originalRequest = error.config;
     const statusCode = error.response ? error.response.status : null;
+
+    console.log("заход в ошибку при 401: ", statusCode, error);
 
     if (statusCode === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
@@ -49,8 +53,15 @@ api.interceptors.response.use(
       if (!isRefreshing) {
         isRefreshing = true;
         try {
-          const response = await axios.post(
+          console.log("начало");
+
+          const response = await api.post(
             "http://localhost:8080/api/auth/refresh"
+          );
+          console.log(
+            "конец ушел запрос на обновление токена: ",
+            response,
+            response.data
           );
 
           const accessToken = response.data["accessToken"];
@@ -61,11 +72,13 @@ api.interceptors.response.use(
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return api(originalRequest);
         } catch (refreshError) {
-          console.error("Refresh token failed:", refreshError);
+          console.error("Refresh token не пришел:", refreshError);
           localStorage.removeItem("accessToken");
 
-          console.log("Failed to refresh token, redirecting to login");
-          // window.location.href = '/login';
+          console.log(
+            "Ошибка обновления refreshToken, перенаправление на auth"
+          );
+          window.location.href = "/auth";
           return Promise.reject(refreshError);
         } finally {
           isRefreshing = false;

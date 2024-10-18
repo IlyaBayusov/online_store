@@ -31,6 +31,19 @@ export default function Home() {
       }
     };
 
+    // const fetch = async () => {
+    //   try {
+    //     const response = await api.post(
+    //       "http://localhost:8080/api/auth/refresh"
+    //     );
+    //     console.log("обновление токенов: ", response, response.data);
+    //   } catch (error) {
+    //     console.log("ошибка обновление токенов: ", error);
+    //   }
+    // };
+
+    // fetch();
+
     fetchNewArrivals();
   }, []);
 
