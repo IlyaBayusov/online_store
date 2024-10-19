@@ -1,8 +1,8 @@
 "use client";
 
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { api } from "@/axios";
 import Link from "next/link";
@@ -13,6 +13,11 @@ import { useInput } from "@/hooks/useInput";
 // ------------------------------------ добавить blur всем, сделать динамический вывод в errorsValidation
 //
 
+interface IParams {
+  minLength: number;
+  maxLength: number;
+}
+
 export default function Registr() {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -20,12 +25,11 @@ export default function Registr() {
     username: "",
     email: "",
     password: "",
-    secondPassword: "",
   });
 
-  const firstname = useInput("", { empty: true, minLength: 3, maxLength: 50 });
-  const lastname = useInput("", { empty: true, minLength: 3, maxLength: 50 });
-  const username = useInput("", { empty: true, minLength: 3, maxLength: 30 });
+  const firstname = useInput("", { empty: true, minLength: 2, maxLength: 50 });
+  const lastname = useInput("", { empty: true, minLength: 2, maxLength: 50 });
+  const username = useInput("", { empty: true, minLength: 2, maxLength: 50 });
   const email = useInput("", { empty: true, minLength: 4, maxLength: 50 });
   const password = useInput("", { empty: true, minLength: 6, maxLength: 50 });
   const secondPassword = useInput("", {
@@ -34,25 +38,89 @@ export default function Registr() {
     maxLength: 50,
   });
 
+  const [errorMessageUsername, setErrorMessageUsername] = useState("");
+
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const errorsValidation = (inputName) => {
+  useEffect(() => {
+    const fetchUsername = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/v1/users/username",
+          {
+            field: username.value,
+          }
+        );
+      } catch (error) {
+        console.log("Ошибка проверки username", error);
+        setErrorMessageUsername("Такой логин уже сушествует");
+      }
+    };
+
+    fetchUsername();
+  }, [username.value]);
+
+  useEffect(() => {}, [email]);
+
+  // useEffect(() => {
+  //   setFormData({
+  //     firstName: firstname.value,
+  //     lastName: lastname.value,
+  //     username: username.value,
+  //     email: email.value,
+  //     password: password.value,
+  //   });
+
+  //   if (
+  //     firstname.inputValid &&
+  //     lastname.inputValid &&
+  //     username.inputValid &&
+  //     email.inputValid &&
+  //     password.inputValid &&
+  //     secondPassword.inputValid
+  //   ) {
+  //     //отправка
+  //   }
+  // }, [firstname, lastname, username, email, password, secondPassword]);
+
+  const errorsValidation = (inputName, params: IParams) => {
     if (inputName.dirty && (inputName.empty || inputName.minLength)) {
-      return <span className="text-red-600 text-xs">Мин. 5 символов</span>;
+      return (
+        <span className="text-red-600 text-xs">
+          Мин.{" "}
+          {params.minLength !== 2
+            ? `${params.minLength} символа`
+            : `${params.minLength} символов`}
+        </span>
+      );
     }
-    if (firstname.dirty && firstname.maxLength) {
-      return <span className="text-red-600 text-xs">Макс. 50 символов</span>;
+    if (inputName.dirty && inputName.maxLength) {
+      return (
+        <span className="text-red-600 text-xs">
+          Макс. {params.maxLength} символов
+        </span>
+      );
     }
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData({
+  //     ...formData,
+  //     [name]: value,
+  //   });
+  // };
+
+  // const handleChange = () => {
+  //   setFormData({
+  //     firstName: firstname.value,
+  //     lastName: lastname.value,
+  //     username: username.value,
+  //     email: email.value,
+  //     password: password.value,
+  //   });
+  // };
 
   const decodeToken = (accessToken: string) => {
     try {
@@ -124,7 +192,7 @@ export default function Registr() {
             onBlur={(e) => firstname.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
-          {errorsValidation(firstname)}
+          {errorsValidation(firstname, { minLength: 2, maxLength: 50 })}
         </div>
 
         <div className="flex flex-col justify-center text-base items-center w-full max-w-64">
@@ -140,8 +208,10 @@ export default function Registr() {
             name="lastName"
             value={lastname.value}
             onChange={(e) => lastname.onChange(e)}
+            onBlur={(e) => lastname.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
+          {errorsValidation(lastname, { minLength: 2, maxLength: 50 })}
         </div>
 
         <div className="flex flex-col justify-center text-base items-center w-full max-w-64">
@@ -156,9 +226,14 @@ export default function Registr() {
             placeholder="Логин"
             name="username"
             value={username.value}
-            onChange={(e) => username.onChange(e)}
+            onChange={(e) => {
+              username.onChange(e);
+            }}
+            onBlur={(e) => username.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
+          {<span className="text-red-600 text-xs">{errorMessageUsername}</span>}
+          {errorsValidation(username, { minLength: 2, maxLength: 50 })}
         </div>
 
         <div className="flex flex-col justify-center text-base items-center w-full max-w-64">
@@ -191,8 +266,10 @@ export default function Registr() {
             name="password"
             value={password.value}
             onChange={(e) => password.onChange(e)}
+            onBlur={(e) => password.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
+          {errorsValidation(password, { minLength: 6, maxLength: 50 })}
         </div>
 
         <div className="flex flex-col justify-center text-base items-center w-full max-w-64">
@@ -208,8 +285,10 @@ export default function Registr() {
             name="secondPassword"
             value={secondPassword.value}
             onChange={(e) => secondPassword.onChange(e)}
+            onBlur={(e) => secondPassword.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
+          {errorsValidation(secondPassword, { minLength: 6, maxLength: 50 })}
         </div>
 
         <button className="bg-white py-2 px-5 rounded-md mt-3" type="submit">
