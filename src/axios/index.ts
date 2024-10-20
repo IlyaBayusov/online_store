@@ -55,9 +55,7 @@ api.interceptors.response.use(
         try {
           console.log("начало");
 
-          const response = await api.post(
-            "http://localhost:8080/api/auth/refresh"
-          );
+          const response = await api.post("/auth/refresh");
           console.log(
             "конец ушел запрос на обновление токена: ",
             response,
@@ -78,7 +76,7 @@ api.interceptors.response.use(
           console.log(
             "Ошибка обновления refreshToken, перенаправление на auth"
           );
-          window.location.href = "/auth";
+          window.location.href = "/";
           return Promise.reject(refreshError);
         } finally {
           isRefreshing = false;

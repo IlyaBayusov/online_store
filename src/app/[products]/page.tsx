@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { notFound, useParams } from "next/navigation";
 import { categories } from "@/constans";
 import ProductsList from "@/components/Products/ProductsList/ProductsList";
-import { api } from "@/axios";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import axios from "axios";
 
 // Chelsea - id - 1
 // Sneakers - id - 2
@@ -16,7 +16,9 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 const fetchProducts = async (products: string) => {
   try {
-    const response = await api.get(`/v1/products/${products}/category`);
+    const response = await axios.get(
+      `http://localhost:8080/api/v1/products/${products}/category`
+    );
 
     const data = await response.data;
 

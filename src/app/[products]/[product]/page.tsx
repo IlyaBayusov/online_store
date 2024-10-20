@@ -4,44 +4,46 @@ import axios from "axios";
 import React from "react";
 
 const fetchProducts = async (productId: string) => {
-  const response = await axios.get(`/v1/products/${productId}`);
+  // const response = await axios.get(`/v1/products/${productId}`);
 
-  const data = await response.data;
+  // const data = await response.data;
 
-  return data;
+  // return data;
 
-  // try {
-  //   const response = await axios.get(`/v1/products/${productId}`);
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/api/v1/products/${productId}`
+    );
 
-  //   if (response.status !== 200) {
-  //     throw {
-  //       status: response.status,
-  //       message: `Ошибка запроса товара с id: ${productId}`,
-  //     };
-  //   }
+    if (response.status !== 200) {
+      throw {
+        status: response.status,
+        message: `Ошибка запроса товара с id: ${productId}`,
+      };
+    }
 
-  //   const data = await response.data;
+    const data = await response.data;
 
-  //   return data;
-  // } catch (error) {
-  //   if (
-  //     error?.code == 404 ||
-  //     error?.message == `Product with id = ${productId}  not found`
-  //   ) {
-  //     return { message: `Product with id = ${productId}  not found` };
-  //   }
-  //   if (error instanceof TypeError && error.message === "Failed to fetch") {
-  //     console.error("Network error: Failed to fetch the resource.");
-  //     return {
-  //       status: 0,
-  //       message: "Network error. Please check your connection.",
-  //     };
-  //   }
+    return data;
+  } catch (error) {
+    if (
+      error?.code == 404 ||
+      error?.message == `Product with id = ${productId}  not found`
+    ) {
+      return { message: `Product with id = ${productId}  not found` };
+    }
+    if (error instanceof TypeError && error.message === "Failed to fetch") {
+      console.error("Network error: Failed to fetch the resource.");
+      return {
+        status: 0,
+        message: "Network error. Please check your connection.",
+      };
+    }
 
-  //   console.error("ERROR PRODUCTS", error);
+    console.error("ERROR PRODUCTS", error);
 
-  //   return { status: 500, message: "Internal Server Error" };
-  // }
+    return { status: 500, message: "Internal Server Error" };
+  }
 };
 
 export default async function Product({

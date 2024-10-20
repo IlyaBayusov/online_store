@@ -39,12 +39,17 @@ export default function Registr() {
   });
 
   const [errorMessageUsername, setErrorMessageUsername] = useState("");
+  const [errorMessageEmail, setErrorMessageEmail] = useState("");
+  const [errorMessageEmailValid, setErrorMessageEmailValid] = useState("");
+  const [errorMessagePassword, setErrorMessagePassword] = useState("");
 
   const [error, setError] = useState("");
   const router = useRouter();
 
   useEffect(() => {
     const fetchUsername = async () => {
+      setErrorMessageUsername("");
+
       try {
         const response = await axios.post(
           "http://localhost:8080/api/v1/users/username",
@@ -53,36 +58,53 @@ export default function Registr() {
           }
         );
       } catch (error) {
-        console.log("Ошибка проверки username", error);
         setErrorMessageUsername("Такой логин уже сушествует");
+        console.log("Ошибка проверки username", error);
       }
     };
 
     fetchUsername();
   }, [username.value]);
 
-  useEffect(() => {}, [email]);
+  useEffect(() => {
+    setErrorMessageEmail("");
 
-  // useEffect(() => {
-  //   setFormData({
-  //     firstName: firstname.value,
-  //     lastName: lastname.value,
-  //     username: username.value,
-  //     email: email.value,
-  //     password: password.value,
-  //   });
+    const fetchEmail = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/v1/users/email",
+          {
+            field: email.value,
+          }
+        );
+      } catch (error) {
+        setErrorMessageEmail("Такой email уже сушествует");
 
-  //   if (
-  //     firstname.inputValid &&
-  //     lastname.inputValid &&
-  //     username.inputValid &&
-  //     email.inputValid &&
-  //     password.inputValid &&
-  //     secondPassword.inputValid
-  //   ) {
-  //     //отправка
-  //   }
-  // }, [firstname, lastname, username, email, password, secondPassword]);
+        console.log("Ошибка проверки email", error);
+      }
+    };
+
+    fetchEmail();
+    validaionEmail();
+  }, [email.value]);
+
+  useEffect(() => {
+    setErrorMessagePassword("");
+    if (password.value !== secondPassword.value && secondPassword.value) {
+      setErrorMessagePassword("Пароли не совпадают");
+    }
+  }, [password, secondPassword]);
+
+  const validaionEmail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    setErrorMessageEmailValid("");
+    if (email.value) {
+      const emailIsValid = emailRegex.test(email.value);
+
+      setErrorMessageEmailValid(emailIsValid ? "" : "Некорректный email");
+    }
+  };
 
   const errorsValidation = (inputName, params: IParams) => {
     if (inputName.dirty && (inputName.empty || inputName.minLength)) {
@@ -104,23 +126,13 @@ export default function Registr() {
     }
   };
 
-  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData({
-  //     ...formData,
-  //     [name]: value,
-  //   });
-  // };
-
-  // const handleChange = () => {
-  //   setFormData({
-  //     firstName: firstname.value,
-  //     lastName: lastname.value,
-  //     username: username.value,
-  //     email: email.value,
-  //     password: password.value,
-  //   });
-  // };
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   const decodeToken = (accessToken: string) => {
     try {
@@ -138,31 +150,41 @@ export default function Registr() {
 
     setError("");
 
-    try {
-      const response: AxiosResponse = await api.post(
-        "http://localhost:8080/api/auth/registration",
-        formData
-      );
+    if (
+      firstname.inputValid &&
+      lastname.inputValid &&
+      username.inputValid &&
+      email.inputValid &&
+      password.inputValid
+    ) {
+      console.log(formData);
 
-      if (response.status !== 200) {
-        const data = await response.data;
-        setError(data.message || "Ошибка регистрации");
-      } else {
-        const data = await response.data;
-        localStorage.setItem("accessToken", data.accessToken);
-        decodeToken(data.accessToken);
-        console.log("Регистрация прошла успешно", data);
-      }
+      try {
+        const response: AxiosResponse = await api.post(
+          "http://localhost:8080/api/auth/registration",
+          formData
+        );
 
-      router.push("/auth");
-    } catch (error) {
-      const axiosError = error as AxiosError;
+        if (response.status !== 200) {
+          const data = await response.data;
+          setError(data.message || "Ошибка регистрации");
+        } else {
+          const data = await response.data;
+          localStorage.setItem("accessToken", data.accessToken);
+          decodeToken(data.accessToken);
+          console.log("Регистрация прошла успешно", data);
+        }
 
-      console.error("Ошибка при регистрации", error);
-      if (axiosError.response && axiosError.response.status === 500) {
-        setError("Ошибка валидации");
-      } else {
-        setError("Ошибка при регистрации");
+        router.push("/");
+      } catch (error) {
+        const axiosError = error as AxiosError;
+
+        console.error("Ошибка при регистрации", error);
+        if (axiosError.response && axiosError.response.status === 500) {
+          setError("Ошибка валидации");
+        } else {
+          setError("Ошибка при регистрации");
+        }
       }
     }
   };
@@ -188,7 +210,10 @@ export default function Registr() {
             placeholder="Имя"
             name="firstName"
             value={firstname.value}
-            onChange={(e) => firstname.onChange(e)}
+            onChange={(e) => {
+              firstname.onChange(e);
+              handleChange(e);
+            }}
             onBlur={(e) => firstname.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
@@ -207,7 +232,10 @@ export default function Registr() {
             placeholder="Фамилия"
             name="lastName"
             value={lastname.value}
-            onChange={(e) => lastname.onChange(e)}
+            onChange={(e) => {
+              lastname.onChange(e);
+              handleChange(e);
+            }}
             onBlur={(e) => lastname.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
@@ -228,11 +256,14 @@ export default function Registr() {
             value={username.value}
             onChange={(e) => {
               username.onChange(e);
+              handleChange(e);
             }}
             onBlur={(e) => username.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
-          {<span className="text-red-600 text-xs">{errorMessageUsername}</span>}
+          {errorMessageUsername && (
+            <span className="text-red-600 text-xs">{errorMessageUsername}</span>
+          )}
           {errorsValidation(username, { minLength: 2, maxLength: 50 })}
         </div>
 
@@ -248,9 +279,21 @@ export default function Registr() {
             placeholder="Email"
             name="email"
             value={email.value}
-            onChange={(e) => email.onChange(e)}
+            onChange={(e) => {
+              email.onChange(e);
+              handleChange(e);
+            }}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
+          {errorMessageEmailValid && (
+            <span className="text-red-600 text-xs">
+              {errorMessageEmailValid}
+            </span>
+          )}
+          {errorMessageEmail && (
+            <span className="text-red-600 text-xs">{errorMessageEmail}</span>
+          )}
+          {errorsValidation(email, { minLength: 4, maxLength: 50 })}
         </div>
 
         <div className="flex flex-col justify-center text-base items-center w-full max-w-64">
@@ -265,7 +308,10 @@ export default function Registr() {
             placeholder="Пароль"
             name="password"
             value={password.value}
-            onChange={(e) => password.onChange(e)}
+            onChange={(e) => {
+              password.onChange(e);
+              handleChange(e);
+            }}
             onBlur={(e) => password.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
@@ -288,6 +334,9 @@ export default function Registr() {
             onBlur={(e) => secondPassword.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
+          {errorMessagePassword && (
+            <span className="text-red-600 text-xs">{errorMessagePassword}</span>
+          )}
           {errorsValidation(secondPassword, { minLength: 6, maxLength: 50 })}
         </div>
 
