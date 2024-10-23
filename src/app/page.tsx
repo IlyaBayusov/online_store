@@ -21,9 +21,10 @@ export default function Home() {
   useEffect(() => {
     const fetchNewArrivals = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/api/v1/products?size=6"
-        );
+        // const response = await axios.get(
+        //   "http://localhost:8080/api/v1/products?size=6"
+        // );
+        const response = await api.get("/v1/products?size=6");
         const data = await response.data;
 
         setNewArrivals(data.products);

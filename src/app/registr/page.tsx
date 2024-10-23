@@ -4,13 +4,12 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
-import { api } from "@/axios";
 import Link from "next/link";
 import { useInput } from "@/hooks/useInput";
 
 //
 // ------------------------------------ форму сделать в отдельном компоненте
-// ------------------------------------ добавить blur всем, сделать динамический вывод в errorsValidation
+// ------------------------------------ сделать динамический вывод в errorsValidation
 //
 
 interface IParams {
@@ -90,6 +89,7 @@ export default function Registr() {
 
   useEffect(() => {
     setErrorMessagePassword("");
+
     if (password.value !== secondPassword.value && secondPassword.value) {
       setErrorMessagePassword("Пароли не совпадают");
     }
@@ -145,46 +145,70 @@ export default function Registr() {
     }
   };
 
+  const validateForm = () => {
+    let isValid = true;
+
+    if (!firstname.inputValid) {
+      isValid = false;
+    }
+    if (!lastname.inputValid) {
+      isValid = false;
+    }
+    if (!username.inputValid || errorMessageUsername) {
+      isValid = false;
+    }
+    if (!email.inputValid || errorMessageEmailValid || errorMessageEmail) {
+      isValid = false;
+    }
+    if (!password.inputValid || errorMessagePassword) {
+      isValid = false;
+    }
+    if (!secondPassword.inputValid) {
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setError("");
 
-    if (
-      firstname.inputValid &&
-      lastname.inputValid &&
-      username.inputValid &&
-      email.inputValid &&
-      password.inputValid
-    ) {
-      console.log(formData);
+    if (!validateForm()) {
+      setError("Некоторые поля заполнены неверно.");
+      return;
+    }
 
-      try {
-        const response: AxiosResponse = await api.post(
-          "http://localhost:8080/api/auth/registration",
-          formData
-        );
+    setError("");
 
-        if (response.status !== 200) {
-          const data = await response.data;
-          setError(data.message || "Ошибка регистрации");
-        } else {
-          const data = await response.data;
-          localStorage.setItem("accessToken", data.accessToken);
-          decodeToken(data.accessToken);
-          console.log("Регистрация прошла успешно", data);
-        }
+    console.log(formData);
 
-        router.push("/");
-      } catch (error) {
-        const axiosError = error as AxiosError;
+    try {
+      const response: AxiosResponse = await axios.post(
+        "http://localhost:8080/api/auth/registration",
+        formData
+      );
 
-        console.error("Ошибка при регистрации", error);
-        if (axiosError.response && axiosError.response.status === 500) {
-          setError("Ошибка валидации");
-        } else {
-          setError("Ошибка при регистрации");
-        }
+      if (response.status !== 200) {
+        const data = await response.data;
+        setError(data.message || "Ошибка регистрации");
+      } else {
+        const data = await response.data;
+        localStorage.setItem("accessToken", data.accessToken);
+        decodeToken(data.accessToken);
+        console.log("Регистрация прошла успешно", data);
+      }
+
+      router.push("/");
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      console.error("Ошибка при регистрации", error);
+      if (axiosError.response && axiosError.response.status === 500) {
+        setError("Ошибка валидации");
+      } else {
+        setError("Ошибка при регистрации");
       }
     }
   };
