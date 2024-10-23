@@ -76,7 +76,7 @@ api.interceptors.response.use(
           console.log(
             "Ошибка обновления refreshToken, перенаправление на auth"
           );
-          window.location.href = "/";
+          window.location.href = "/auth";
           return Promise.reject(refreshError);
         } finally {
           isRefreshing = false;

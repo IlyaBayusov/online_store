@@ -1,3 +1,16 @@
+import { jwtDecode } from "jwt-decode";
+
+export const decodeToken = (accessToken: string) => {
+  try {
+    const decoded = jwtDecode(accessToken);
+    console.log("Decoded token:", decoded);
+    return decoded;
+  } catch (error) {
+    console.error("Invalid token:", error);
+    return null;
+  }
+};
+
 export function getCodeColor(color: string) {
   switch (color.toLowerCase()) {
     case "белый":

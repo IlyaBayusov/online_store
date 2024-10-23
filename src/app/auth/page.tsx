@@ -109,7 +109,10 @@ export default function Auth() {
       const axiosError = error as AxiosError;
 
       console.error("Ошибка при авторизации", error);
-      if (axiosError.response && axiosError.response.status === 500) {
+
+      if (axiosError.response?.status === 404) {
+        setError("Такого логина не существует");
+      } else if (axiosError.response && axiosError.response.status === 500) {
         setError("Ошибка валидации");
       } else {
         setError("Ошибка при регистрации");

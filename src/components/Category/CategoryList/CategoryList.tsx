@@ -16,20 +16,6 @@ export default function CategoryList() {
   return (
     <div className="container px-3">
       <div className="my-3 w-full grid grid-cols-2 grid-rows-2 gap-3">
-        {/* {categoriesPages.map((category) => (
-          <Link
-            key={category.id}
-            href={category.urlName}
-            onClick={() => updateCategory(category.name)}
-          >
-            <CategoryItem
-              id={category.id}
-              name={category.name}
-              img={category.img}
-            />
-          </Link>
-        ))} */}
-
         {categories.map((category) =>
           category.next?.map((subCategory) => (
             <Link

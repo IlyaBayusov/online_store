@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
-import Nav from "@/components/Nav";
-import { Oswald } from "next/font/google";
+// import { Oswald } from "next/font/google";
 import Footer from "@/components/Footer";
 import ModalNav from "@/components/Modals/ModalNav";
 import ModalNavCategory from "@/components/Modals/ModalNavCategory";
@@ -14,8 +13,8 @@ import ModalNavCategory from "@/components/Modals/ModalNavCategory";
 // });
 
 export const metadata: Metadata = {
-  title: "Main",
-  description: "Main page",
+  title: "Главная",
+  description: "Главная страница",
 };
 
 export default function RootLayout({

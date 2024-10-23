@@ -15,3 +15,24 @@ export interface IProductInfo {
   quantities: number[];
   images: string[];
 }
+
+export interface IDecodedToken {
+  id: number;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  roles: string;
+  sub: string;
+  exp: number;
+}
+
+export interface IProductInCart {
+  cartItemId: number;
+  productId: number;
+  productName: string;
+  price: number;
+  sizes: string;
+  quantity: number;
+  image: string;
+}

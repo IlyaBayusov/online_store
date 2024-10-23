@@ -1,12 +1,20 @@
 "use client";
 
-import { IProductInfo } from "@/interfaces/index";
+import {
+  IDecodedToken,
+  IProductInCart,
+  IProductInfo,
+} from "@/interfaces/index";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { getCodeColor } from "@/utils";
+import { decodeToken, getCodeColor } from "@/utils";
 import ProductTabs from "../Tabs/ProductTabs";
+import { RiShoppingBasketLine, RiShoppingBasketFill } from "react-icons/ri";
+import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
+import { useCartStore } from "@/stores/useCartStore";
+import { api } from "@/axios";
 
 type Props = {
   id: number;
@@ -23,15 +31,76 @@ export default function ProductInfo({
   const [nowProduct, setNowProduct] = useState<IProductInfo>(
     arrProduct[productIdInArray]
   );
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [selectedSize, setSelectedSize] = useState<number>(
     Number(nowProduct.sizes[0])
   );
   const [selectedColor, setSelectedColor] = useState<string>(nowProduct.color);
-  const [selectedTab, setSelectedTab] = useState<string>();
+
+  const [isActiveCart, setIsActiveCart] = useState(false);
+  const [isActiveFav, setIsActiveFav] = useState(false);
 
   const params = useParams();
+
+  const { cart, addProduct, removeProduct } = useCartStore();
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("accessToken");
+  //   if (!token) {
+  //     throw Error("Ошибка, токен не найден");
+  //   }
+
+  //   const decodedToken: IDecodedToken = decodeToken(token);
+
+  //   const fetchActiveBtnCart = async () => {
+  //     try {
+  //       const response = await api.get(`/v1/cart/${decodedToken.id}`);
+  //       const data: IProductInCart[] = await response.data;
+
+  //       if (data.some((item) => item.productId === nowProduct.id)) {
+  //         setIsActiveCart(true);
+  //         // addProduct(nowProduct);
+  //       }
+  //     } catch (error) {
+  //       console.error("Ошибка запроса получения корзины", error);
+  //     }
+  //   };
+
+  //   fetchActiveBtnCart();
+
+  //   // if (cart.some((item) => item.id === nowProduct.id)) {
+  //   //   setIsActiveCart(true);
+  //   // }
+  // }, [cart, nowProduct]);
+
+  // console.log(cart);
+
+  // const handleClickCart = async () => {
+  //   try {
+  //     const token = localStorage.getItem("accessToken");
+  //     if (!token) {
+  //       throw Error("Ошибка, токен не найден");
+  //     }
+
+  //     const decodedToken: IDecodedToken = decodeToken(token);
+
+  //     console.log(decodedToken);
+
+  //     const response = await api.post("/v1/cart", {
+  //       userId: decodedToken.id,
+  //       productId: nowProduct.id,
+  //       quantity: 1,
+  //       size: String(selectedSize),
+  //     });
+  //   } catch (error) {
+  //     console.error("Ошибка запроса к корзине", error);
+  //   }
+
+  //   if (!isActiveCart) {
+  //     setIsActiveCart(true);
+  //   }
+  // };
 
   return (
     <div className="container px-3">
@@ -122,6 +191,36 @@ export default function ProductInfo({
           </div>
 
           {/* 3 блок */}
+          <div className="flex justify-between items-center w-full gap-3">
+            <button
+              className={
+                "flex justify-center items-center gap-1 py-2 w-full rounded-md text-white border border-[#895D5D] " +
+                (isActiveCart ? "bg-[#895D5D]" : "border border-[#895D5D]")
+              }
+              onClick={() => handleClickCart()}
+            >
+              {isActiveCart ? (
+                <RiShoppingBasketFill className="h-5 w-5 ml-px" />
+              ) : (
+                <RiShoppingBasketLine className="h-5 w-5" />
+              )}
+            </button>
+            <button
+              className={
+                "flex justify-center items-center gap-1 py-2 w-full rounded-md text-white border border-[#895D5D] " +
+                (isActiveFav ? "bg-[#895D5D]" : "")
+              }
+              onClick={() => setIsActiveFav(!isActiveFav)}
+            >
+              {isActiveFav ? (
+                <MdFavorite className="h-5 w-5 mr-px" />
+              ) : (
+                <MdFavoriteBorder className="h-5 w-5" />
+              )}
+            </button>
+          </div>
+
+          {/* 4 блок */}
           <ProductTabs description={nowProduct.description} />
         </div>
       </div>
