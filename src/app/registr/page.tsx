@@ -173,8 +173,6 @@ export default function Registr() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setError("");
-
     if (!validateForm()) {
       setError("Некоторые поля заполнены неверно.");
       return;

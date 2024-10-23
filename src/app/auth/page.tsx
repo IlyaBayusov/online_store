@@ -1,16 +1,26 @@
 "use client";
 
+import { useInput } from "@/hooks/useInput";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 
+interface IParams {
+  minLength: number;
+  maxLength: number;
+}
+
 export default function Auth() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+
+  const username = useInput("", { empty: true, minLength: 2, maxLength: 50 });
+  const password = useInput("", { empty: true, minLength: 4, maxLength: 50 });
+
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -33,10 +43,50 @@ export default function Auth() {
     }
   };
 
+  const errorsValidation = (inputName, params: IParams) => {
+    if (inputName.dirty && (inputName.empty || inputName.minLength)) {
+      return (
+        <span className="text-red-600 text-xs">
+          Мин.{" "}
+          {params.minLength !== 2
+            ? `${params.minLength} символа`
+            : `${params.minLength} символов`}
+        </span>
+      );
+    }
+    if (inputName.dirty && inputName.maxLength) {
+      return (
+        <span className="text-red-600 text-xs">
+          Макс. {params.maxLength} символов
+        </span>
+      );
+    }
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+
+    if (!username.inputValid) {
+      isValid = false;
+    }
+    if (!password.inputValid) {
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!validateForm()) {
+      setError("Некоторые поля заполнены неверно.");
+      return;
+    }
+
     setError("");
+
+    console.log(formData);
 
     try {
       const response: AxiosResponse = await axios.post(
@@ -70,7 +120,7 @@ export default function Auth() {
   return (
     <div className="container px-3 flex flex-col justify-center items-center">
       <h1 className="text-lg uppercase text-center mt-3">Авторизация</h1>
-      {/* {error && <p className="text-red-700">{error}</p>} */}
+      {error && <p className="text-red-700">{error}</p>}
 
       <form
         onSubmit={handleSubmit}
@@ -88,9 +138,14 @@ export default function Auth() {
             placeholder="Логин"
             name="username"
             value={formData.username}
-            onChange={handleChange}
+            onChange={(e) => {
+              username.onChange(e);
+              handleChange(e);
+            }}
+            onBlur={(e) => username.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
+          {errorsValidation(username, { minLength: 2, maxLength: 50 })}
         </div>
 
         <div className="flex flex-col justify-center text-base items-center w-full max-w-64">
@@ -105,9 +160,14 @@ export default function Auth() {
             placeholder="Пароль"
             name="password"
             value={formData.password}
-            onChange={handleChange}
+            onChange={(e) => {
+              password.onChange(e);
+              handleChange(e);
+            }}
+            onBlur={(e) => password.onBlur(e)}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
+          {errorsValidation(password, { minLength: 6, maxLength: 50 })}
         </div>
 
         <Link href={"/forgotPass"} className="text-gray-400 text-base mt-1">
