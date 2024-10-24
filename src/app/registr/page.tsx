@@ -173,10 +173,10 @@ export default function Registr() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // if (!validateForm()) {
-    //   setError("Некоторые поля заполнены неверно.");
-    //   return;
-    // }
+    if (!validateForm()) {
+      setError("Некоторые поля заполнены неверно.");
+      return;
+    }
 
     setError("");
 
@@ -188,15 +188,12 @@ export default function Registr() {
         formData
       );
 
-      if (response.status !== 200) {
-        const data = await response.data;
-        setError(data.message || "Ошибка регистрации");
-      } else {
-        const data = await response.data;
-        localStorage.setItem("accessToken", data.accessToken);
-        decodeToken(data.accessToken);
-        console.log("Регистрация прошла успешно", data);
-      }
+      const data = await response.data;
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+
+      decodeToken(data.accessToken);
+      console.log("Регистрация прошла успешно", data);
 
       router.push("/");
     } catch (error) {

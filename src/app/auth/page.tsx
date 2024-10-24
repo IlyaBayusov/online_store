@@ -100,6 +100,7 @@ export default function Auth() {
       } else {
         const data = await response.data;
         localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
         decodeToken(data.accessToken);
         console.log("Авторизация прошла успешно", data);
       }

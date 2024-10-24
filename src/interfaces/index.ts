@@ -31,8 +31,8 @@ export interface IProductInCart {
   cartItemId: number;
   productId: number;
   productName: string;
+  image: string;
   price: number;
   sizes: string;
   quantity: number;
-  image: string;
 }

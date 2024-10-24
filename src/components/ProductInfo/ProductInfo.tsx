@@ -41,66 +41,58 @@ export default function ProductInfo({
   const [isActiveCart, setIsActiveCart] = useState(false);
   const [isActiveFav, setIsActiveFav] = useState(false);
 
+  const [nowCartItem, setNowCartItem] = useState<IProductInCart>();
+
   const params = useParams();
 
   const { cart, addProduct, removeProduct } = useCartStore();
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("accessToken");
-  //   if (!token) {
-  //     throw Error("Ошибка, токен не найден");
-  //   }
+  useEffect(() => {
+    const decodedToken: IDecodedToken = decodeToken();
 
-  //   const decodedToken: IDecodedToken = decodeToken(token);
+    const fetchActiveBtnCart = async (decodedTokenId: number) => {
+      try {
+        const response = await api.get(`/v1/cart/${decodedTokenId}`);
+        const data: IProductInCart[] = await response.data;
 
-  //   const fetchActiveBtnCart = async () => {
-  //     try {
-  //       const response = await api.get(`/v1/cart/${decodedToken.id}`);
-  //       const data: IProductInCart[] = await response.data;
+        data.map((item) => {
+          if (item.productId === nowProduct.id) {
+            setIsActiveCart(true);
+            setNowCartItem(item);
+          }
+        });
+      } catch (error) {
+        console.error("Ошибка запроса получения корзины", error);
+      }
+    };
 
-  //       if (data.some((item) => item.productId === nowProduct.id)) {
-  //         setIsActiveCart(true);
-  //         // addProduct(nowProduct);
-  //       }
-  //     } catch (error) {
-  //       console.error("Ошибка запроса получения корзины", error);
-  //     }
-  //   };
+    fetchActiveBtnCart(decodedToken.id);
+  }, [nowProduct]);
 
-  //   fetchActiveBtnCart();
+  const handleClickCart = async () => {
+    try {
+      const decodedToken: IDecodedToken = decodeToken();
 
-  //   // if (cart.some((item) => item.id === nowProduct.id)) {
-  //   //   setIsActiveCart(true);
-  //   // }
-  // }, [cart, nowProduct]);
-
-  // console.log(cart);
-
-  // const handleClickCart = async () => {
-  //   try {
-  //     const token = localStorage.getItem("accessToken");
-  //     if (!token) {
-  //       throw Error("Ошибка, токен не найден");
-  //     }
-
-  //     const decodedToken: IDecodedToken = decodeToken(token);
-
-  //     console.log(decodedToken);
-
-  //     const response = await api.post("/v1/cart", {
-  //       userId: decodedToken.id,
-  //       productId: nowProduct.id,
-  //       quantity: 1,
-  //       size: String(selectedSize),
-  //     });
-  //   } catch (error) {
-  //     console.error("Ошибка запроса к корзине", error);
-  //   }
-
-  //   if (!isActiveCart) {
-  //     setIsActiveCart(true);
-  //   }
-  // };
+      if (isActiveCart && nowCartItem) {
+        setIsActiveCart(false);
+        //удаление из корзины
+        const response = await api.delete(`/v1/cart/${nowCartItem.cartItemId}`);
+      } else {
+        setIsActiveCart(true);
+        //добавление в корзину
+        const response = await api.post("/v1/cart", {
+          userId: decodedToken.id,
+          productId: nowProduct.id,
+          quantity: 1,
+          size: String(selectedSize),
+        });
+        const data = await response.data;
+        setNowCartItem(data);
+      }
+    } catch (error) {
+      console.error("Ошибка запроса добавления/удаления: ", error);
+    }
+  };
 
   return (
     <div className="container px-3">

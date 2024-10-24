@@ -8,8 +8,6 @@ export default function Footer() {
   const path = usePathname();
   const noFooterPages = ["/cart"];
 
-  console.log(path);
-
   const showFooter = !noFooterPages.includes(path);
 
   return (

@@ -55,19 +55,21 @@ api.interceptors.response.use(
         try {
           console.log("начало");
 
-          const response = await api.post("/auth/refresh");
+          const refreshToken = localStorage.getItem("refreshToken");
+          const response = await api.post("/auth/refresh", refreshToken);
           console.log(
             "конец ушел запрос на обновление токена: ",
             response,
             response.data
           );
 
-          const accessToken = response.data["accessToken"];
+          const data = await response.data;
 
-          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("refreshToken", data.refreshToken);
 
-          onRefreshed(accessToken);
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          onRefreshed(data.accessToken);
+          originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
           return api(originalRequest);
         } catch (refreshError) {
           console.error("Refresh token не пришел:", refreshError);
@@ -83,6 +85,7 @@ api.interceptors.response.use(
         }
       } else {
         return new Promise((resolve) => {
+          const accessToken = localStorage.getItem("accessToken");
           subscribeTokenRefresh((accessToken) => {
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             resolve(api(originalRequest));

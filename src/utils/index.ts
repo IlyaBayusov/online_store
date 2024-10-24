@@ -1,9 +1,13 @@
 import { jwtDecode } from "jwt-decode";
 
-export const decodeToken = (accessToken: string) => {
+export const decodeToken = () => {
+  const token = localStorage.getItem("accessToken");
+  if (!token) {
+    throw Error("Ошибка, токен не найден");
+  }
+
   try {
-    const decoded = jwtDecode(accessToken);
-    console.log("Decoded token:", decoded);
+    const decoded = jwtDecode(token);
     return decoded;
   } catch (error) {
     console.error("Invalid token:", error);
