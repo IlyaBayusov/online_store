@@ -15,6 +15,7 @@ import { RiShoppingBasketLine, RiShoppingBasketFill } from "react-icons/ri";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { useCartStore } from "@/stores/useCartStore";
 import { api } from "@/axios";
+import { getProductsCart } from "@/api";
 
 type Props = {
   id: number;
@@ -48,12 +49,9 @@ export default function ProductInfo({
   const { cart, addProduct, removeProduct } = useCartStore();
 
   useEffect(() => {
-    const decodedToken: IDecodedToken = decodeToken();
-
-    const fetchActiveBtnCart = async (decodedTokenId: number) => {
+    const setActiveBtnCart = async () => {
       try {
-        const response = await api.get(`/v1/cart/${decodedTokenId}`);
-        const data: IProductInCart[] = await response.data;
+        const data: IProductInCart[] = await getProductsCart();
 
         data.map((item) => {
           if (item.productId === nowProduct.id) {
@@ -66,7 +64,7 @@ export default function ProductInfo({
       }
     };
 
-    fetchActiveBtnCart(decodedToken.id);
+    setActiveBtnCart();
   }, [nowProduct]);
 
   const handleClickCart = async () => {

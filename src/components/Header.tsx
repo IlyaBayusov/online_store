@@ -1,17 +1,28 @@
 "use client";
 
+import { getProductsCart } from "@/api";
 import { modalNav } from "@/constans";
-import { useCartStore } from "@/stores/useCartStore";
+import { IProductInCart } from "@/interfaces";
 import { useModalStore } from "@/stores/useModalStore";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { FiMenu } from "react-icons/fi";
 import { RiShoppingBasketLine } from "react-icons/ri";
 
 export default function Header() {
+  const [products, setProducts] = useState<IProductInCart[]>([]);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      const data: IProductInCart[] = await getProductsCart();
+      setProducts(data);
+    };
+
+    getProducts();
+  }, []);
+
   const { openModal } = useModalStore();
-  const { cart } = useCartStore();
 
   return (
     <div className="bg-black w-full">
@@ -33,7 +44,7 @@ export default function Header() {
               <div className="relative">
                 <RiShoppingBasketLine className="h-8 w-8 p-1.5" />
                 <div className="flex justify-center items-center absolute bottom-0 right-0 z-10 w-4 h-4 bg-white rounded-full text-[11px] text-black font-bold border-2 border-black">
-                  {cart.length}
+                  {products.length}
                 </div>
               </div>
             </Link>
