@@ -1,7 +1,9 @@
 "use client";
 
+import { modalCartDeleteProduct } from "@/constans";
 import { IProductInCart } from "@/interfaces";
 import { useCartStore } from "@/stores/useCartStore";
+import { useModalStore } from "@/stores/useModalStore";
 import Image from "next/image";
 import React, { useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
@@ -13,6 +15,7 @@ type Props = { product: IProductInCart };
 export default function CartItem({ product }: Props) {
   const [quantity, setQuantity] = useState(product.quantity);
   const { plusSum, minusSum } = useCartStore();
+  const { openModal, addModalProps } = useModalStore();
 
   const handleClickMinus = () => {
     if (quantity > 1) {
@@ -28,7 +31,14 @@ export default function CartItem({ product }: Props) {
     }
   };
 
-  const handleDeleteProduct = () => {};
+  const handleOpenModal = () => {
+    addModalProps(modalCartDeleteProduct, {
+      cartItemId: product.cartItemId,
+      isDeleted: false,
+    });
+
+    openModal(modalCartDeleteProduct);
+  };
 
   return (
     <div
@@ -82,7 +92,7 @@ export default function CartItem({ product }: Props) {
           {/* <SlOptions className="w-4 h-4" /> */}
           <RiDeleteBin6Line
             className="w-4 h-4 mt-0.5"
-            onClick={handleDeleteProduct}
+            onClick={handleOpenModal}
           />
         </div>
       </div>

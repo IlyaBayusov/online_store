@@ -2,24 +2,33 @@
 
 import { getProductsCart } from "@/api";
 import CartList from "@/components/Cart/CartList/CartList";
+import { modalCartDeleteProduct } from "@/constans";
 import { IProductInCart } from "@/interfaces";
 import { useCartStore } from "@/stores/useCartStore";
+import { useModalStore } from "@/stores/useModalStore";
 import React, { useEffect, useState } from "react";
 
 export default function Cart() {
   const [products, setProducts] = useState<IProductInCart[]>([]);
   const { sum } = useCartStore();
+  const { modalsProps } = useModalStore();
+
+  const getProducts = async () => {
+    const data: IProductInCart[] = await getProductsCart();
+    setProducts(data);
+  };
 
   useEffect(() => {
-    const getProducts = async () => {
-      const data: IProductInCart[] = await getProductsCart();
-      setProducts(data);
-    };
-
     getProducts();
   }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (modalsProps[modalCartDeleteProduct]?.isDeleted) {
+      console.log("test");
+
+      getProducts();
+    }
+  }, [modalsProps]);
 
   return (
     <div className="container px-3">

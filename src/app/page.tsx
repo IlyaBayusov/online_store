@@ -7,7 +7,6 @@ import NewArrivalsList from "@/components/NewArrivals/NewArrivalsList/NewArrival
 import EmblaCarousel from "@/components/Carousels/EmblaCarousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { api } from "@/axios";
 
 const OPTIONS: EmblaOptionsType = {};
@@ -21,9 +20,6 @@ export default function Home() {
   useEffect(() => {
     const fetchNewArrivals = async () => {
       try {
-        // const response = await axios.get(
-        //   "http://localhost:8080/api/v1/products?size=6"
-        // );
         const response = await api.get("/v1/products?size=6");
         const data = await response.data;
 
@@ -33,19 +29,6 @@ export default function Home() {
         console.log("главная страница: ", error);
       }
     };
-
-    // const fetch = async () => {
-    //   try {
-    //     const response = await api.post(
-    //       "http://localhost:8080/api/auth/refresh"
-    //     );
-    //     console.log("обновление токенов: ", response, response.data);
-    //   } catch (error) {
-    //     console.log("ошибка обновление токенов: ", error);
-    //   }
-    // };
-
-    // fetch();
 
     fetchNewArrivals();
   }, []);

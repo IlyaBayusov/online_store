@@ -11,7 +11,7 @@ import { useCategoryStore } from "@/stores/useCategoryStore";
 
 export default function ModalNav() {
   const { modals, openModal, closeModal, addModalProps } = useModalStore();
-  const { category, updateCategory } = useCategoryStore();
+  const { updateCategory } = useCategoryStore();
 
   const handleModalNav = (
     nextCategory: INextCategoryProps[],
