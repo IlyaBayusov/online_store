@@ -16,8 +16,8 @@ export default function ProductsItem({ id, name, img, price }: Props) {
         />
       </div>
 
-      <p className="text-xs text-center">{name}</p>
-      <p className="text-xs text-center">{price}</p>
+      <p className="text-base font-bold text-start">{`${price} РУБ.`}</p>
+      <p className="text-sm text-start">{name}</p>
     </div>
   );
 }

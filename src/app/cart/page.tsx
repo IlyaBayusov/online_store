@@ -24,8 +24,6 @@ export default function Cart() {
 
   useEffect(() => {
     if (modalsProps[modalCartDeleteProduct]?.isDeleted) {
-      console.log("test");
-
       getProducts();
     }
   }, [modalsProps]);

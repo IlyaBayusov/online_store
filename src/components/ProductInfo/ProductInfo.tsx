@@ -100,7 +100,7 @@ export default function ProductInfo({
           <div className="flex flex-col items-center gap-3 mt-3">
             <div>
               Main / Shoes / Chelsea /{" "}
-              <span className="text-orange-200">Chelsea suede brown</span>
+              <span className="text-orange-200">{nowProduct.name}</span>
             </div>
             <Image
               src={nowProduct.images[0]}

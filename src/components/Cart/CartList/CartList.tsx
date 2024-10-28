@@ -16,7 +16,7 @@ export default function CartList({ products }: Props) {
   }, [updateSum, products]);
 
   return (
-    <div className="flex flex-col justify-center items-center w-full mt-3">
+    <div className="flex flex-col justify-center items-center w-full mt-3 mb-[4.75rem]">
       {products.map((product) => (
         <CartItem key={product.productId} product={product} />
       ))}

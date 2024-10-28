@@ -3,12 +3,12 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import ProductsItem from "../ProductsItem/ProductsItem";
-import { IProductCategory } from "@/interfaces/Index";
+import { IProductCategory } from "@/interfaces/index";
 
 type Props = { category: string; products: IProductCategory[] };
 
 export default function ProductsList({ category, products }: Props) {
-  const [isLoading, setIsLoading] = useState(true); //--------------------------------------
+  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <div className="container px-3">
@@ -17,7 +17,7 @@ export default function ProductsList({ category, products }: Props) {
           {category}
         </h2>
       </div>
-      <div className="my-2 w-full grid grid-cols-3 grid-rows-2 gap-2 gap-y-2">
+      <div className="my-2 w-full grid grid-cols-2 gap-3">
         {products.map((product) => (
           <Link
             key={product.productId}

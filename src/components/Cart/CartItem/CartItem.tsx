@@ -1,11 +1,12 @@
 "use client";
 
+import { putProductCart } from "@/api";
 import { modalCartDeleteProduct } from "@/constans";
 import { IProductInCart } from "@/interfaces";
 import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 // import { SlOptions } from "react-icons/sl";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -16,6 +17,14 @@ export default function CartItem({ product }: Props) {
   const [quantity, setQuantity] = useState(product.quantity);
   const { plusSum, minusSum } = useCartStore();
   const { openModal, addModalProps } = useModalStore();
+
+  useEffect(() => {
+    const updateQuantity = async () => {
+      const response = await putProductCart(product, quantity);
+    };
+
+    updateQuantity();
+  }, [product, quantity]);
 
   const handleClickMinus = () => {
     if (quantity > 1) {
@@ -61,7 +70,6 @@ export default function CartItem({ product }: Props) {
             <h2 className="text-base leading-5">{product.productName}</h2>
 
             <div className="text-sm text-start mt-1">
-              {/* <p>Цвет: {product.color}</p> */}
               <p>Размер: {product.sizes}</p>
               <p>Артикул: {product.productId}</p>
             </div>

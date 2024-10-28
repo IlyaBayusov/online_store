@@ -14,3 +14,20 @@ export const getProductsCart = async () => {
     console.error("Ошибка получения товаров из корзины: ", error);
   }
 };
+
+export const putProductCart = async (
+  product: IProductInCart,
+  updateQuantity: number
+) => {
+  try {
+    const response = await api.put(`/v1/cart/${product.cartItemId}`, {
+      ...product,
+      quantity: updateQuantity,
+    });
+    console.log("Кол-во изменено: ", response);
+
+    return response;
+  } catch (error) {
+    console.error("Ошибка изменения кол-ва товара в корзине: ", error);
+  }
+};
