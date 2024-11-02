@@ -29,6 +29,7 @@ export interface IDecodedToken {
 
 export interface IProductInCart {
   cartItemId: number;
+  categoryId: number;
   productId: number;
   productName: string;
   image: string;

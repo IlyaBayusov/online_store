@@ -15,8 +15,11 @@ export default function Header() {
 
   useEffect(() => {
     const getProducts = async () => {
-      const data: IProductInCart[] = await getProductsCart();
-      setProducts(data);
+      const data: IProductInCart[] | undefined = await getProductsCart();
+
+      if (data) {
+        setProducts(data);
+      }
     };
 
     getProducts();
@@ -51,11 +54,6 @@ export default function Header() {
 
             <CgProfile className="h-8 w-8 p-1.5" />
           </div>
-          {/* <div className="flex items-center text-[#969696] text-base">
-            <button>Log in</button>
-            <span>/</span>
-            <button>Sign up</button>
-          </div> */}
         </div>
       </div>
     </div>

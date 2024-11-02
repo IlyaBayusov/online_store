@@ -1,7 +1,7 @@
 "use client";
 
 import { IProductCategory } from "@/interfaces";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import React from "react";
 
 type Props = { arrival: IProductCategory };

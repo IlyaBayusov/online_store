@@ -4,19 +4,19 @@ import { getProductsCart } from "@/api";
 import CartList from "@/components/Cart/CartList/CartList";
 import { modalCartDeleteProduct } from "@/constans";
 import { IProductInCart } from "@/interfaces";
+import { useByProductsStore } from "@/stores/useByProducts";
 import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function Cart() {
   const [products, setProducts] = useState<IProductInCart[]>([]);
   const { sum } = useCartStore();
   const { modalsProps } = useModalStore();
+  const { updateProducts } = useByProductsStore();
 
-  const getProducts = async () => {
-    const data: IProductInCart[] = await getProductsCart();
-    setProducts(data);
-  };
+  const router = useRouter();
 
   useEffect(() => {
     getProducts();
@@ -27,6 +27,18 @@ export default function Cart() {
       getProducts();
     }
   }, [modalsProps]);
+
+  const getProducts = async () => {
+    const data: IProductInCart[] | undefined = await getProductsCart();
+    if (data) {
+      setProducts(data);
+    }
+  };
+
+  const handleBuy = () => {
+    updateProducts(products);
+    router.push("/cart/buyProducts");
+  };
 
   return (
     <div className="container px-3">
@@ -39,7 +51,10 @@ export default function Cart() {
       </div>
 
       {products.length ? (
-        <button className="flex flex-col items-center fixed bottom-7 left-1/2 -translate-x-1/2 z-[1000] w-[calc(100%-1.5rem)] py-2 rounded-md bg-orange-400">
+        <button
+          className="flex flex-col items-center fixed bottom-7 left-1/2 -translate-x-1/2 z-[1000] w-[calc(100%-1.5rem)] py-2 rounded-md bg-orange-400"
+          onClick={handleBuy}
+        >
           <span className="text-base leading-none">К оформлению</span>
           <span className="text-base leading-none">{`${products.length} шт., ${sum} руб.`}</span>
         </button>

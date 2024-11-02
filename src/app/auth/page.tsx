@@ -1,6 +1,7 @@
 "use client";
 
 import { useInput } from "@/hooks/useInput";
+import { decodeToken } from "@/utils";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
@@ -30,17 +31,6 @@ export default function Auth() {
       ...formData,
       [name]: value,
     });
-  };
-
-  const decodeToken = (accessToken: string) => {
-    try {
-      const decoded = jwtDecode(accessToken);
-      console.log("Decoded token:", decoded);
-      return decoded;
-    } catch (error) {
-      console.error("Invalid token:", error);
-      return null;
-    }
   };
 
   const errorsValidation = (inputName, params: IParams) => {
@@ -101,7 +91,7 @@ export default function Auth() {
         const data = await response.data;
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
-        decodeToken(data.accessToken);
+        console.log(decodeToken());
         console.log("Авторизация прошла успешно", data);
       }
 

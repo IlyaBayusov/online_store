@@ -8,7 +8,6 @@ import { useModalStore } from "@/stores/useModalStore";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
-// import { SlOptions } from "react-icons/sl";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 type Props = { product: IProductInCart };
@@ -20,7 +19,7 @@ export default function CartItem({ product }: Props) {
 
   useEffect(() => {
     const updateQuantity = async () => {
-      const response = await putProductCart(product, quantity);
+      await putProductCart(product, quantity);
     };
 
     updateQuantity();
@@ -97,7 +96,6 @@ export default function CartItem({ product }: Props) {
         </div>
 
         <div className="w-4 h-4">
-          {/* <SlOptions className="w-4 h-4" /> */}
           <RiDeleteBin6Line
             className="w-4 h-4 mt-0.5"
             onClick={handleOpenModal}

@@ -79,6 +79,23 @@ export default function ModalNav() {
               </ul>
             </nav>
 
+            <div className="flex flex-col justify-start uppercase mt-6 gap-3">
+              <Link
+                href="/cart"
+                className="bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
+                onClick={() => closeModal(modalNav)}
+              >
+                Корзина
+              </Link>
+              <Link
+                href="/orders"
+                className="bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
+                onClick={() => closeModal(modalNav)}
+              >
+                Заказы
+              </Link>
+            </div>
+
             <div className="mt-3">
               <Link href="#" className="flex items-center my-3 text-[#B3B3B3]">
                 <FaPhoneAlt className="mr-3" />
