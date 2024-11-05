@@ -1,10 +1,12 @@
 "use client";
 
-import { getProductsCart } from "@/api";
+import { getProductsCart, postByProducts } from "@/api";
 import FormByProducts from "@/components/Forms/FormByProducts/FormByProducts";
-import { IProductInCart } from "@/interfaces";
-import { useByProductsStore } from "@/stores/useByProducts";
+import { IOrderPost, IProductInCart } from "@/interfaces";
+import { useFormStore } from "@/stores/useFormStore";
+import { decodeToken } from "@/utils";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function BuyProducts() {
@@ -12,8 +14,11 @@ export default function BuyProducts() {
     IProductInCart[] | undefined
   >();
   const [sumPrice, setSumPrice] = useState(0);
+  const [error, setError] = useState("");
 
-  const { products } = useByProductsStore();
+  const router = useRouter();
+
+  const { data, isValid } = useFormStore();
 
   useEffect(() => {
     const getData = async () => {
@@ -24,53 +29,43 @@ export default function BuyProducts() {
 
         const sum = data.reduce((sum, item) => sum + item.price, 0);
         setSumPrice(sum);
-      } else {
-        setProductsCart(products);
       }
     };
 
     getData();
-  }, [products]);
+  }, []);
 
-  // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
+  const handleSubmit = async () => {
+    if (!isValid) {
+      setError("Некоторые поля заполнены неверно");
+      return;
+    }
+    if (productsCart === undefined) {
+      setError(
+        "Ошибка отправки данных, в пост запросе пустой объект orderItemRequest"
+      );
+      return;
+    }
 
-  //   if (!validateForm()) {
-  //     setError("Некоторые поля заполнены неверно.");
-  //     return;
-  //   }
+    setError("");
 
-  //   setError("");
+    const decoded = decodeToken();
 
-  //   console.log(formData);
+    const newOrder: IOrderPost = {
+      orderDetailsRequest: {
+        ...data,
+        totalPrice: sumPrice,
+        userId: decoded.id,
+      },
+      orderItemRequest: productsCart,
+    };
 
-  //   try {
-  //     const response: AxiosResponse = await api.post(
-  //       "http://localhost:8080/api/auth/login",
-  //       formData
-  //     );
+    console.log("Ответ ушел, новый заказ: ", newOrder);
 
-  //     if (response.status !== 200) {
-  //       const data = await response.data;
-  //       setError(data.message || "Ошибка авторизации");
-  //     } else {
-  //     }
+    await postByProducts(newOrder);
 
-  //     router.push("/");
-  //   } catch (error) {
-  //     const axiosError = error as AxiosError;
-
-  //     console.error("Ошибка при авторизации", error);
-
-  //     if (axiosError.response?.status === 404) {
-  //       setError("Такого логина не существует");
-  //     } else if (axiosError.response && axiosError.response.status === 500) {
-  //       setError("Ошибка валидации");
-  //     } else {
-  //       setError("Ошибка при регистрации");
-  //     }
-  //   }
-  // };
+    router.push("/");
+  };
 
   return (
     <>
@@ -104,7 +99,7 @@ export default function BuyProducts() {
             </div>
           </div>
 
-          <div className="p-3 bg-black rounded-md w-full">
+          <div className="p-3 bg-black rounded-md w-full mb-[4.5rem]">
             <p className="text-[#B3B3B3] uppercase text-sm">
               Заполнение данных
             </p>
@@ -115,7 +110,12 @@ export default function BuyProducts() {
       </div>
 
       <div className="fixed bottom-0 left-0 z-10 w-full px-2 bg-black pt-2 pb-3 rounded-t-2xl">
-        <button className="flex justify-between items-center px-3 py-2 text-base w-full bg-orange-600 rounded-xl">
+        {error && <p className="text-red-700">{error}</p>}
+
+        <button
+          className="flex justify-between items-center px-3 py-2 text-base w-full bg-orange-600 rounded-xl"
+          onClick={handleSubmit}
+        >
           <p>Заказать</p>
 
           <p>{`${productsCart?.length} шт., ${sumPrice} руб.`}</p>

@@ -49,3 +49,16 @@ export interface IByProductsForm {
   postalCode: string;
   paymentMethod: string;
 }
+
+// export interface IByProductsItems {
+//   cartItemId: number;
+//   productId: number;
+//   quantity: number;
+//   price: number;
+//   size: string;
+// }
+
+export interface IOrderPost {
+  orderDetailsRequest: IByProductsForm;
+  orderItemRequest: IProductInCart[];
+}

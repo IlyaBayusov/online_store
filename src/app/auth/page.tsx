@@ -105,7 +105,7 @@ export default function Auth() {
       } else if (axiosError.response && axiosError.response.status === 500) {
         setError("Ошибка валидации");
       } else {
-        setError("Ошибка при регистрации");
+        setError("Ошибка при авторизации");
       }
     }
   };

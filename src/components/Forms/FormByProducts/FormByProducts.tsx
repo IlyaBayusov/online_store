@@ -20,22 +20,23 @@ export default function FormByProducts() {
     minLength: 2,
     maxLength: 50,
   });
-  const phone = useInput("", { empty: true, minLength: 2, maxLength: 50 });
+  const phone = useInput("", { empty: true, minLength: 6, maxLength: 50 });
   const country = useInput("", { empty: true, minLength: 2, maxLength: 50 });
   const city = useInput("", { empty: true, minLength: 2, maxLength: 50 });
   const address = useInput("", { empty: true, minLength: 2, maxLength: 50 });
   const postalCode = useInput("", { empty: true, minLength: 2, maxLength: 50 });
-  // const paymentMethod = useInput("тут будет оплата", {
-  //   empty: true,
-  //   minLength: 2,
-  //   maxLength: 50,
-  // });
+  const paymentMethod = useInput("CARD", {
+    empty: true,
+    minLength: 2,
+    maxLength: 50,
+  }); // временно
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
+      paymentMethod: paymentMethod.value, // временно
     });
 
     updateData(formData);

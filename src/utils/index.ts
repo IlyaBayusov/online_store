@@ -1,3 +1,4 @@
+import { IDecodedToken } from "@/interfaces";
 import { jwtDecode } from "jwt-decode";
 
 export const decodeToken = () => {
@@ -7,11 +8,13 @@ export const decodeToken = () => {
   }
 
   try {
-    const decoded = jwtDecode(token);
-    return decoded;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const decoded: IDecodedToken = jwtDecode(token);
   } catch (error) {
     console.error("Invalid token:", error);
-    return null;
+  } finally {
+    const decoded: IDecodedToken = jwtDecode(token);
+    return decoded;
   }
 };
 

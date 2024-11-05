@@ -1,10 +1,10 @@
 import { api } from "@/axios";
-import { IDecodedToken, IProductInCart } from "@/interfaces";
+import { IDecodedToken, IOrderPost, IProductInCart } from "@/interfaces";
 import { decodeToken } from "@/utils";
 
 export const getProductsCart = async () => {
   try {
-    const decodedToken: IDecodedToken | null = decodeToken();
+    const decodedToken: IDecodedToken = decodeToken();
 
     if (!decodedToken) return;
 
@@ -14,6 +14,15 @@ export const getProductsCart = async () => {
     return data;
   } catch (error) {
     console.error("Ошибка получения товаров из корзины: ", error);
+  }
+};
+
+export const postByProducts = async (order: IOrderPost) => {
+  try {
+    const response = await api.post(`/v1/orders`, order);
+    console.log(response);
+  } catch (error) {
+    console.error("Ошибка оформления заказа: ", error);
   }
 };
 
