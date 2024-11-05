@@ -4,7 +4,9 @@ import { decodeToken } from "@/utils";
 
 export const getProductsCart = async () => {
   try {
-    const decodedToken: IDecodedToken = decodeToken();
+    const decodedToken: IDecodedToken | null = decodeToken();
+
+    if (!decodedToken) return;
 
     const response = await api.get(`/v1/cart/${decodedToken.id}`);
     const data: IProductInCart[] = await response.data;

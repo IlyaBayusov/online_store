@@ -1,28 +1,19 @@
 "use client";
 
-import { useInput } from "@/hooks/useInput";
-import { useRouter } from "next/navigation";
+import { IUseInput, useInput } from "@/hooks/useInput";
+import { IByProductsForm } from "@/interfaces";
+import { useFormStore } from "@/stores/useFormStore";
 import React, { ChangeEvent, useState } from "react";
-
-type Props = {};
 
 interface IParams {
   minLength: number;
   maxLength: number;
 }
 
-export default function FormByProducts({}: Props) {
-  const [formData, setFormData] = useState({
-    userId: 0,
-    totalPrice: 0,
-    customerName: "",
-    phone: "",
-    country: "",
-    city: "",
-    address: "",
-    postalCode: "",
-    paymentMethod: "",
-  });
+export default function FormByProducts() {
+  const { data, updateData, updateIsValid } = useFormStore();
+
+  const [formData, setFormData] = useState<IByProductsForm>(data);
 
   const customerName = useInput("", {
     empty: true,
@@ -34,15 +25,11 @@ export default function FormByProducts({}: Props) {
   const city = useInput("", { empty: true, minLength: 2, maxLength: 50 });
   const address = useInput("", { empty: true, minLength: 2, maxLength: 50 });
   const postalCode = useInput("", { empty: true, minLength: 2, maxLength: 50 });
-  const paymentMethod = useInput("", {
-    empty: true,
-    minLength: 2,
-    maxLength: 50,
-  });
-
-  const [error, setError] = useState("");
-
-  const router = useRouter();
+  // const paymentMethod = useInput("тут будет оплата", {
+  //   empty: true,
+  //   minLength: 2,
+  //   maxLength: 50,
+  // });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -50,9 +37,14 @@ export default function FormByProducts({}: Props) {
       ...formData,
       [name]: value,
     });
+
+    updateData(formData);
+
+    const valid = validateForm();
+    if (valid) updateIsValid(true);
   };
 
-  const errorsValidation = (inputName, params: IParams) => {
+  const errorsValidation = (inputName: IUseInput, params: IParams) => {
     if (inputName.dirty && (inputName.empty || inputName.minLength)) {
       return (
         <span className="text-red-600 text-xs">
@@ -81,9 +73,22 @@ export default function FormByProducts({}: Props) {
     if (!phone.inputValid) {
       isValid = false;
     }
+    if (!country.inputValid) {
+      isValid = false;
+    }
+    if (!city.inputValid) {
+      isValid = false;
+    }
+    if (!address.inputValid) {
+      isValid = false;
+    }
+    if (!postalCode.inputValid) {
+      isValid = false;
+    }
 
     return isValid;
   };
+
   return (
     <form className="flex flex-col w-full items-center mt-1 text-black">
       <div className="flex flex-col justify-center text-base items-center w-full max-w-64">
@@ -102,7 +107,7 @@ export default function FormByProducts({}: Props) {
             customerName.onChange(e);
             handleChange(e);
           }}
-          onBlur={(e) => customerName.onBlur(e)}
+          onBlur={() => customerName.onBlur()}
           className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
         />
         {errorsValidation(customerName, { minLength: 2, maxLength: 50 })}
@@ -124,7 +129,7 @@ export default function FormByProducts({}: Props) {
             phone.onChange(e);
             handleChange(e);
           }}
-          onBlur={(e) => phone.onBlur(e)}
+          onBlur={() => phone.onBlur()}
           className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
         />
         {errorsValidation(phone, { minLength: 6, maxLength: 50 })}
@@ -146,7 +151,7 @@ export default function FormByProducts({}: Props) {
             country.onChange(e);
             handleChange(e);
           }}
-          onBlur={(e) => country.onBlur(e)}
+          onBlur={() => country.onBlur()}
           className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
         />
         {errorsValidation(country, { minLength: 2, maxLength: 50 })}
@@ -168,7 +173,7 @@ export default function FormByProducts({}: Props) {
             city.onChange(e);
             handleChange(e);
           }}
-          onBlur={(e) => city.onBlur(e)}
+          onBlur={() => city.onBlur()}
           className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
         />
         {errorsValidation(city, { minLength: 2, maxLength: 50 })}
@@ -190,7 +195,7 @@ export default function FormByProducts({}: Props) {
             address.onChange(e);
             handleChange(e);
           }}
-          onBlur={(e) => address.onBlur(e)}
+          onBlur={() => address.onBlur()}
           className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
         />
         {errorsValidation(address, { minLength: 2, maxLength: 50 })}
@@ -212,7 +217,7 @@ export default function FormByProducts({}: Props) {
             postalCode.onChange(e);
             handleChange(e);
           }}
-          onBlur={(e) => postalCode.onBlur(e)}
+          onBlur={() => postalCode.onBlur()}
           className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
         />
         {errorsValidation(postalCode, { minLength: 2, maxLength: 50 })}

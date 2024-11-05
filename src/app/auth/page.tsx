@@ -1,9 +1,8 @@
 "use client";
 
-import { useInput } from "@/hooks/useInput";
+import { IUseInput, useInput } from "@/hooks/useInput";
 import { decodeToken } from "@/utils";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { ChangeEvent, FormEvent, useState } from "react";
@@ -33,7 +32,7 @@ export default function Auth() {
     });
   };
 
-  const errorsValidation = (inputName, params: IParams) => {
+  const errorsValidation = (inputName: IUseInput, params: IParams) => {
     if (inputName.dirty && (inputName.empty || inputName.minLength)) {
       return (
         <span className="text-red-600 text-xs">
@@ -136,7 +135,7 @@ export default function Auth() {
               username.onChange(e);
               handleChange(e);
             }}
-            onBlur={(e) => username.onBlur(e)}
+            onBlur={() => username.onBlur()}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {errorsValidation(username, { minLength: 2, maxLength: 50 })}
@@ -158,7 +157,7 @@ export default function Auth() {
               password.onChange(e);
               handleChange(e);
             }}
-            onBlur={(e) => password.onBlur(e)}
+            onBlur={() => password.onBlur()}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {errorsValidation(password, { minLength: 6, maxLength: 50 })}

@@ -37,3 +37,15 @@ export interface IProductInCart {
   sizes: string;
   quantity: number;
 }
+
+export interface IByProductsForm {
+  userId: number;
+  totalPrice: number;
+  customerName: string;
+  phone: string;
+  country: string;
+  city: string;
+  address: string;
+  postalCode: string;
+  paymentMethod: string;
+}

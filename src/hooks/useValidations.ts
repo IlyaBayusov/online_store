@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
 export const useValidation = (value: string, valids: object) => {
-  const [empty, setEmpty] = useState(true);
-  const [minLength, setMinLength] = useState(false);
-  const [maxLength, setMaxLength] = useState(false);
-  const [inputValid, setInputValid] = useState(false);
+  const [empty, setEmpty] = useState<boolean>(true);
+  const [minLength, setMinLength] = useState<boolean>(false);
+  const [maxLength, setMaxLength] = useState<boolean>(false);
+  const [inputValid, setInputValid] = useState<boolean>(false);
 
   useEffect(() => {
     for (const valid in valids) {

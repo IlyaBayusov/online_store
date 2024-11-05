@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useInput } from "@/hooks/useInput";
+import { IUseInput, useInput } from "@/hooks/useInput";
 
 //
 // ------------------------------------ форму сделать в отдельном компоненте
@@ -50,6 +50,7 @@ export default function Registr() {
       setErrorMessageUsername("");
 
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const response = await axios.post(
           "http://localhost:8080/api/v1/users/username",
           {
@@ -70,6 +71,7 @@ export default function Registr() {
 
     const fetchEmail = async () => {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const response = await axios.post(
           "http://localhost:8080/api/v1/users/email",
           {
@@ -106,7 +108,7 @@ export default function Registr() {
     }
   };
 
-  const errorsValidation = (inputName, params: IParams) => {
+  const errorsValidation = (inputName: IUseInput, params: IParams) => {
     if (inputName.dirty && (inputName.empty || inputName.minLength)) {
       return (
         <span className="text-red-600 text-xs">
@@ -233,7 +235,7 @@ export default function Registr() {
               firstname.onChange(e);
               handleChange(e);
             }}
-            onBlur={(e) => firstname.onBlur(e)}
+            onBlur={() => firstname.onBlur()}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {errorsValidation(firstname, { minLength: 2, maxLength: 50 })}
@@ -255,7 +257,7 @@ export default function Registr() {
               lastname.onChange(e);
               handleChange(e);
             }}
-            onBlur={(e) => lastname.onBlur(e)}
+            onBlur={() => lastname.onBlur()}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {errorsValidation(lastname, { minLength: 2, maxLength: 50 })}
@@ -277,7 +279,7 @@ export default function Registr() {
               username.onChange(e);
               handleChange(e);
             }}
-            onBlur={(e) => username.onBlur(e)}
+            onBlur={() => username.onBlur()}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {errorMessageUsername && (
@@ -302,6 +304,7 @@ export default function Registr() {
               email.onChange(e);
               handleChange(e);
             }}
+            onBlur={() => email.onBlur()}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {errorMessageEmailValid && (
@@ -331,7 +334,7 @@ export default function Registr() {
               password.onChange(e);
               handleChange(e);
             }}
-            onBlur={(e) => password.onBlur(e)}
+            onBlur={() => password.onBlur()}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {errorsValidation(password, { minLength: 6, maxLength: 50 })}
@@ -350,7 +353,7 @@ export default function Registr() {
             name="secondPassword"
             value={secondPassword.value}
             onChange={(e) => secondPassword.onChange(e)}
-            onBlur={(e) => secondPassword.onBlur(e)}
+            onBlur={() => secondPassword.onBlur()}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {errorMessagePassword && (

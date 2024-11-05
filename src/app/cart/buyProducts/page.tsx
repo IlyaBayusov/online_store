@@ -1,12 +1,36 @@
 "use client";
 
+import { getProductsCart } from "@/api";
 import FormByProducts from "@/components/Forms/FormByProducts/FormByProducts";
+import { IProductInCart } from "@/interfaces";
 import { useByProductsStore } from "@/stores/useByProducts";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function BuyProducts() {
+  const [productsCart, setProductsCart] = useState<
+    IProductInCart[] | undefined
+  >();
+  const [sumPrice, setSumPrice] = useState(0);
+
   const { products } = useByProductsStore();
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getProductsCart();
+
+      if (data) {
+        setProductsCart(data);
+
+        const sum = data.reduce((sum, item) => sum + item.price, 0);
+        setSumPrice(sum);
+      } else {
+        setProductsCart(products);
+      }
+    };
+
+    getData();
+  }, [products]);
 
   // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
@@ -66,7 +90,7 @@ export default function BuyProducts() {
             </div>
 
             <div className="mt-3 flex gap-2">
-              {products.map((item) => (
+              {productsCart?.map((item) => (
                 <div key={item.cartItemId} className="max-w-16">
                   <Image
                     src={item.image}
@@ -80,7 +104,13 @@ export default function BuyProducts() {
             </div>
           </div>
 
-          <FormByProducts />
+          <div className="p-3 bg-black rounded-md w-full">
+            <p className="text-[#B3B3B3] uppercase text-sm">
+              Заполнение данных
+            </p>
+
+            <FormByProducts />
+          </div>
         </div>
       </div>
 
@@ -88,7 +118,7 @@ export default function BuyProducts() {
         <button className="flex justify-between items-center px-3 py-2 text-base w-full bg-orange-600 rounded-xl">
           <p>Заказать</p>
 
-          <p>3 шт., 75 руб.</p>
+          <p>{`${productsCart?.length} шт., ${sumPrice} руб.`}</p>
         </button>
       </div>
     </>
