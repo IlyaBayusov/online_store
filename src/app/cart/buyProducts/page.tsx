@@ -2,11 +2,12 @@
 
 import { getProductsCart, postByProducts } from "@/api";
 import FormByProducts from "@/components/Forms/FormByProducts/FormByProducts";
+import { modalSuccessOrder } from "@/constans";
 import { IOrderPost, IProductInCart } from "@/interfaces";
 import { useFormStore } from "@/stores/useFormStore";
+import { useModalStore } from "@/stores/useModalStore";
 import { decodeToken } from "@/utils";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function BuyProducts() {
@@ -16,9 +17,9 @@ export default function BuyProducts() {
   const [sumPrice, setSumPrice] = useState(0);
   const [error, setError] = useState("");
 
-  const router = useRouter();
-
   const { data, isValid } = useFormStore();
+
+  const { openModal } = useModalStore();
 
   useEffect(() => {
     const getData = async () => {
@@ -62,9 +63,13 @@ export default function BuyProducts() {
 
     console.log("Ответ ушел, новый заказ: ", newOrder);
 
-    await postByProducts(newOrder);
+    const response = await postByProducts(newOrder);
 
-    router.push("/");
+    if (response?.status !== 201) {
+      setError("Ошибка оформления заказа");
+    } else {
+      openModal(modalSuccessOrder);
+    }
   };
 
   return (

@@ -33,11 +33,11 @@ export default function ModalCartDeleteProduct() {
         `top-0 -0 z-[1000] w-full h-full bg-black bg-opacity-40 transition-all overflow-y-hidden ` +
         (modals[modalCartDeleteProduct] ? "fixed" : "hidden")
       }
+      onClick={() => closeModal(modalCartDeleteProduct)}
     >
       <div
-        className={
-          "absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-md flex flex-col bg-[#121212] p-3"
-        }
+        className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-md flex flex-col bg-[#121212] p-3"
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-end">
           <div onClick={() => closeModal(modalCartDeleteProduct)}>

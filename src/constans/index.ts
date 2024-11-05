@@ -6,6 +6,7 @@ import img_test_shoes1 from "../../public/testImg/img_test_shoes1.png";
 export const modalNav = "modalNav";
 export const modalNavCategory = "modalNavCategory";
 export const modalCartDeleteProduct = "modalCartDeleteProduct";
+export const modalSuccessOrder = "modalSuccessOrder";
 
 // Chelsea - id - 1
 // Sneakers - id - 2

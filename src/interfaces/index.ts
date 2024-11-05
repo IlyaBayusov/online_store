@@ -34,7 +34,7 @@ export interface IProductInCart {
   productName: string;
   image: string;
   price: number;
-  sizes: string;
+  size: string;
   quantity: number;
 }
 

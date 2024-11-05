@@ -30,7 +30,7 @@ export default function ModalNav() {
         (modals[modalNav] ? "translate-x-full" : "")
       }
     >
-      <div className={"container absolute top-0 left-0 z-10 h-full"}>
+      <div className="container absolute top-0 left-0 z-10 h-full">
         <div className="flex flex-col h-full w-full bg-[#121212] p-3">
           <div className="flex justify-end">
             <div onClick={() => closeModal(modalNav)}>

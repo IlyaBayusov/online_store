@@ -20,7 +20,8 @@ export const getProductsCart = async () => {
 export const postByProducts = async (order: IOrderPost) => {
   try {
     const response = await api.post(`/v1/orders`, order);
-    console.log(response);
+
+    return response;
   } catch (error) {
     console.error("Ошибка оформления заказа: ", error);
   }

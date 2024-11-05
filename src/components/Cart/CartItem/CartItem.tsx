@@ -69,7 +69,7 @@ export default function CartItem({ product }: Props) {
             <h2 className="text-base leading-5">{product.productName}</h2>
 
             <div className="text-sm text-start mt-1">
-              <p>Размер: {product.sizes}</p>
+              <p>Размер: {product.size}</p>
               <p>Артикул: {product.productId}</p>
             </div>
 
