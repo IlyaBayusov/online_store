@@ -125,6 +125,15 @@ export const categories = [
   },
 ];
 
+export const categoriesList = [
+  { id: 1, name: "Челси", url_name: "Chelsea" },
+  { id: 2, name: "Кеды", url_name: "Sneakers" },
+  { id: 3, name: "Брюки", url_name: "Trousers" },
+  { id: 4, name: "Рубашки", url_name: "Shirts" },
+  { id: 5, name: "Галстуки", url_name: "Ties" },
+  { id: 6, name: "Ремни", url_name: "Belts" },
+];
+
 export const newArrivals = [
   {
     id: 1,

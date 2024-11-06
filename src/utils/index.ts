@@ -46,3 +46,18 @@ export function getCodeColor(color: string) {
       return "#cccccc";
   }
 }
+
+export function getStatusRu(status: string) {
+  switch (status.toLowerCase()) {
+    case "created":
+      return "В обработке";
+    case "en_route":
+      return "В пути";
+    case "completed":
+      return "Доставлен";
+    case "canceled":
+      return "Отменён";
+    default:
+      return "В обработке";
+  }
+}

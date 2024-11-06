@@ -9,7 +9,9 @@ import { decodeToken } from "@/utils";
 
 export const getProductsCart = async () => {
   try {
-    const decodedToken: IDecodedToken | undefined = decodeToken();
+    const decodedToken: IDecodedToken = decodeToken();
+
+    console.log(decodedToken);
 
     if (!decodedToken) return;
 

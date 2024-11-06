@@ -15,7 +15,10 @@ export default function OrdersList({ orders }: Props) {
       </div>
       <div className="my-2 w-full grid grid-cols-2 gap-3">
         {orders.map((order, index) => (
-          <Link key={index} href={`/${order.categoryName}/${order.productId}`}>
+          <Link
+            key={index}
+            href={`/${order.categoryName.toLowerCase()}/${order.productId}`}
+          >
             <OrdersItem order={order} />
           </Link>
         ))}

@@ -74,10 +74,12 @@ api.interceptors.response.use(
         } catch (refreshError) {
           console.error("Refresh token не пришел:", refreshError);
           localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
 
           console.log(
             "Ошибка обновления refreshToken, перенаправление на auth"
           );
+
           window.location.href = "/auth";
           return Promise.reject(refreshError);
         } finally {

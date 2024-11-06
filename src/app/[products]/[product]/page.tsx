@@ -1,6 +1,8 @@
 import ProductInfo from "@/components/ProductInfo/ProductInfo";
+import { categoriesList } from "@/constans";
 import { IProductInfo } from "@/interfaces/index";
 import axios from "axios";
+import { notFound } from "next/navigation";
 import React from "react";
 
 const fetchProducts = async (productId: string) => {
@@ -29,15 +31,23 @@ const fetchProducts = async (productId: string) => {
 export default async function Product({
   params,
 }: {
-  params: { product: string };
+  params: { product: string; products: string };
 }) {
-  const { product } = params;
+  const { product, products } = params;
 
   const arrProduct: IProductInfo[] = await fetchProducts(product);
 
   const productIdInArray = arrProduct
     .map((item) => item.id)
     .indexOf(Number(product));
+
+  if (
+    !categoriesList
+      .map((item) => item.url_name)
+      .find((item) => item.toLowerCase() === products.toLowerCase())
+  ) {
+    return notFound();
+  }
 
   if (arrProduct)
     return (

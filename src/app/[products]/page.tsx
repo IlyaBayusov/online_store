@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { notFound, useParams } from "next/navigation";
-import { categories } from "@/constans";
+import { categoriesList } from "@/constans";
 import ProductsList from "@/components/Products/ProductsList/ProductsList";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import axios from "axios";
@@ -44,10 +44,9 @@ export default function Products() {
   }, [params.products]);
 
   if (
-    !categories
-      .map((item) => item.next)
-      .flat()
-      .find((item) => item?.urlName == params.products)
+    !categoriesList
+      .map((item) => item.url_name)
+      .find((item) => item.toLowerCase() === params.products.toLowerCase())
   ) {
     return notFound();
   }
