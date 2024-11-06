@@ -6,6 +6,7 @@ import { IProductInCart } from "@/interfaces";
 import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -55,7 +56,10 @@ export default function CartItem({ product }: Props) {
     >
       <div className="flex justify-between w-full mb-2">
         <div className="flex justify-start gap-3 w-full">
-          <div className="max-w-20">
+          <Link
+            href={`/${product.categoryName.toLowerCase()}/${product.productId}`}
+            className="max-w-20"
+          >
             <Image
               width={350}
               height={500}
@@ -63,10 +67,16 @@ export default function CartItem({ product }: Props) {
               alt={product.productName}
               className="rounded-md"
             />
-          </div>
+          </Link>
 
           <div className="flex flex-col justify-start">
-            <h2 className="text-base leading-5">{product.productName}</h2>
+            <Link
+              href={`/${product.categoryName.toLowerCase()}/${
+                product.productId
+              }`}
+            >
+              <h2 className="text-base leading-5">{product.productName}</h2>
+            </Link>
 
             <div className="text-sm text-start mt-1">
               <p>Размер: {product.size}</p>

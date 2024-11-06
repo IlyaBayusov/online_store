@@ -52,7 +52,6 @@ export default async function Product({
   if (arrProduct)
     return (
       <ProductInfo
-        id={Number(product)}
         productIdInArray={productIdInArray}
         arrProduct={arrProduct}
       />

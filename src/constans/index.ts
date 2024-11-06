@@ -126,12 +126,12 @@ export const categories = [
 ];
 
 export const categoriesList = [
-  { id: 1, name: "Челси", url_name: "Chelsea" },
-  { id: 2, name: "Кеды", url_name: "Sneakers" },
-  { id: 3, name: "Брюки", url_name: "Trousers" },
-  { id: 4, name: "Рубашки", url_name: "Shirts" },
-  { id: 5, name: "Галстуки", url_name: "Ties" },
-  { id: 6, name: "Ремни", url_name: "Belts" },
+  { id: 1, name: "Челси", url_name: "chelsea" },
+  { id: 2, name: "Кеды", url_name: "sneakers" },
+  { id: 3, name: "Брюки", url_name: "trousers" },
+  { id: 4, name: "Рубашки", url_name: "shirts" },
+  { id: 5, name: "Галстуки", url_name: "ties" },
+  { id: 6, name: "Ремни", url_name: "belts" },
 ];
 
 export const newArrivals = [

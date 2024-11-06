@@ -9,25 +9,19 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { decodeToken, getCodeColor } from "@/utils";
+import { decodeToken, getCategoryRu, getCodeColor } from "@/utils";
 import ProductTabs from "../Tabs/ProductTabs";
 import { RiShoppingBasketLine, RiShoppingBasketFill } from "react-icons/ri";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
-import { useCartStore } from "@/stores/useCartStore";
 import { api } from "@/axios";
 import { getProductsCart } from "@/api";
 
 type Props = {
-  id: number;
   arrProduct: IProductInfo[];
   productIdInArray: number;
 };
 
-export default function ProductInfo({
-  id,
-  arrProduct,
-  productIdInArray,
-}: Props) {
+export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
   const [arrProducts, setArrProducts] = useState<IProductInfo[]>(arrProduct);
   const [nowProduct, setNowProduct] = useState<IProductInfo>(
     arrProduct[productIdInArray]
@@ -46,19 +40,19 @@ export default function ProductInfo({
 
   const params = useParams();
 
-  const { cart, addProduct, removeProduct } = useCartStore();
-
   useEffect(() => {
     const setActiveBtnCart = async () => {
       try {
         const data: IProductInCart[] = await getProductsCart();
 
-        data.map((item) => {
-          if (item.productId === nowProduct.id) {
-            setIsActiveCart(true);
-            setNowCartItem(item);
-          }
-        });
+        if (data) {
+          data.map((item) => {
+            if (item.productId === nowProduct.id) {
+              setIsActiveCart(true);
+              setNowCartItem(item);
+            }
+          });
+        }
       } catch (error) {
         console.error("Ошибка запроса получения корзины", error);
       }
@@ -74,7 +68,7 @@ export default function ProductInfo({
       if (isActiveCart && nowCartItem) {
         setIsActiveCart(false);
         //удаление из корзины
-        const response = await api.delete(`/v1/cart/${nowCartItem.cartItemId}`);
+        await api.delete(`/v1/cart/${nowCartItem.cartItemId}`);
       } else {
         setIsActiveCart(true);
         //добавление в корзину
@@ -97,11 +91,22 @@ export default function ProductInfo({
       <div className="flex flex-col items-center">
         <div className="flex flex-col items-center gap-3">
           {/* 1 блок */}
-          <div className="flex flex-col items-center gap-3 mt-3">
-            <div>
-              Main / Shoes / Chelsea /{" "}
+          <div className="flex flex-col items-center gap-3 mt-3 text-base">
+            <div className="flex items-center justify-start gap-1 w-full">
+              <Link href="/" className="hover:text-orange-200 transition-all">
+                Главная{" "}
+              </Link>
+              <p>/</p>
+              <Link
+                href={`/${params.products}`}
+                className="hover:text-orange-200 transition-all"
+              >
+                {getCategoryRu(String(params.products)).name}
+              </Link>
+              <p>/</p>
               <span className="text-orange-200">{nowProduct.name}</span>
             </div>
+
             <Image
               src={nowProduct.images[0]}
               width={351}

@@ -1,5 +1,7 @@
+import { categoriesList } from "@/constans";
 import { IDecodedToken } from "@/interfaces";
 import { jwtDecode } from "jwt-decode";
+import { notFound } from "next/navigation";
 
 export const decodeToken = () => {
   const token = localStorage.getItem("accessToken");
@@ -60,4 +62,15 @@ export function getStatusRu(status: string) {
     default:
       return "В обработке";
   }
+}
+
+export function getCategoryRu(category: string) {
+  const categoryRu = categoriesList.find((item) => {
+    if (item.url_name.toLocaleLowerCase() === category.toLowerCase())
+      return item;
+  });
+
+  if (!categoryRu) return notFound();
+
+  return categoryRu;
 }

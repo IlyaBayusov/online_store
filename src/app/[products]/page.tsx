@@ -6,6 +6,7 @@ import { categoriesList } from "@/constans";
 import ProductsList from "@/components/Products/ProductsList/ProductsList";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import axios from "axios";
+import { ICategory } from "@/interfaces";
 
 // Chelsea - id - 1
 // Sneakers - id - 2
@@ -30,6 +31,7 @@ const fetchProducts = async (products: string) => {
 
 export default function Products() {
   const [data, setData] = useState([]);
+  const [category, setCategory] = useState<ICategory>();
 
   const params: Params = useParams();
 
@@ -39,6 +41,13 @@ export default function Products() {
 
       setData(productsData.products);
     };
+
+    const categoryRu = categoriesList.find((item) => {
+      if (item.url_name.toLocaleLowerCase() === params.products.toLowerCase())
+        return item;
+    });
+
+    setCategory(categoryRu);
 
     getProducts();
   }, [params.products]);
@@ -50,5 +59,8 @@ export default function Products() {
   ) {
     return notFound();
   }
-  return <ProductsList category={params.products} products={data} />;
+
+  if (category) {
+    return <ProductsList category={category} products={data} />;
+  }
 }
