@@ -9,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { FiMenu } from "react-icons/fi";
 import { RiShoppingBasketLine } from "react-icons/ri";
+import { MdOutlineShoppingBag } from "react-icons/md";
 
 export default function Header() {
   const [products, setProducts] = useState<IProductInCart[]>([]);
@@ -50,6 +51,10 @@ export default function Header() {
                   {products.length}
                 </div>
               </div>
+            </Link>
+
+            <Link href="/orders">
+              <MdOutlineShoppingBag className="h-8 w-8 p-1.5" />
             </Link>
 
             <CgProfile className="h-8 w-8 p-1.5" />

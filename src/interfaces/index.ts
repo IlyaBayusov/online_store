@@ -62,3 +62,16 @@ export interface IOrderPost {
   orderDetailsRequest: IByProductsForm;
   orderItemRequest: IProductInCart[];
 }
+
+export interface IOrdersGet {
+  productId: number;
+  categoryName: string;
+  productName: string;
+  image: string;
+  price: number;
+  size: string;
+  quantity: number;
+  totalPrice: number;
+  paymentMethod: string;
+  status: string;
+}

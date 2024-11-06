@@ -1,15 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import ProductsItem from "../ProductsItem/ProductsItem";
 import { IProductCategory } from "@/interfaces/index";
 
 type Props = { category: string; products: IProductCategory[] };
 
 export default function ProductsList({ category, products }: Props) {
-  const [isLoading, setIsLoading] = useState(true);
-
   return (
     <div className="container px-3">
       <div className="flex justify-center mt-3 mb-5">
@@ -24,7 +22,6 @@ export default function ProductsList({ category, products }: Props) {
             href={`/${category}/${product.productId}`}
           >
             <ProductsItem
-              id={product.productId}
               name={product.name}
               img={product.image}
               price={product.price}

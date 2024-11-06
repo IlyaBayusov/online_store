@@ -1,9 +1,9 @@
 import Image from "next/image";
 import React from "react";
 
-type Props = { id: number; name: string; img: string; price: number };
+type Props = { name: string; img: string; price: number };
 
-export default function ProductsItem({ id, name, img, price }: Props) {
+export default function ProductsItem({ name, img, price }: Props) {
   return (
     <div className="flex flex-col justify-center">
       <div>

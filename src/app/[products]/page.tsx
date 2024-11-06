@@ -51,9 +51,5 @@ export default function Products() {
   ) {
     return notFound();
   }
-  return (
-    <div>
-      <ProductsList category={params.products} products={data} />
-    </div>
-  );
+  return <ProductsList category={params.products} products={data} />;
 }
