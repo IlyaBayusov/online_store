@@ -81,3 +81,16 @@ export interface ICategory {
   name: string;
   url_name: string;
 }
+
+export interface IPostFav {
+  userId: number;
+  productId: number;
+}
+
+export interface IGetFav {
+  favoriteId: number;
+  productId: number;
+  categoryName: string;
+  productName: string;
+  image: string;
+}

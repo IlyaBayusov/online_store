@@ -1,8 +1,10 @@
 import { api } from "@/axios";
 import {
   IDecodedToken,
+  IGetFav,
   IOrderPost,
   IOrdersGet,
+  IPostFav,
   IProductInCart,
 } from "@/interfaces";
 import { decodeToken } from "@/utils";
@@ -10,8 +12,6 @@ import { decodeToken } from "@/utils";
 export const getProductsCart = async () => {
   try {
     const decodedToken: IDecodedToken = decodeToken();
-
-    console.log(decodedToken);
 
     if (!decodedToken) return;
 
@@ -63,5 +63,30 @@ export const getOrders = async () => {
     return data;
   } catch (error) {
     console.error("Ошибка получения товаров из корзины: ", error);
+  }
+};
+
+export const postFav = async (fav: IPostFav) => {
+  try {
+    const response = await api.post(`/v1/favorites`, fav);
+
+    return response;
+  } catch (error) {
+    console.error("Ошибка добавления в избранные: ", error);
+  }
+};
+
+export const getFav = async () => {
+  try {
+    const decodedToken: IDecodedToken = decodeToken();
+
+    if (!decodedToken) return;
+
+    const response = await api.get(`/v1/favorites/${decodedToken.id}`);
+    const data: IGetFav[] = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения избранных: ", error);
   }
 };

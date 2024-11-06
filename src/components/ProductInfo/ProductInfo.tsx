@@ -2,6 +2,7 @@
 
 import {
   IDecodedToken,
+  IGetFav,
   IProductInCart,
   IProductInfo,
 } from "@/interfaces/index";
@@ -14,7 +15,7 @@ import ProductTabs from "../Tabs/ProductTabs";
 import { RiShoppingBasketLine, RiShoppingBasketFill } from "react-icons/ri";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { api } from "@/axios";
-import { getProductsCart } from "@/api";
+import { getFav, getProductsCart, postFav } from "@/api";
 
 type Props = {
   arrProduct: IProductInfo[];
@@ -37,6 +38,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
   const [isActiveFav, setIsActiveFav] = useState(false);
 
   const [nowCartItem, setNowCartItem] = useState<IProductInCart>();
+  const [nowFavItem, setNowFavItem] = useState<IGetFav>();
 
   const params = useParams();
 
@@ -61,6 +63,27 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
     setActiveBtnCart();
   }, [nowProduct]);
 
+  useEffect(() => {
+    const setActiveBtnFav = async () => {
+      try {
+        const data: IGetFav[] = await getFav();
+
+        if (data) {
+          data.map((item) => {
+            if (item.productId === nowProduct.id) {
+              setIsActiveFav(true);
+              setNowFavItem(item);
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Ошибка запроса получения избранных", error);
+      }
+    };
+
+    setActiveBtnFav();
+  }, [nowProduct]);
+
   const handleClickCart = async () => {
     try {
       const decodedToken: IDecodedToken = decodeToken();
@@ -82,7 +105,28 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
         setNowCartItem(data);
       }
     } catch (error) {
-      console.error("Ошибка запроса добавления/удаления: ", error);
+      console.error("Ошибка запроса добавления/удаления в корзину: ", error);
+    }
+  };
+
+  const handleClickFav = async () => {
+    try {
+      const decodedToken: IDecodedToken = decodeToken();
+
+      if (isActiveFav && nowFavItem) {
+        setIsActiveFav(false);
+        //удаление из избранных
+        await api.delete(`/v1/favorites/${nowFavItem.favoriteId}`);
+      } else {
+        setIsActiveFav(true);
+        //добавление в избранные
+        await postFav({
+          userId: decodedToken.id,
+          productId: nowProduct.id,
+        });
+      }
+    } catch (error) {
+      console.error("Ошибка запроса добавления/удаления в избранных: ", error);
     }
   };
 
@@ -192,7 +236,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
                 "flex justify-center items-center gap-1 py-2 w-full rounded-md text-white border border-[#895D5D] " +
                 (isActiveCart ? "bg-[#895D5D]" : "border border-[#895D5D]")
               }
-              onClick={() => handleClickCart()}
+              onClick={handleClickCart}
             >
               {isActiveCart ? (
                 <RiShoppingBasketFill className="h-5 w-5 ml-px" />
@@ -205,7 +249,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
                 "flex justify-center items-center gap-1 py-2 w-full rounded-md text-white border border-[#895D5D] " +
                 (isActiveFav ? "bg-[#895D5D]" : "")
               }
-              onClick={() => setIsActiveFav(!isActiveFav)}
+              onClick={handleClickFav}
             >
               {isActiveFav ? (
                 <MdFavorite className="h-5 w-5 mr-px" />
