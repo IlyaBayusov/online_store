@@ -76,6 +76,14 @@ export interface IOrdersGet {
   status: string;
 }
 
+export interface IFavsGet {
+  favoriteId: number;
+  productId: number;
+  categoryName: string;
+  productName: string;
+  image: string;
+}
+
 export interface ICategory {
   id: number;
   name: string;

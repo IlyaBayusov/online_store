@@ -45,7 +45,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
   useEffect(() => {
     const setActiveBtnCart = async () => {
       try {
-        const data: IProductInCart[] = await getProductsCart();
+        const data: IProductInCart[] | undefined = await getProductsCart();
 
         if (data) {
           data.map((item) => {
@@ -66,7 +66,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
   useEffect(() => {
     const setActiveBtnFav = async () => {
       try {
-        const data: IGetFav[] = await getFav();
+        const data: IGetFav[] | undefined = await getFav();
 
         if (data) {
           data.map((item) => {
@@ -121,6 +121,10 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
         setIsActiveFav(true);
         //добавление в избранные
         await postFav({
+          userId: decodedToken.id,
+          productId: nowProduct.id,
+        });
+        console.log({
           userId: decodedToken.id,
           productId: nowProduct.id,
         });
