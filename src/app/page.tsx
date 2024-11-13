@@ -10,8 +10,6 @@ import { useEffect, useState } from "react";
 import { api } from "@/axios";
 
 const OPTIONS: EmblaOptionsType = {};
-const SLIDE_COUNT = 5;
-const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
 export default function Home() {
   const [newArrivals, setNewArrivals] = useState([]);
@@ -79,7 +77,7 @@ export default function Home() {
           </h2>
         </div>
 
-        <EmblaCarousel slides={SLIDES} options={OPTIONS} />
+        <EmblaCarousel options={OPTIONS} />
       </div>
     </div>
   );

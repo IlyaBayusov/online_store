@@ -2,7 +2,6 @@ import Link from "next/link";
 import React from "react";
 import NewArrivalsItem from "../NewArrivalsItem/NewArrivalsItem";
 import { IProductCategory } from "@/interfaces";
-// import { newArrivals } from "@/constans";
 
 type Props = { newArrivals: IProductCategory[] };
 
@@ -14,9 +13,12 @@ export default function NewArrivalsList({ newArrivals }: Props) {
           Новые поступления
         </h2>
       </div>
-      <div className="my-2 w-full grid grid-cols-3 grid-rows-2 gap-3">
+      <div className="my-2 w-full grid grid-cols-2 gap-3">
         {newArrivals.map((arrival) => (
-          <Link key={arrival.productId} href="#">
+          <Link
+            key={arrival.productId}
+            href={`/${arrival.categoryName}/${arrival.productId}`}
+          >
             <NewArrivalsItem arrival={arrival} />
           </Link>
         ))}

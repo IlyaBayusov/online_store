@@ -1,5 +1,6 @@
 export interface IProductCategory {
   productId: number;
+  categoryName: string;
   name: string;
   image: string;
   price: number;

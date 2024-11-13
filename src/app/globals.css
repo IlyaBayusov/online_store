@@ -175,11 +175,11 @@ button {
 }
 
 .embla {
-  max-width: 48rem;
+  max-width: 60rem;
   margin: auto;
-  --slide-height: 21rem;
+  --slide-height: 25rem;
   --slide-spacing: 1rem;
-  --slide-size: 28%;
+  --slide-size: 40%;
 }
 .embla__viewport {
   overflow: hidden;
