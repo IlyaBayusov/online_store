@@ -3,15 +3,30 @@
 import { INextCategoryProps, useModalStore } from "@/stores/useModalStore";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 import { categories, modalNav, modalNavCategory } from "@/constans";
 import { useCategoryStore } from "@/stores/useCategoryStore";
+import { decodeToken } from "@/utils";
 
 export default function ModalNav() {
   const { modals, openModal, closeModal, addModalProps } = useModalStore();
   const { updateCategory } = useCategoryStore();
+
+  const [role, setRole] = useState<string>("");
+
+  useEffect(() => {
+    const decodedToken = decodeToken();
+
+    console.log(decodedToken);
+
+    if (decodedToken) {
+      setRole(decodedToken.roles);
+    }
+  }, []);
+
+  console.log(role);
 
   const handleModalNav = (
     nextCategory: INextCategoryProps[],
@@ -57,6 +72,16 @@ export default function ModalNav() {
                 >
                   Главная
                 </Link>
+
+                {role === "ADMIN" && (
+                  <Link
+                    href="/adminMenu"
+                    className="mb-3 bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
+                    onClick={() => closeModal(modalNav)}
+                  >
+                    Админ панель
+                  </Link>
+                )}
 
                 {categories.map((category, index) => (
                   <li

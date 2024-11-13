@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function AdminMenuPage() {
+export default function AdminMenu() {
   return <div>SellerPage</div>;
 }

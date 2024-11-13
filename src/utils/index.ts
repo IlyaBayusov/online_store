@@ -5,19 +5,14 @@ import { notFound } from "next/navigation";
 
 export const decodeToken = () => {
   const token = localStorage.getItem("accessToken");
+
   if (!token) {
-    throw Error("Ошибка, токен не найден");
+    // window.location.href = "http://localhost:3000/auth";
+    return;
   }
 
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const decoded: IDecodedToken = jwtDecode(token);
-  } catch (error) {
-    console.error("Invalid token:", error);
-  } finally {
-    const decoded: IDecodedToken = jwtDecode(token);
-    return decoded;
-  }
+  const decoded: IDecodedToken = jwtDecode(token);
+  return decoded;
 };
 
 export function getCodeColor(color: string) {

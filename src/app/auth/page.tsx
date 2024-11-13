@@ -1,7 +1,6 @@
 "use client";
 
 import { IUseInput, useInput } from "@/hooks/useInput";
-import { decodeToken } from "@/utils";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -90,7 +89,6 @@ export default function Auth() {
         const data = await response.data;
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
-        console.log(decodeToken());
         console.log("Авторизация прошла успешно", data);
       }
 
