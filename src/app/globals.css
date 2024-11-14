@@ -175,7 +175,7 @@ button {
 }
 
 .embla {
-  max-width: 60rem;
+  max-width: 100rem;
   margin: auto;
   --slide-height: 25rem;
   --slide-spacing: 1rem;

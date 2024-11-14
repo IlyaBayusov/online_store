@@ -6,7 +6,7 @@ import { FaVk, FaTelegram, FaYoutube, FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
   const path = usePathname();
-  const noFooterPages = ["/cart", "/cart/buyProducts"];
+  const noFooterPages = ["/cart", "/cart/buyProducts", "/adminMenu"];
 
   const showFooter = !noFooterPages.includes(path);
 
