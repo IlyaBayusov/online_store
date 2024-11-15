@@ -7,6 +7,8 @@ export interface IProductCategory {
 }
 
 export interface IProductInfo {
+  categoryName: string;
+  groupId: number;
   id: number;
   name: string;
   color: string;
@@ -102,4 +104,15 @@ export interface IGetFav {
   categoryName: string;
   productName: string;
   image: string;
+}
+
+export interface IPostNewProduct {
+  categoryName: string;
+  groupId: null;
+  name: string;
+  color: string;
+  description: string;
+  price: number;
+  sizes: string[];
+  quantities: number[];
 }

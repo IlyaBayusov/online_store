@@ -8,6 +8,7 @@ import {
   IProductInCart,
 } from "@/interfaces";
 import { decodeToken } from "@/utils";
+import { AxiosResponse } from "axios";
 
 export const getProductsCart = async () => {
   try {
@@ -88,5 +89,15 @@ export const getFav = async () => {
     return data;
   } catch (error) {
     console.error("Ошибка получения избранных: ", error);
+  }
+};
+
+export const postProductAdmin = async (product: FormData) => {
+  try {
+    const response = await api.post(`/v1/favorites`, product);
+
+    return response;
+  } catch (error) {
+    console.error("Ошибка добавления товара в админке: ", error);
   }
 };

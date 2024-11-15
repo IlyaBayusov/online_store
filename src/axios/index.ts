@@ -1,5 +1,8 @@
 import axios from "axios";
 
+// Типизация для refreshSubscribers
+type RefreshSubscriber = (accessToken: string) => void;
+
 export const api = axios.create({
   baseURL: "http://localhost:8080/api",
   headers: {
@@ -9,14 +12,14 @@ export const api = axios.create({
 });
 
 let isRefreshing = false;
-let refreshSubscribers = [];
+let refreshSubscribers: RefreshSubscriber[] = []; // Явно указываем тип
 
-const subscribeTokenRefresh = (callback) => {
+const subscribeTokenRefresh = (callback: RefreshSubscriber) => {
   refreshSubscribers.push(callback);
 };
 
-const onRefreshed = (accessToken) => {
-  refreshSubscribers.map((callback) => callback(accessToken));
+const onRefreshed = (accessToken: string) => {
+  refreshSubscribers.forEach((callback) => callback(accessToken));
   refreshSubscribers = [];
 };
 
@@ -37,15 +40,14 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    console.log("ответ пришел: ", response);
-
+    console.log("Ответ пришел: ", response);
     return response;
   },
   async (error) => {
     const originalRequest = error.config;
     const statusCode = error.response ? error.response.status : null;
 
-    console.log("заход в ошибку при 401: ", statusCode, error);
+    console.log("Ошибка 401: статус = ", statusCode, error);
 
     if (statusCode === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
@@ -53,48 +55,52 @@ api.interceptors.response.use(
       if (!isRefreshing) {
         isRefreshing = true;
         try {
-          console.log("начало");
-
           const refreshToken = localStorage.getItem("refreshToken");
-          const response = await api.post("/auth/refresh", refreshToken);
-          console.log(
-            "конец ушел запрос на обновление токена: ",
-            response,
-            response.data
-          );
 
-          const data = await response.data;
+          if (!refreshToken) {
+            console.log("Refresh token не найден, перенаправляем на /auth");
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            window.location.replace("/auth");
+            return Promise.reject(new Error("No refresh token"));
+          }
+
+          const response = await api.post("/auth/refresh", { refreshToken });
+          console.log("Ответ от обновления токена: ", response.data);
+
+          const data = response.data;
 
           localStorage.setItem("accessToken", data.accessToken);
           localStorage.setItem("refreshToken", data.refreshToken);
 
           onRefreshed(data.accessToken);
+
           originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
           return api(originalRequest);
         } catch (refreshError) {
-          console.error("Refresh token не пришел:", refreshError);
+          console.log("ТЕСТ 2");
+
+          console.error("Ошибка при обновлении токена:", refreshError);
+
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
 
-          console.log(
-            "Ошибка обновления refreshToken, перенаправление на auth"
-          );
-
-          window.location.href = "/auth";
+          console.log("Ошибка при обновлении токена, перенаправляем на /auth");
+          window.location.replace("/auth");
           return Promise.reject(refreshError);
         } finally {
           isRefreshing = false;
         }
       } else {
         return new Promise((resolve) => {
-          const accessToken = localStorage.getItem("accessToken");
-          subscribeTokenRefresh((accessToken) => {
+          subscribeTokenRefresh((accessToken: string) => {
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             resolve(api(originalRequest));
           });
         });
       }
     }
+
     return Promise.reject(error);
   }
 );

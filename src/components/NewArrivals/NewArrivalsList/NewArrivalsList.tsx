@@ -14,14 +14,15 @@ export default function NewArrivalsList({ newArrivals }: Props) {
         </h2>
       </div>
       <div className="my-2 w-full grid grid-cols-2 gap-3">
-        {newArrivals.map((arrival) => (
-          <Link
-            key={arrival.productId}
-            href={`/${arrival.categoryName}/${arrival.productId}`}
-          >
-            <NewArrivalsItem arrival={arrival} />
-          </Link>
-        ))}
+        {newArrivals &&
+          newArrivals.map((arrival) => (
+            <Link
+              key={arrival.productId}
+              href={`/${arrival.categoryName}/${arrival.productId}`}
+            >
+              <NewArrivalsItem arrival={arrival} />
+            </Link>
+          ))}
       </div>
     </div>
   );

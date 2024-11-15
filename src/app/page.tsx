@@ -23,6 +23,7 @@ export default function Home() {
 
         setNewArrivals(data.products);
         setIsLoading(false);
+        console.log(newArrivals);
       } catch (error) {
         console.log("главная страница: ", error);
       }
@@ -64,7 +65,7 @@ export default function Home() {
         </div>
       </div>
 
-      {isLoading ? (
+      {!newArrivals ? (
         <h1>Loading</h1>
       ) : (
         <NewArrivalsList newArrivals={newArrivals} />
