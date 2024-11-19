@@ -21,7 +21,7 @@ export default function Home() {
         const response = await api.get("/v1/products?size=6");
         const data = await response.data;
 
-        setNewArrivals(data.products);
+        setNewArrivals(data);
         setIsLoading(false);
         console.log(newArrivals);
       } catch (error) {
