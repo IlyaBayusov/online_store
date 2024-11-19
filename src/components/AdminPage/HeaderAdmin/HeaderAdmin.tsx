@@ -10,8 +10,12 @@ import {
 import { FaHouse } from "react-icons/fa6";
 import { IoSearchSharp } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
+import { useModalStore } from "@/stores/useModalStore";
+import { modalNewProductAdmin } from "@/constans";
 
 export default function HeaderAdmin() {
+  const { openModal } = useModalStore();
+
   return (
     <div className="w-full">
       <div className="flex flex-col items-center w-full">
@@ -63,7 +67,10 @@ export default function HeaderAdmin() {
               <IoIosOptions className="h-5 w-5 p-px text-green-600" />
             </button>
 
-            <button className="py-1 px-2 bg-green-600 rounded-md">
+            <button
+              className="py-1 px-2 bg-green-600 rounded-md"
+              onClick={() => openModal(modalNewProductAdmin)}
+            >
               <FaPlus className="h-5 w-5 p-px text-white" />
             </button>
           </div>

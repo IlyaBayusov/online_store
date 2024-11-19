@@ -53,7 +53,9 @@ img {
 }
 
 input,
-button {
+button,
+textarea,
+select {
   outline: none;
 }
 

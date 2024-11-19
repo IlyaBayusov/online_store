@@ -7,6 +7,7 @@ import ModalNav from "@/components/Modals/ModalNav";
 import ModalNavCategory from "@/components/Modals/ModalNavCategory";
 import ModalCartDeleteProduct from "@/components/Modals/ModalCartDeleteProduct";
 import ModalSuccessOrder from "@/components/Modals/ModalSuccessOrder";
+import ModalNewProductAdmin from "@/components/Modals/ModalNewProductAdmin";
 
 // const oswald = Oswald({
 //   subsets: ["latin"],
@@ -37,6 +38,7 @@ export default function RootLayout({
           <ModalNavCategory />
           <ModalCartDeleteProduct />
           <ModalSuccessOrder />
+          <ModalNewProductAdmin />
 
           <Footer />
         </div>

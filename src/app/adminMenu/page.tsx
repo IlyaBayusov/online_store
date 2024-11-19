@@ -4,7 +4,7 @@ import { getProductAdmin, postProductAdmin } from "@/api";
 import HeaderAdmin from "@/components/AdminPage/HeaderAdmin/HeaderAdmin";
 import ProductsAdmin from "@/components/AdminPage/ProductsAdmin/ProductsAdmin";
 // import { IProductInfo } from "@/interfaces";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 export default function AdminMenu() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -31,7 +31,7 @@ export default function AdminMenu() {
 
   console.log(selectedFiles);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!selectedFiles || selectedFiles.length === 0) {

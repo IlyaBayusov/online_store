@@ -7,6 +7,7 @@ export const modalNav = "modalNav";
 export const modalNavCategory = "modalNavCategory";
 export const modalCartDeleteProduct = "modalCartDeleteProduct";
 export const modalSuccessOrder = "modalSuccessOrder";
+export const modalNewProductAdmin = "modalNewProductAdmin";
 
 // Chelsea - id - 1
 // Sneakers - id - 2
@@ -171,4 +172,18 @@ export const newArrivals = [
     img: img_test_shoes1,
     price: "59 руб",
   },
+];
+
+export const colors = [
+  { name: "Белый", value: "#f0f0f0" },
+  { name: "Черный", value: "#333333" },
+  { name: "Коричневый", value: "#a0522d" },
+  { name: "Бежевый", value: "#e0d4b0" },
+  { name: "Серый", value: "#a9a9a9" },
+  { name: "Темно-синий", value: "#191970" },
+  { name: "Зеленый", value: "#6b8e23" },
+  { name: "Синий", value: "#4682b4" },
+  { name: "Голубой", value: "#87cefa" },
+  { name: "Бордовый", value: "#800020" },
+  { name: "Черно-серый", value: "#555555" },
 ];

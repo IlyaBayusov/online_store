@@ -18,16 +18,26 @@ type Props = {
 export default function ProductsAdmin({ products }: Props) {
   return (
     <div className="flex flex-col w-full px-3 bg-white">
-      <div>str</div>
+      <div className="flex justify-start items-center gap-1">
+        <button className="px-2 py-1 border rounded-md">
+          <MdOutlineKeyboardDoubleArrowLeft className="h-5 w-5 p-px text-gray-400" />
+        </button>
+        <button className="px-2 py-1 border rounded-md">
+          <MdOutlineKeyboardArrowLeft className="h-5 w-5 p-px text-gray-400" />
+        </button>
 
-      <div className="flex flex-col items-center">
-        <button>
-          <MdOutlineKeyboardArrowLeft className="h-5 w-5 p-px" />
+        <p className="text-red-400 text-sm">1-10 из 24</p>
+
+        <button className="px-2 py-1 border rounded-md">
+          <MdOutlineKeyboardArrowRight className="h-5 w-5 p-px text-gray-400" />
+        </button>
+        <button className="px-2 py-1 border rounded-md">
+          <MdOutlineKeyboardDoubleArrowRight className="h-5 w-5 p-px text-gray-400" />
         </button>
       </div>
 
       {products ? (
-        <table className="text-black uppercase text-xs text-center -mx-3">
+        <table className="text-black uppercase text-xs text-center -mx-3 mt-3">
           <thead>
             <tr className="text-red-400">
               <th>Название / Артикул</th>
