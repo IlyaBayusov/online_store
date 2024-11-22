@@ -84,6 +84,8 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
     setActiveBtnFav();
   }, [nowProduct]);
 
+  console.log("newproduct", nowProduct);
+
   const handleClickCart = async () => {
     try {
       const decodedToken: IDecodedToken = decodeToken();

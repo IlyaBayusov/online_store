@@ -187,3 +187,37 @@ export const colors = [
   { name: "Бордовый", value: "#800020" },
   { name: "Черно-серый", value: "#555555" },
 ];
+
+export const selectCategoryies = [
+  { name: "Челси", value: "Chelsea" },
+  { name: "Кеды", value: "Sneakers" },
+  { name: "Брюки", value: "Trousers" },
+  { name: "Рубашки", value: "Shirts" },
+  { name: "Галстуки", value: "Ties" },
+  { name: "Ремни", value: "Belts" },
+];
+
+export const selectSiziesCloth = [
+  { name: "44" },
+  { name: "46" },
+  { name: "48" },
+  { name: "50" },
+  { name: "52" },
+  { name: "54" },
+  { name: "56" },
+  { name: "58" },
+  { name: "60" },
+  { name: "62" },
+  { name: "64" },
+];
+
+export const selectSiziesShoes = [
+  { name: "39" },
+  { name: "40" },
+  { name: "41" },
+  { name: "42" },
+  { name: "43" },
+  { name: "44" },
+  { name: "45" },
+  { name: "46" },
+];
