@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const useValidation = (value: string, valids: object) => {
+export const useValidation = (value: string | [], valids: object) => {
   const [empty, setEmpty] = useState<boolean>(true);
   const [minLength, setMinLength] = useState<boolean>(false);
   const [maxLength, setMaxLength] = useState<boolean>(false);

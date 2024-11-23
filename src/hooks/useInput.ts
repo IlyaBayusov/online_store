@@ -17,7 +17,12 @@ export const useInput = (initValue: string, valids: object) => {
   const [dirty, setDirty] = useState<boolean>(false);
   const valid = useValidation(value, valids);
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChange = (
+    e:
+      | ChangeEvent<HTMLInputElement>
+      | ChangeEvent<HTMLTextAreaElement>
+      | ChangeEvent<HTMLSelectElement>
+  ) => {
     setValue(e.target.value);
   };
 
