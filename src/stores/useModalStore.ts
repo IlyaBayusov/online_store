@@ -1,19 +1,13 @@
+import {
+  modalNav,
+  modalNavCategory,
+  modalCartDeleteProduct,
+  modalSuccessOrder,
+  modalNewProductAdmin,
+  modalDeleteEditNewProduct,
+} from "@/constans";
 import { StaticImageData } from "next/image";
 import { create } from "zustand";
-
-export interface IModalStore {
-  modals: { [key: string]: boolean };
-  modalsProps: {
-    [key: string]: INextCategoryProps[] | ICartDeleteProductProps;
-  };
-
-  openModal: (modalName: string) => void;
-  closeModal: (modalName: string) => void;
-  addModalProps: (
-    modalName: string,
-    modProps: INextCategoryProps[] | ICartDeleteProductProps
-  ) => void;
-}
 
 export interface INextCategoryProps {
   id: number;
@@ -27,18 +21,45 @@ export interface ICartDeleteProductProps {
   isDeleted: boolean;
 }
 
+export interface IDeleteEditNewProductProps {
+  size: string;
+  quantity: string;
+}
+
+type ModalPropsMap = {
+  [modalNav]: undefined;
+  [modalNavCategory]: INextCategoryProps[];
+  [modalCartDeleteProduct]: ICartDeleteProductProps;
+  [modalSuccessOrder]: undefined;
+  [modalNewProductAdmin]: undefined;
+  [modalDeleteEditNewProduct]: IDeleteEditNewProductProps;
+};
+
+export interface IModalStore {
+  modals: { [key: string]: boolean };
+  modalsProps: {
+    [K in keyof ModalPropsMap]?: ModalPropsMap[K];
+  } & { [key: string]: unknown };
+
+  openModal: (modalName: string) => void;
+  closeModal: (modalName: string) => void;
+  addModalProps: <K extends keyof ModalPropsMap>(
+    modalName: K,
+    modProps: ModalPropsMap[K]
+  ) => void;
+}
+
 export const useModalStore = create<IModalStore>((set) => ({
   modals: {},
   modalsProps: {},
 
-  openModal: (modalName: string) =>
+  openModal: (modalName) =>
     set((state) => ({ modals: { ...state.modals, [modalName]: true } })),
-  closeModal: (modalName: string) =>
+
+  closeModal: (modalName) =>
     set((state) => ({ modals: { ...state.modals, [modalName]: false } })),
-  addModalProps: (
-    modalName: string,
-    modProps: INextCategoryProps[] | ICartDeleteProductProps
-  ) =>
+
+  addModalProps: (modalName, modProps) =>
     set((state) => ({
       modalsProps: { ...state.modalsProps, [modalName]: modProps },
     })),

@@ -8,6 +8,7 @@ export const modalNavCategory = "modalNavCategory";
 export const modalCartDeleteProduct = "modalCartDeleteProduct";
 export const modalSuccessOrder = "modalSuccessOrder";
 export const modalNewProductAdmin = "modalNewProductAdmin";
+export const modalDeleteEditNewProduct = "modalDeleteEditNewProduct";
 
 // Chelsea - id - 1
 // Sneakers - id - 2

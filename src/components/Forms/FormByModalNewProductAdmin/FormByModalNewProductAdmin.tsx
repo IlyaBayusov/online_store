@@ -1,10 +1,16 @@
 "use client";
 
 import { postProductAdmin } from "@/api";
-import { colors, selectCategoryies, selectSiziesCloth } from "@/constans";
+import {
+  colors,
+  modalDeleteEditNewProduct,
+  selectCategoryies,
+  selectSiziesCloth,
+} from "@/constans";
 import { IUseInput, useInput } from "@/hooks/useInput";
 import { IPostNewProduct } from "@/interfaces";
 import { useFormNewProductStore } from "@/stores/useFormNewProduct";
+import { useModalStore } from "@/stores/useModalStore";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 
 interface IParams {
@@ -19,6 +25,7 @@ interface ISizeAndQuantity {
 
 export default function FormByModalNewProductAdmin() {
   const { data, updateData, updateIsValid } = useFormNewProductStore();
+  const { openModal, addModalProps, modalsProps } = useModalStore();
 
   const [formData, setFormData] = useState<IPostNewProduct>(data);
 
@@ -158,6 +165,16 @@ export default function FormByModalNewProductAdmin() {
     ];
 
     setSizeAndQuantity(newSizeAndQuantity);
+  };
+
+  const handleOpenModalDeleteEdit = () => {
+    addModalProps(modalDeleteEditNewProduct, {
+      ...modalsProps[modalDeleteEditNewProduct],
+      size: size.value,
+      quantity: quantity.value,
+    });
+
+    openModal(modalDeleteEditNewProduct);
   };
 
   return (
@@ -334,6 +351,7 @@ export default function FormByModalNewProductAdmin() {
                 key={index}
                 type="button"
                 className="flex rounded-md max-w-20 bg-white text-black"
+                onClick={handleOpenModalDeleteEdit}
               >
                 <div className="text-center px-2 py-1 border-r">
                   {item.size}
