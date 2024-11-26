@@ -30,5 +30,10 @@ export const useInput = (initValue: string, valids: object) => {
     setDirty(true);
   };
 
-  return { value, onChange, onBlur, dirty, ...valid };
+  const setValueExternally = (newValue: string) => {
+    setValue(newValue);
+    setDirty(false); // Сбрасываем "грязное" состояние, если нужно
+  };
+
+  return { value, onChange, onBlur, dirty, setValueExternally, ...valid };
 };

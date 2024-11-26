@@ -3,7 +3,7 @@
 import { modalDeleteEditNewProduct, selectSiziesCloth } from "@/constans";
 import { useInput } from "@/hooks/useInput";
 import { useModalStore } from "@/stores/useModalStore";
-import React from "react";
+import React, { useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 
 export default function ModalDeleteEditNewProduct() {
@@ -18,9 +18,17 @@ export default function ModalDeleteEditNewProduct() {
     maxLength: 5,
   });
 
-  console.log(modalsProps[modalDeleteEditNewProduct]);
+  useEffect(() => {
+    size.setValueExternally(modalsProps[modalDeleteEditNewProduct]?.size || "");
+    quantity.setValueExternally(
+      modalsProps[modalDeleteEditNewProduct]?.quantity || ""
+    );
+  }, [
+    modalsProps[modalDeleteEditNewProduct]?.size,
+    modalsProps[modalDeleteEditNewProduct]?.quantity,
+  ]);
 
-  const handleDeleteProduct = async () => {};
+  const handleDeleteSizeQuantity = async () => {};
 
   return (
     <div
@@ -34,7 +42,9 @@ export default function ModalDeleteEditNewProduct() {
         className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-md flex flex-col bg-[#121212] p-3"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center mb-2">
+          <h1 className="text-[#B3B3B3] uppercase">Подтвердить изменение?</h1>
+
           <div onClick={() => closeModal(modalDeleteEditNewProduct)}>
             <IoClose
               className="text-[#B3B3B3] w-5 h-5"
@@ -43,13 +53,13 @@ export default function ModalDeleteEditNewProduct() {
           </div>
         </div>
 
-        <div className="flex justify-between items-start gap-3">
-          <div className="flex flex-col w-1/2">
+        <div className="flex justify-between items-start gap-3 h-14 text-base">
+          <div className="flex flex-col w-1/2 h-full">
             <label htmlFor="sizes">Размер</label>
 
             <select
               id="sizes"
-              className="rounded-md text-black px-2 py-[3px] text-base"
+              className="rounded-md text-black px-2 text-base h-full"
               name="sizes"
               value={size.value}
               onChange={(e) => {
@@ -75,7 +85,7 @@ export default function ModalDeleteEditNewProduct() {
               name="quantities"
               placeholder="Размер"
               maxLength={4}
-              className="px-2 py-1 rounded-md text-black"
+              className="px-2 py-1 rounded-md text-black h-full"
               value={quantity.value}
               onChange={(e) => {
                 quantity.onChange(e);
@@ -85,20 +95,19 @@ export default function ModalDeleteEditNewProduct() {
           </div>
         </div>
 
-        <div className="mt-3 flex justify-around items-center">
+        <div className="mt-3 flex justify-around items-center text-base">
+          <button className="py-2 px-4 text-[#B3B3B3] w-full">Да</button>
           <button
-            className="py-2 px-4 text-[#B3B3B3]"
-            onClick={handleDeleteProduct}
-          >
-            Да
-          </button>
-          <button
-            className="py-2 px-4 text-[#B3B3B3]"
+            className="py-2 px-4 text-[#B3B3B3] w-full"
             onClick={() => closeModal(modalDeleteEditNewProduct)}
           >
             Нет
           </button>
         </div>
+
+        <button className="mt-3 py-2 px-4 text-base text-red-500 border border-red-500 rounded-md uppercase">
+          Удалить
+        </button>
       </div>
     </div>
   );

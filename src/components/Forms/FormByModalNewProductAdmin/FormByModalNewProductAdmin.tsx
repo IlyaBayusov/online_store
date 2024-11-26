@@ -167,13 +167,22 @@ export default function FormByModalNewProductAdmin() {
     setSizeAndQuantity(newSizeAndQuantity);
   };
 
-  const handleOpenModalDeleteEdit = () => {
+  const handleAddPropsModal = (index: number) => {
     addModalProps(modalDeleteEditNewProduct, {
       ...modalsProps[modalDeleteEditNewProduct],
-      size: size.value,
-      quantity: quantity.value,
+      size: sizeAndQuantity[index].size,
+      quantity: String(sizeAndQuantity[index].quantity),
     });
 
+    console.log({
+      size: sizeAndQuantity[index].size,
+      quantity: String(sizeAndQuantity[index].quantity),
+    });
+
+    handleOpenModalDeleteEdit();
+  };
+
+  const handleOpenModalDeleteEdit = () => {
     openModal(modalDeleteEditNewProduct);
   };
 
@@ -351,7 +360,7 @@ export default function FormByModalNewProductAdmin() {
                 key={index}
                 type="button"
                 className="flex rounded-md max-w-20 bg-white text-black"
-                onClick={handleOpenModalDeleteEdit}
+                onClick={() => handleAddPropsModal(index)}
               >
                 <div className="text-center px-2 py-1 border-r">
                   {item.size}
