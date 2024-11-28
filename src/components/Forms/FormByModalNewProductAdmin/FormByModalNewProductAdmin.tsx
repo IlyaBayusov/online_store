@@ -8,19 +8,17 @@ import {
   selectSiziesCloth,
 } from "@/constans";
 import { IUseInput, useInput } from "@/hooks/useInput";
-import { IPostNewProduct } from "@/interfaces";
+import { IPostNewProduct, ISizeAndQuantity } from "@/interfaces";
 import { useFormNewProductStore } from "@/stores/useFormNewProduct";
-import { useModalStore } from "@/stores/useModalStore";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import {
+  defaultDeleteEditNewProductProps,
+  useModalStore,
+} from "@/stores/useModalStore";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 interface IParams {
   minLength: number;
   maxLength: number;
-}
-
-interface ISizeAndQuantity {
-  size: string;
-  quantity: number;
 }
 
 export default function FormByModalNewProductAdmin() {
@@ -29,7 +27,6 @@ export default function FormByModalNewProductAdmin() {
 
   const [formData, setFormData] = useState<IPostNewProduct>(data);
 
-  // const groupId = useInput("", { empty: true, minLength: 6, maxLength: 50 });
   const name = useInput("", { empty: true, minLength: 2, maxLength: 50 });
   const color = useInput("", { empty: true, minLength: 2, maxLength: 50 });
   const description = useInput("", {
@@ -51,8 +48,23 @@ export default function FormByModalNewProductAdmin() {
   const [sizeAndQuantity, setSizeAndQuantity] = useState<ISizeAndQuantity[]>(
     []
   );
+  const [errorSizeAndQuantity, setErrorSizeAndQuantity] = useState("");
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  useEffect(() => {
+    const modalProps = modalsProps[modalDeleteEditNewProduct];
+
+    if (modalProps?.isChanged) {
+      modalProps.arrSizeAndQuantity[modalProps.nowIndex].size = modalProps.size;
+      modalProps.arrSizeAndQuantity[modalProps.nowIndex].quantity =
+        +modalProps.quantity;
+
+      setSizeAndQuantity(modalProps.arrSizeAndQuantity);
+    }
+  }, [modalsProps, size, quantity]);
+
+  console.log(modalsProps[modalDeleteEditNewProduct]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -153,9 +165,26 @@ export default function FormByModalNewProductAdmin() {
   };
 
   const addSizeAndQuantity = () => {
+    const props =
+      modalsProps[modalDeleteEditNewProduct] ??
+      defaultDeleteEditNewProductProps();
+    addModalProps(modalDeleteEditNewProduct, {
+      ...props,
+      isChanged: false,
+    });
+
     if (!size.value || !quantity.value) {
       console.error("size или quantity не заданы");
 
+      return;
+    }
+
+    const isDuplicate = sizeAndQuantity.some(
+      (item) => item.size === size.value
+    );
+
+    if (isDuplicate) {
+      setErrorSizeAndQuantity("Такой размер уже существует");
       return;
     }
 
@@ -165,6 +194,11 @@ export default function FormByModalNewProductAdmin() {
     ];
 
     setSizeAndQuantity(newSizeAndQuantity);
+
+    size.setValueExternally("");
+    quantity.setValueExternally("");
+
+    setErrorSizeAndQuantity("");
   };
 
   const handleAddPropsModal = (index: number) => {
@@ -172,6 +206,9 @@ export default function FormByModalNewProductAdmin() {
       ...modalsProps[modalDeleteEditNewProduct],
       size: sizeAndQuantity[index].size,
       quantity: String(sizeAndQuantity[index].quantity),
+      arrSizeAndQuantity: sizeAndQuantity,
+      nowIndex: index,
+      isChanged: false,
     });
 
     console.log({
@@ -325,6 +362,10 @@ export default function FormByModalNewProductAdmin() {
                   </option>
                 ))}
               </select>
+
+              {errorSizeAndQuantity && (
+                <p className="text-red-500 text-sm">{errorSizeAndQuantity}</p>
+              )}
             </div>
 
             <div className="flex flex-col w-1/2">
@@ -355,19 +396,21 @@ export default function FormByModalNewProductAdmin() {
           </div>
 
           <div className="flex justify-start items-center gap-1 flex-wrap">
-            {sizeAndQuantity.map((item, index) => (
-              <button
-                key={index}
-                type="button"
-                className="flex rounded-md max-w-20 bg-white text-black"
-                onClick={() => handleAddPropsModal(index)}
-              >
-                <div className="text-center px-2 py-1 border-r">
-                  {item.size}
-                </div>
-                <div className="text-center px-2 py-1 ">{item.quantity}</div>
-              </button>
-            ))}
+            {[...sizeAndQuantity]
+              .sort((a, b) => +a.size - +b.size)
+              .map((item, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="flex rounded-md max-w-20 bg-white text-black"
+                  onClick={() => handleAddPropsModal(index)}
+                >
+                  <div className="text-center px-2 py-1 border-r">
+                    {item.size}
+                  </div>
+                  <div className="text-center px-2 py-1">{item.quantity}</div>
+                </button>
+              ))}
           </div>
         </div>
 

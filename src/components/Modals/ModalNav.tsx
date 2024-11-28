@@ -19,14 +19,10 @@ export default function ModalNav() {
   useEffect(() => {
     const decodedToken = decodeToken();
 
-    console.log(decodedToken);
-
     if (decodedToken) {
       setRole(decodedToken.roles);
     }
   }, []);
-
-  console.log(role);
 
   const handleModalNav = (
     nextCategory: INextCategoryProps[],

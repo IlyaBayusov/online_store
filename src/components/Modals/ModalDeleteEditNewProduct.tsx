@@ -2,12 +2,15 @@
 
 import { modalDeleteEditNewProduct, selectSiziesCloth } from "@/constans";
 import { useInput } from "@/hooks/useInput";
-import { useModalStore } from "@/stores/useModalStore";
-import React, { useEffect } from "react";
+import {
+  defaultDeleteEditNewProductProps,
+  useModalStore,
+} from "@/stores/useModalStore";
+import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
 export default function ModalDeleteEditNewProduct() {
-  const { modals, closeModal, modalsProps } = useModalStore();
+  const { modals, closeModal, modalsProps, addModalProps } = useModalStore();
 
   const size = useInput("", {
     empty: true,
@@ -18,6 +21,8 @@ export default function ModalDeleteEditNewProduct() {
     maxLength: 5,
   });
 
+  const [errorSizeAndQuantity, setErrorSizeAndQuantity] = useState("");
+
   useEffect(() => {
     size.setValueExternally(modalsProps[modalDeleteEditNewProduct]?.size || "");
     quantity.setValueExternally(
@@ -27,6 +32,34 @@ export default function ModalDeleteEditNewProduct() {
     modalsProps[modalDeleteEditNewProduct]?.size,
     modalsProps[modalDeleteEditNewProduct]?.quantity,
   ]);
+
+  const handleEditSizeAndQuantity = () => {
+    const isDuplicate = modalsProps[
+      modalDeleteEditNewProduct
+    ]?.arrSizeAndQuantity.some((item) => item.size === size.value);
+
+    if (
+      modalsProps[modalDeleteEditNewProduct]!.arrSizeAndQuantity[
+        modalsProps[modalDeleteEditNewProduct]!.nowIndex
+      ].size !== size.value &&
+      isDuplicate
+    ) {
+      setErrorSizeAndQuantity("Такой размер уже существует");
+      return;
+    } else {
+      setErrorSizeAndQuantity("");
+
+      const props =
+        modalsProps[modalDeleteEditNewProduct] ??
+        defaultDeleteEditNewProductProps();
+      addModalProps(modalDeleteEditNewProduct, {
+        ...props,
+        size: size.value,
+        quantity: quantity.value,
+        isChanged: true,
+      });
+    }
+  };
 
   const handleDeleteSizeQuantity = async () => {};
 
@@ -95,8 +128,17 @@ export default function ModalDeleteEditNewProduct() {
           </div>
         </div>
 
+        {errorSizeAndQuantity && (
+          <p className="text-red-500 text-sm">{errorSizeAndQuantity}</p>
+        )}
+
         <div className="mt-3 flex justify-around items-center text-base">
-          <button className="py-2 px-4 text-[#B3B3B3] w-full">Да</button>
+          <button
+            className="py-2 px-4 text-[#B3B3B3] w-full"
+            onClick={handleEditSizeAndQuantity}
+          >
+            Да
+          </button>
           <button
             className="py-2 px-4 text-[#B3B3B3] w-full"
             onClick={() => closeModal(modalDeleteEditNewProduct)}

@@ -6,6 +6,7 @@ import {
   modalNewProductAdmin,
   modalDeleteEditNewProduct,
 } from "@/constans";
+import { ISizeAndQuantity } from "@/interfaces";
 import { StaticImageData } from "next/image";
 import { create } from "zustand";
 
@@ -24,14 +25,26 @@ export interface ICartDeleteProductProps {
 export interface IDeleteEditNewProductProps {
   size: string;
   quantity: string;
+  arrSizeAndQuantity: ISizeAndQuantity[];
+  nowIndex: number;
+  isChanged: boolean;
 }
 
+export const defaultDeleteEditNewProductProps =
+  (): IDeleteEditNewProductProps => ({
+    size: "",
+    quantity: "",
+    arrSizeAndQuantity: [],
+    nowIndex: 0,
+    isChanged: false,
+  });
+
 type ModalPropsMap = {
-  [modalNav]: undefined;
+  [modalNav]: null;
   [modalNavCategory]: INextCategoryProps[];
   [modalCartDeleteProduct]: ICartDeleteProductProps;
-  [modalSuccessOrder]: undefined;
-  [modalNewProductAdmin]: undefined;
+  [modalSuccessOrder]: null;
+  [modalNewProductAdmin]: null;
   [modalDeleteEditNewProduct]: IDeleteEditNewProductProps;
 };
 
@@ -51,7 +64,15 @@ export interface IModalStore {
 
 export const useModalStore = create<IModalStore>((set) => ({
   modals: {},
-  modalsProps: {},
+  modalsProps: {
+    modalDeleteEditNewProduct: {
+      size: "",
+      quantity: "",
+      arrSizeAndQuantity: [],
+      nowIndex: 0,
+      isChanged: false,
+    },
+  },
 
   openModal: (modalName) =>
     set((state) => ({ modals: { ...state.modals, [modalName]: true } })),

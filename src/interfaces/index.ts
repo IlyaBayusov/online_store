@@ -116,3 +116,8 @@ export interface IPostNewProduct {
   sizes: string[];
   quantities: number[];
 }
+
+export interface ISizeAndQuantity {
+  size: string;
+  quantity: number;
+}
