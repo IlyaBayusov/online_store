@@ -61,7 +61,21 @@ export default function ModalDeleteEditNewProduct() {
     }
   };
 
-  const handleDeleteSizeQuantity = async () => {};
+  const handleDeleteSizeQuantity = async () => {
+    const props =
+      modalsProps[modalDeleteEditNewProduct] ??
+      defaultDeleteEditNewProductProps();
+    addModalProps(modalDeleteEditNewProduct, {
+      ...props,
+      arrSizeAndQuantity: [
+        ...props.arrSizeAndQuantity.slice(0, props.nowIndex),
+        ...props.arrSizeAndQuantity.slice(props.nowIndex + 1),
+      ],
+      isDeleted: true,
+    });
+
+    closeModal(modalDeleteEditNewProduct);
+  };
 
   return (
     <div
@@ -147,7 +161,10 @@ export default function ModalDeleteEditNewProduct() {
           </button>
         </div>
 
-        <button className="mt-3 py-2 px-4 text-base text-red-500 border border-red-500 rounded-md uppercase">
+        <button
+          className="mt-3 py-2 px-4 text-base text-red-500 border border-red-500 rounded-md uppercase"
+          onClick={handleDeleteSizeQuantity}
+        >
           Удалить
         </button>
       </div>

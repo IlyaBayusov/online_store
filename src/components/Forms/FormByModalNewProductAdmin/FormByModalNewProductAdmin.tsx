@@ -55,6 +55,19 @@ export default function FormByModalNewProductAdmin() {
   useEffect(() => {
     const modalProps = modalsProps[modalDeleteEditNewProduct];
 
+    if (modalProps?.isDeleted) {
+      const props =
+        modalsProps[modalDeleteEditNewProduct] ??
+        defaultDeleteEditNewProductProps();
+
+      addModalProps(modalDeleteEditNewProduct, {
+        ...props,
+        isDeleted: false,
+      });
+
+      setSizeAndQuantity(modalProps.arrSizeAndQuantity);
+    }
+
     if (modalProps?.isChanged) {
       modalProps.arrSizeAndQuantity[modalProps.nowIndex].size = modalProps.size;
       modalProps.arrSizeAndQuantity[modalProps.nowIndex].quantity =
@@ -64,7 +77,7 @@ export default function FormByModalNewProductAdmin() {
     }
   }, [modalsProps, size, quantity]);
 
-  console.log(modalsProps[modalDeleteEditNewProduct]);
+  console.log(sizeAndQuantity);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -168,6 +181,7 @@ export default function FormByModalNewProductAdmin() {
     const props =
       modalsProps[modalDeleteEditNewProduct] ??
       defaultDeleteEditNewProductProps();
+
     addModalProps(modalDeleteEditNewProduct, {
       ...props,
       isChanged: false,

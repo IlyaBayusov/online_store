@@ -28,6 +28,7 @@ export interface IDeleteEditNewProductProps {
   arrSizeAndQuantity: ISizeAndQuantity[];
   nowIndex: number;
   isChanged: boolean;
+  isDeleted: boolean;
 }
 
 export const defaultDeleteEditNewProductProps =
@@ -37,6 +38,7 @@ export const defaultDeleteEditNewProductProps =
     arrSizeAndQuantity: [],
     nowIndex: 0,
     isChanged: false,
+    isDeleted: false,
   });
 
 type ModalPropsMap = {
@@ -65,13 +67,7 @@ export interface IModalStore {
 export const useModalStore = create<IModalStore>((set) => ({
   modals: {},
   modalsProps: {
-    modalDeleteEditNewProduct: {
-      size: "",
-      quantity: "",
-      arrSizeAndQuantity: [],
-      nowIndex: 0,
-      isChanged: false,
-    },
+    [modalDeleteEditNewProduct]: defaultDeleteEditNewProductProps(),
   },
 
   openModal: (modalName) =>
