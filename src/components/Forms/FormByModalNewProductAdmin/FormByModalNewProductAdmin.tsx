@@ -16,11 +16,6 @@ import {
 } from "@/stores/useModalStore";
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
-interface IParams {
-  minLength: number;
-  maxLength: number;
-}
-
 export default function FormByModalNewProductAdmin() {
   const { data, updateData, updateIsValid } = useFormNewProductStore();
   const { openModal, addModalProps, modalsProps } = useModalStore();
@@ -39,7 +34,7 @@ export default function FormByModalNewProductAdmin() {
     minLength: 2,
     maxLength: 50,
   });
-  const price = useInput("", { empty: true, minLength: 2, maxLength: 50 });
+  const price = useInput("", { empty: true, minLength: 1, maxLength: 5 });
   const size = useInput("", {
     empty: true,
   });
@@ -51,6 +46,8 @@ export default function FormByModalNewProductAdmin() {
   const [errorSizeAndQuantity, setErrorSizeAndQuantity] = useState("");
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  const [errorSubmit, setErrorSubmit] = useState<string>("");
 
   useEffect(() => {
     const modalProps = modalsProps[modalDeleteEditNewProduct];
@@ -77,8 +74,6 @@ export default function FormByModalNewProductAdmin() {
     }
   }, [modalsProps, size, quantity]);
 
-  console.log(sizeAndQuantity);
-
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setSelectedFiles(Array.from(e.target.files));
@@ -88,10 +83,12 @@ export default function FormByModalNewProductAdmin() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!selectedFiles || selectedFiles.length === 0) {
-      console.log("Выберите файлы");
+    if (!validateForm()) {
+      setErrorSubmit("Не все поля заполнены, либо заполнены неверно");
       return;
     }
+
+    setErrorSubmit("");
 
     const fData = new FormData();
 
@@ -138,25 +135,21 @@ export default function FormByModalNewProductAdmin() {
     // if (valid) updateIsValid(true);
   };
 
-  const errorsValidation = (inputName: IUseInput, params: IParams) => {
+  // доделать
+  const errorsValidation = (inputName: IUseInput) => {
+    if (!inputName.inputValid) {
+      <span className="text-red-600 text-base">*</span>; // привести к этому виду
+    }
+
     if (inputName.dirty && (inputName.empty || inputName.minLength)) {
-      return (
-        <span className="text-red-600 text-xs">
-          Мин.{" "}
-          {params.minLength !== 2
-            ? `${params.minLength} символа`
-            : `${params.minLength} символов`}
-        </span>
-      );
+      return <span className="text-red-600 text-base">*</span>;
     }
     if (inputName.dirty && inputName.maxLength) {
-      return (
-        <span className="text-red-600 text-xs">
-          Макс. {params.maxLength} символов
-        </span>
-      );
+      return <span className="text-red-600 text-base">*</span>;
     }
   };
+
+  console.log(price.inputValid);
 
   const validateForm = () => {
     let isValid = true;
@@ -170,8 +163,22 @@ export default function FormByModalNewProductAdmin() {
     if (!description.inputValid) {
       isValid = false;
     }
+    if (!categoryName.inputValid) {
+      isValid = false;
+    }
     if (!price.inputValid) {
       isValid = false;
+    }
+    if (!sizeAndQuantity) {
+      isValid = false;
+    }
+    if (!selectedFiles.length) {
+      isValid = false;
+    }
+
+    if (!selectedFiles || selectedFiles.length === 0) {
+      console.log("Выберите файлы");
+      return;
     }
 
     return isValid;
@@ -216,8 +223,12 @@ export default function FormByModalNewProductAdmin() {
   };
 
   const handleAddPropsModal = (index: number) => {
+    const props =
+      modalsProps[modalDeleteEditNewProduct] ??
+      defaultDeleteEditNewProductProps();
+
     addModalProps(modalDeleteEditNewProduct, {
-      ...modalsProps[modalDeleteEditNewProduct],
+      ...props,
       size: sizeAndQuantity[index].size,
       quantity: String(sizeAndQuantity[index].quantity),
       arrSizeAndQuantity: sizeAndQuantity,
@@ -241,7 +252,11 @@ export default function FormByModalNewProductAdmin() {
     <div className="mt-3">
       <form onSubmit={handleSubmit} className="text-base flex flex-col gap-3">
         <div className="flex flex-col">
-          <label>Название</label>
+          <div className="flex items-start gap-1">
+            <label htmlFor="name">Название</label>
+            {errorsValidation(name)}
+          </div>
+
           <input
             type="text"
             placeholder="Название"
@@ -257,7 +272,10 @@ export default function FormByModalNewProductAdmin() {
         </div>
 
         <div className="flex flex-col">
-          <label>Описание</label>
+          <div className="flex items-start gap-1">
+            <label htmlFor="description">Описание</label>
+            {errorsValidation(description)}
+          </div>
           <textarea
             id="largeText"
             name="description"
@@ -276,7 +294,10 @@ export default function FormByModalNewProductAdmin() {
 
         <div className="flex justify-between items-start">
           <div className="flex flex-col">
-            <label htmlFor="price">Цена</label>
+            <div className="flex items-start gap-1">
+              <label htmlFor="price">Цена</label>
+              {errorsValidation(price)}
+            </div>
             <input
               id="price"
               type="number"
@@ -294,7 +315,10 @@ export default function FormByModalNewProductAdmin() {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="color">Цвет</label>
+            <div className="flex items-start gap-1">
+              <label htmlFor="color">Цвет</label>
+              {errorsValidation(color)}
+            </div>
 
             <div className="flex items-center gap-1">
               <select
@@ -327,7 +351,10 @@ export default function FormByModalNewProductAdmin() {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="category">Категория</label>
+            <div className="flex items-start gap-1">
+              <label htmlFor="category">Категория</label>
+              {errorsValidation(categoryName)}
+            </div>
 
             <div className="flex items-center gap-3">
               <select
@@ -356,12 +383,15 @@ export default function FormByModalNewProductAdmin() {
         <div className="flex flex-col gap-3">
           <div className="flex justify-between items-start gap-3">
             <div className="flex flex-col w-1/2">
-              <label htmlFor="sizes">Размер</label>
+              <div className="flex items-start gap-1">
+                <label htmlFor="size">Размер</label>
+                {errorsValidation(size)}
+              </div>
 
               <select
-                id="sizes"
+                id="size"
                 className="rounded-md text-black px-2 py-[3px] text-base"
-                name="sizes"
+                name="size"
                 value={size.value}
                 onChange={(e) => {
                   size.onChange(e);
@@ -383,7 +413,11 @@ export default function FormByModalNewProductAdmin() {
             </div>
 
             <div className="flex flex-col w-1/2">
-              <label htmlFor="quantity">Количество</label>
+              <div className="flex items-start gap-1">
+                <label htmlFor="quantity">Количество</label>
+                {errorsValidation(quantity)}
+              </div>
+
               <input
                 id="quantity"
                 type="number"
@@ -429,9 +463,25 @@ export default function FormByModalNewProductAdmin() {
         </div>
 
         <div>
-          <label htmlFor="files">Фотографии</label>
-          <input id="files" type="file" multiple onChange={handleFileChange} />
+          <div className="flex items-start gap-1">
+            <label htmlFor="files">Фото</label>
+            {(!selectedFiles || selectedFiles.length === 0) && (
+              <span className="text-red-600 text-base">Выберите фото</span>
+            )}
+          </div>
+
+          <input
+            id="files"
+            name="files"
+            type="file"
+            multiple
+            onChange={handleFileChange}
+          />
         </div>
+
+        {errorSubmit && (
+          <span className="text-red-600 text-base">{errorSubmit}</span>
+        )}
 
         <button
           type="submit"
