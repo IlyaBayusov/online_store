@@ -55,13 +55,15 @@ export default function ModalNavCategory() {
                     className=""
                     onClick={() => handleCloseModals()}
                   >
-                    <li className="bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center">
+                    <li className="relative bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center">
                       <p className="uppercase">{category.name}</p>
-                      <Image
-                        src={category.img}
-                        alt={category.name}
-                        className="max-w-10 max-h-10"
-                      />
+                      <div className="absolute top-0 right-0 z-10 h-full">
+                        <Image
+                          src={category.img}
+                          alt={category.name}
+                          className="object-cover h-full w-auto rounded-r-md"
+                        />
+                      </div>
                     </li>
                   </Link>
                 ))}

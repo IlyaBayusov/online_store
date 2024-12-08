@@ -9,6 +9,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { categories, modalNav, modalNavCategory } from "@/constans";
 import { useCategoryStore } from "@/stores/useCategoryStore";
 import { decodeToken } from "@/utils";
+import { MdFiberNew } from "react-icons/md";
 
 export default function ModalNav() {
   const { modals, openModal, closeModal, addModalProps } = useModalStore();
@@ -82,7 +83,7 @@ export default function ModalNav() {
                 {categories.map((category, index) => (
                   <li
                     key={index}
-                    className="bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center"
+                    className="relative bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center"
                     onClick={() =>
                       category.next
                         ? handleModalNav(category.next, category.name)
@@ -90,11 +91,19 @@ export default function ModalNav() {
                     }
                   >
                     <p className="uppercase">{category.name}</p>
-                    <Image
-                      src={category.img}
-                      alt={category.name}
-                      className="max-w-10 max-h-10"
-                    />
+                    {index === 0 ? (
+                      <div className="absolute top-1/2 -translate-y-1/2 right-2 z-10">
+                        <MdFiberNew className="w-10 h-10" />
+                      </div>
+                    ) : (
+                      <div className="absolute top-0 right-0 z-10 h-full">
+                        <Image
+                          src={category.img}
+                          alt={category.name}
+                          className="object-cover h-full w-auto rounded-r-md"
+                        />
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>

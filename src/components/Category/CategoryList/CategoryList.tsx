@@ -1,6 +1,6 @@
 "use client";
 
-import { categories, categoriesPages } from "@/constans";
+import { categories } from "@/constans";
 import React from "react";
 import CategoryItem from "../CategoryItem/CategoryItem";
 import Link from "next/link";

@@ -1,7 +1,15 @@
-import img_shoes from "../../public/main/category/img_shoes.png";
 import img_warm from "../../public/main/category/img_warm.png";
-import img_business from "../../public/main/category/img_business.png";
 import img_test_shoes1 from "../../public/testImg/img_test_shoes1.png";
+import img_belts from "../../public/main/category/img_belts.webp";
+import img_chelsea from "../../public/main/category/img_chelsea.webp";
+import img_shirts from "../../public/main/category/img_shirts.webp";
+import img_ties from "../../public/main/category/img_ties.webp";
+import img_trousers from "../../public/main/category/img_trousers.webp";
+import img_sneakers from "../../public/main/category/img_sneakers.webp";
+
+import img_acc from "../../public/main/category/img_acc.webp";
+import img_cloth from "../../public/main/category/img_cloth.jpg";
+import img_shoes from "../../public/main/category/img_shoes.jpg";
 
 export const modalNav = "modalNav";
 export const modalNavCategory = "modalNavCategory";
@@ -66,62 +74,62 @@ export const categories = [
   {
     id: 1,
     name: "Новинки",
-    img: img_shoes,
+    img: img_warm,
   },
   {
     id: 2,
     name: "Одежда",
-    img: img_warm,
+    img: img_cloth,
     next: [
       {
         id: 1,
         name: "Брюки",
         urlName: "trousers",
-        img: img_shoes,
+        img: img_trousers,
       },
       {
         id: 2,
         name: "Рубашки",
         urlName: "shirts",
-        img: img_shoes,
+        img: img_shirts,
       },
     ],
   },
   {
     id: 3,
     name: "Обувь",
-    img: img_business,
+    img: img_shoes,
     next: [
       {
         id: 1,
         name: "Кеды",
         urlName: "sneakers",
-        img: img_shoes,
+        img: img_sneakers,
       },
       {
         id: 2,
         name: "Челси",
         urlName: "chelsea",
-        img: img_shoes,
+        img: img_chelsea,
       },
     ],
   },
   {
     id: 4,
     name: "Аксессуары",
-    img: img_shoes,
+    img: img_acc,
     next: [
       {
         id: 1,
         name: "Галстуки",
         urlName: "ties",
-        img: img_shoes,
+        img: img_ties,
       },
       {
         id: 2,
         name: "Ремни",
         urlName: "belts",
-        img: img_shoes,
+        img: img_belts,
       },
     ],
   },

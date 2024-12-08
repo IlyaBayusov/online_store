@@ -3,15 +3,13 @@ import * as Tabs from "@radix-ui/react-tabs";
 import Image from "next/image";
 import img_tableSizesCloth from "../../../public/img_tableSizesCloth.jpg";
 import img_tableSizesShoes from "../../../public/img_tableSizesShoes.jpg";
-import { useCategoryStore } from "@/stores/useCategoryStore";
 
 type Props = {
+  category: string;
   description: string;
 };
 
-export default function ProductTabs({ description }: Props) {
-  const { category } = useCategoryStore();
-
+export default function ProductTabs({ category, description }: Props) {
   return (
     <Tabs.Root className="flex flex-col w-full mt-3" defaultValue="description">
       <Tabs.List className="flex justify-start items-center gap-4">
@@ -39,7 +37,9 @@ export default function ProductTabs({ description }: Props) {
       </Tabs.Content>
       <Tabs.Content className="mt-3" value="tableSizes">
         <Image
-          src={category == "одежда" ? img_tableSizesCloth : img_tableSizesShoes}
+          src={
+            category === "одежда" ? img_tableSizesCloth : img_tableSizesShoes
+          } //исправить
           alt="Таблица размеров"
         />
       </Tabs.Content>

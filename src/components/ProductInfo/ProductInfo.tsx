@@ -84,7 +84,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
     setActiveBtnFav();
   }, [nowProduct]);
 
-  console.log("newproduct", nowProduct);
+  console.log("nowproduct", nowProduct);
 
   const handleClickCart = async () => {
     try {
@@ -214,7 +214,10 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
               </div>
 
               <div className="mt-1 w-full">
-                <p>Размер: {selectedSize}</p>
+                <p>
+                  Размер:{" "}
+                  {Number.isNaN(selectedSize) ? "Стандартный" : selectedSize}
+                </p>
                 <div className="flex justify-between items-center mt-1 w-full">
                   {nowProduct.sizes.map((size, index) => (
                     <button
@@ -266,7 +269,10 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
           </div>
 
           {/* 4 блок */}
-          <ProductTabs description={nowProduct.description} />
+          <ProductTabs
+            category={nowProduct.categoryName}
+            description={nowProduct.description}
+          />
         </div>
       </div>
     </div>

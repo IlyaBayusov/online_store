@@ -33,9 +33,9 @@ export default function HeaderAdmin() {
           <div className="flex items-center gap-3">
             <FaHouse className="h-4 w-4 text-red-400 text-opacity-80" />
 
-            <button className="text-base text-red-400 text-opacity-80 py-2">
+            {/* <button className="text-base text-red-400 text-opacity-80 py-2">
               Заказы
-            </button>
+            </button> */}
             <button className="text-base text-red-400 text-opacity-80 py-2">
               Товары
             </button>
