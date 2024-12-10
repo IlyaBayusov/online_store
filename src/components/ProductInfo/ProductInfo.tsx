@@ -16,6 +16,7 @@ import { RiShoppingBasketLine, RiShoppingBasketFill } from "react-icons/ri";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { api } from "@/axios";
 import { getFav, getProductsCart, postFav } from "@/api";
+import { useCartStore } from "@/stores/useCartStore";
 
 type Props = {
   arrProduct: IProductInfo[];
@@ -41,6 +42,8 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
   const [nowFavItem, setNowFavItem] = useState<IGetFav>();
 
   const params = useParams();
+
+  const { addProduct, removeProduct } = useCartStore();
 
   useEffect(() => {
     const setActiveBtnCart = async () => {
@@ -94,6 +97,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
         setIsActiveCart(false);
         //удаление из корзины
         await api.delete(`/v1/cart/${nowCartItem.cartItemId}`);
+        removeProduct(nowProduct);
       } else {
         setIsActiveCart(true);
         //добавление в корзину
@@ -105,6 +109,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
         });
         const data = await response.data;
         setNowCartItem(data);
+        addProduct(nowProduct);
       }
     } catch (error) {
       console.error("Ошибка запроса добавления/удаления в корзину: ", error);
@@ -142,7 +147,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
         <div className="flex flex-col items-center gap-3">
           {/* 1 блок */}
           <div className="flex flex-col items-center gap-3 mt-3 text-base">
-            <div className="flex items-center justify-start gap-1 w-full">
+            <div className="flex items-start justify-start gap-1 w-full">
               <Link href="/" className="hover:text-orange-200 transition-all">
                 Главная{" "}
               </Link>

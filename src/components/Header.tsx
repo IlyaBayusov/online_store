@@ -10,10 +10,12 @@ import { FiMenu } from "react-icons/fi";
 import { RiShoppingBasketLine } from "react-icons/ri";
 import { MdOutlineShoppingBag, MdFavorite } from "react-icons/md";
 import { ProfileDropDownMenu } from "./DropDownMenu/ProfileDropDownMenu/ProfileDropDownMenu";
+import { useCartStore } from "@/stores/useCartStore";
 
 export default function Header() {
   const [products, setProducts] = useState<IProductInCart[]>([]);
   const { openModal } = useModalStore();
+  const { cart } = useCartStore();
 
   useEffect(() => {
     const getProducts = async () => {
@@ -27,6 +29,8 @@ export default function Header() {
     getProducts();
   }, []);
 
+  console.log("монтирование");
+
   return (
     <div className="bg-black w-full">
       <div className="container px-3">
@@ -35,19 +39,20 @@ export default function Header() {
             <FiMenu className="h-9 w-9 p-1.5" />
           </div>
 
-          <h1
+          <Link
+            href={"/"}
             id="headerTitle"
             className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2  text-xl text-white font-bold leading-5"
           >
             MAN&apos;S
-          </h1>
+          </Link>
 
           <div className="flex items-center gap-2">
             <Link href="/cart">
               <div className="relative">
                 <RiShoppingBasketLine className="h-8 w-8 p-1.5" />
                 <div className="flex justify-center items-center absolute bottom-0 right-0 z-10 w-4 h-4 bg-white rounded-full text-[11px] text-black font-bold border-2 border-black">
-                  {products.length}
+                  {cart.length}
                 </div>
               </div>
             </Link>

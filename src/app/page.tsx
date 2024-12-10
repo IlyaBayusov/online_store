@@ -65,8 +65,8 @@ export default function Home() {
         </div>
       </div>
 
-      {!newArrivals ? (
-        <h1>Loading</h1>
+      {isLoading ? (
+        <h1>Loading...</h1>
       ) : (
         <NewArrivalsList newArrivals={newArrivals} />
       )}

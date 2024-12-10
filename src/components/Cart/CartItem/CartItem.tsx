@@ -1,13 +1,13 @@
 "use client";
 
-import { putProductCart } from "@/api";
+import { getProductCount, putProductCart } from "@/api";
 import { modalCartDeleteProduct } from "@/constans";
 import { IProductInCart } from "@/interfaces";
 import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
@@ -15,27 +15,25 @@ type Props = { product: IProductInCart };
 
 export default function CartItem({ product }: Props) {
   const [quantity, setQuantity] = useState(product.quantity);
-  const { plusSum, minusSum } = useCartStore();
   const { openModal, addModalProps } = useModalStore();
+  const { plusSum, minusSum } = useCartStore();
 
-  useEffect(() => {
-    const updateQuantity = async () => {
-      await putProductCart(product, quantity);
-    };
-
-    updateQuantity();
-  }, [product, quantity]);
-
-  const handleClickMinus = () => {
+  const handleClickMinus = async () => {
     if (quantity > 1) {
-      setQuantity(quantity - 1);
+      const newQuantity = quantity - 1;
+      await putProductCart(product, newQuantity);
+      setQuantity(newQuantity);
       minusSum(product.price);
     }
   };
 
-  const handleClickPlus = () => {
-    if (quantity < 99) {
-      setQuantity(quantity + 1);
+  const handleClickPlus = async () => {
+    const productCount = await getProductCount(product.productId, product.size);
+
+    if (quantity < 99 && quantity < productCount) {
+      const newQuantity = quantity + 1;
+      await putProductCart(product, newQuantity);
+      setQuantity(newQuantity);
       plusSum(product.price);
     }
   };
@@ -95,7 +93,7 @@ export default function CartItem({ product }: Props) {
                 <p className="text-base text-center">{quantity}</p>
               </div>
               <button
-                disabled={quantity >= 99}
+                disabled={quantity > 99}
                 className="w-6 h-6 flex justify-center items-center disabled:bg-[#3A3A3A] bg-fuchsia-700 rounded-md"
                 onClick={handleClickPlus}
               >

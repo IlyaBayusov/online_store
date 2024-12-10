@@ -11,9 +11,11 @@ export default function CartList({ products }: Props) {
   const { updateSum } = useCartStore();
 
   useEffect(() => {
-    const totalSum = products.reduce((acc, product) => acc + product.price, 0);
+    const totalSum = products.reduce((acc, product) => {
+      return acc + product.price * product.quantity;
+    }, 0);
     updateSum(totalSum);
-  }, [updateSum, products]);
+  }, [products, updateSum]);
 
   return (
     <div className="flex flex-col justify-center items-center w-full mt-3 mb-[4.75rem]">
