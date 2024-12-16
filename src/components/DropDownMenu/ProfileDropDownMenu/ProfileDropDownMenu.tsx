@@ -19,8 +19,6 @@ export const ProfileDropDownMenu = () => {
     }
   }, []);
 
-  console.log(isAuth);
-
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>

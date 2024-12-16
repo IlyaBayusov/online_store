@@ -51,6 +51,7 @@ export default function Products() {
 
     getProducts();
   }, [params.products]);
+  console.log(data);
 
   if (
     !categoriesList

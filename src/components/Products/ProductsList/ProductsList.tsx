@@ -8,6 +8,8 @@ import { ICategory, IProductCategory } from "@/interfaces/index";
 type Props = { category: ICategory; products: IProductCategory[] };
 
 export default function ProductsList({ category, products }: Props) {
+  console.log(products);
+
   return (
     <div className="container px-3">
       <div className="flex justify-center mt-3 mb-5">

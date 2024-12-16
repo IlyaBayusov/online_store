@@ -14,7 +14,8 @@ export default function NewArrivalsItem({ arrival }: Props) {
           src={arrival.image}
           alt={arrival.name}
           fill
-          objectFit="cover"
+          style={{ objectFit: "cover" }}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="rounded-md"
         />
       </div>

@@ -85,6 +85,12 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
     setActiveBtnFav();
   }, [nowProduct]);
 
+  // useEffect(() => {
+  //   if() {
+
+  //   }
+  // }, [selectedSize])
+
   console.log("nowproduct", nowProduct);
 
   const handleClickCart = async () => {

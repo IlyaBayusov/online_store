@@ -29,8 +29,6 @@ export default function Header() {
     getProducts();
   }, []);
 
-  console.log("монтирование");
-
   return (
     <div className="bg-black w-full">
       <div className="container px-3">
