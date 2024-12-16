@@ -30,9 +30,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
   );
   // const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const [selectedSize, setSelectedSize] = useState<number>(
-    Number(nowProduct.sizes[0])
-  );
+  const [selectedSize, setSelectedSize] = useState<string>(nowProduct.sizes[0]);
   const [selectedColor, setSelectedColor] = useState<string>(nowProduct.color);
 
   const [isActiveCart, setIsActiveCart] = useState(false);
@@ -105,7 +103,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
           userId: decodedToken.id,
           productId: nowProduct.id,
           quantity: 1,
-          size: String(selectedSize),
+          size: selectedSize,
         });
         const data = await response.data;
         setNowCartItem(data);
@@ -147,19 +145,21 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
         <div className="flex flex-col items-center gap-3">
           {/* 1 блок */}
           <div className="flex flex-col items-center gap-3 mt-3 text-base">
-            <div className="flex items-start justify-start gap-1 w-full">
-              <Link href="/" className="hover:text-orange-200 transition-all">
-                Главная{" "}
-              </Link>
-              <p>/</p>
-              <Link
-                href={`/${params.products}`}
-                className="hover:text-orange-200 transition-all"
-              >
-                {getCategoryRu(String(params.products)).name}
-              </Link>
-              <p>/</p>
-              <span className="text-orange-200">{nowProduct.name}</span>
+            <div className="w-full">
+              <div className="flex items-start justify-start gap-1 w-full">
+                <Link href="/" className="hover:text-orange-200 transition-all">
+                  Главная{" "}
+                </Link>
+                <p>/</p>
+                <Link
+                  href={`/${params.products}`}
+                  className="hover:text-orange-200 transition-all"
+                >
+                  {getCategoryRu(String(params.products)).name}
+                </Link>
+                <p>/</p>
+              </div>
+              <p className="text-orange-200">{nowProduct.name}</p>
             </div>
 
             <Image

@@ -4,6 +4,7 @@ import { IUseInput, useInput } from "@/hooks/useInput";
 import { IByProductsForm } from "@/interfaces";
 import { useFormStore } from "@/stores/useFormStore";
 import React, { ChangeEvent, useState } from "react";
+import * as RadioGroup from "@radix-ui/react-radio-group";
 
 interface IParams {
   minLength: number;
@@ -25,18 +26,14 @@ export default function FormByProducts() {
   const city = useInput("", { empty: true, minLength: 2, maxLength: 50 });
   const address = useInput("", { empty: true, minLength: 2, maxLength: 50 });
   const postalCode = useInput("", { empty: true, minLength: 2, maxLength: 50 });
-  const paymentMethod = useInput("CARD", {
-    empty: true,
-    minLength: 2,
-    maxLength: 50,
-  }); // временно
+  const [selectedPayment, setSelectedPayment] = useState("CASH");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
-      paymentMethod: paymentMethod.value, // временно
+      paymentMethod: selectedPayment,
     });
 
     updateData(formData);
@@ -88,6 +85,10 @@ export default function FormByProducts() {
     }
 
     return isValid;
+  };
+
+  const handlePaymentChange = (value: string) => {
+    setSelectedPayment(value);
   };
 
   return (
@@ -210,7 +211,7 @@ export default function FormByProducts() {
           Почтовый индекс
         </label>
         <input
-          type="text"
+          type="number"
           placeholder="Почтовый индекс"
           name="postalCode"
           value={formData.postalCode}
@@ -222,6 +223,42 @@ export default function FormByProducts() {
           className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
         />
         {errorsValidation(postalCode, { minLength: 2, maxLength: 50 })}
+      </div>
+
+      <div className="max-w-64 w-full mt-3">
+        <p className="text-white text-base mb-1">Способ оплаты</p>
+
+        <RadioGroup.Root
+          className="flex flex-col gap-2.5 text-white"
+          value={selectedPayment}
+          onValueChange={handlePaymentChange}
+        >
+          <div className="flex items-center">
+            <RadioGroup.Item
+              value="CASH"
+              id="cash"
+              className="size-5 cursor-default rounded-full border border-[#B3B3B3] focus:border-[#6F00FF] bg-white outline-none data-[state=checked]:border-[#6F00FF]"
+            >
+              <RadioGroup.Indicator className="relative flex size-full items-center justify-center after:block after:size-[10px] after:rounded-full after:bg-[#6F00FF]" />
+            </RadioGroup.Item>
+            <label className="pl-2 cursor-pointer text-sm " htmlFor="cash">
+              Наличными
+            </label>
+          </div>
+
+          <div className="flex items-center">
+            <RadioGroup.Item
+              value="CARD"
+              id="card"
+              className="size-5 cursor-default rounded-full border border-[#B3B3B3] focus:border-[#6F00FF] bg-white outline-none data-[state=checked]:border-[#6F00FF]"
+            >
+              <RadioGroup.Indicator className="relative flex size-full items-center justify-center after:block after:size-[10px] after:rounded-full after:bg-[#6F00FF]" />
+            </RadioGroup.Item>
+            <label className="pl-2 cursor-pointer text-sm" htmlFor="card">
+              Банковской картой
+            </label>
+          </div>
+        </RadioGroup.Root>
       </div>
     </form>
   );

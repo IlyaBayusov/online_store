@@ -47,13 +47,13 @@ export default function Header() {
             MAN&apos;S
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Link href="/cart">
               <div className="relative">
                 <RiShoppingBasketLine className="h-8 w-8 p-1.5" />
-                <div className="flex justify-center items-center absolute bottom-0 right-0 z-10 w-4 h-4 bg-white rounded-full text-[11px] text-black font-bold border-2 border-black">
+                {/* <div className="flex justify-center items-center absolute bottom-0 right-0 z-10 w-4 h-4 bg-white rounded-full text-[11px] text-black font-bold border-2 border-black">
                   {cart.length}
-                </div>
+                </div> */}
               </div>
             </Link>
 
