@@ -23,11 +23,7 @@ export default function CategoryList() {
               href={subCategory.urlName}
               onClick={() => updateCategory(category.name.toLowerCase())}
             >
-              <CategoryItem
-                id={subCategory.id}
-                name={subCategory.name}
-                img={subCategory.img}
-              />
+              <CategoryItem name={subCategory.name} img={subCategory.img} />
             </Link>
           ))
         )}

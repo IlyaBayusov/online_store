@@ -17,6 +17,7 @@ export interface IProductInfo {
   sizes: string[];
   quantities: number[];
   images: string[];
+  isActive: boolean;
 }
 
 export interface IDecodedToken {

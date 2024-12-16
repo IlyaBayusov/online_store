@@ -130,3 +130,14 @@ export const getProductCount = async (productId: number, size: string) => {
     console.error("Ошибка получения кол-во товара: ", error);
   }
 };
+
+export const postEnableProductAdmin = async (productId: number) => {
+  try {
+    const response = await api.post(`/v1/products/enable/${productId}`);
+    const data: string = await response.data.enable;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка вкл./выкл. товара: ", error);
+  }
+};

@@ -1,8 +1,9 @@
 "use client";
 
+import { postEnableProductAdmin } from "@/api";
 import { IProductInfo } from "@/interfaces";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { IoIosOptions } from "react-icons/io";
 import {
   MdOutlineKeyboardArrowLeft,
@@ -16,6 +17,17 @@ type Props = {
 };
 
 export default function ProductsAdmin({ products }: Props) {
+  const [isActive, setIsActive] = useState(false);
+
+  const handleClickIsActive = async (productId: number) => {
+    const data = await postEnableProductAdmin(productId);
+
+    if (data) {
+      setIsActive(!isActive);
+    }
+  };
+
+  console.log(products);
   return (
     <div className="flex flex-col w-full px-3 bg-white">
       <div className="flex justify-start items-center gap-1">
@@ -26,7 +38,7 @@ export default function ProductsAdmin({ products }: Props) {
           <MdOutlineKeyboardArrowLeft className="h-5 w-5 p-px text-gray-400" />
         </button>
 
-        <p className="text-red-400 text-sm">1-10 из 24</p>
+        <p className="text-black text-sm">1-10 из 24</p>
 
         <button className="px-2 py-1 border rounded-md">
           <MdOutlineKeyboardArrowRight className="h-5 w-5 p-px text-gray-400" />
@@ -39,7 +51,7 @@ export default function ProductsAdmin({ products }: Props) {
       {products ? (
         <table className="text-black uppercase text-xs text-center -mx-3 mt-3">
           <thead>
-            <tr className="text-red-400">
+            <tr className="text-black">
               <th>Название / Артикул</th>
               <th>Цена</th>
               <th>Кол-во</th>
@@ -73,7 +85,11 @@ export default function ProductsAdmin({ products }: Props) {
                     return acc + currentValue;
                   }, 0)}
                 </td>
-                <td>Вкл.</td>
+                <td>
+                  <button onClick={() => handleClickIsActive(product.id)}>
+                    {product.isActive ? "Вкл." : "Выкл."}
+                  </button>
+                </td>
                 <td className="h-full">
                   <div className="flex justify-center items-center ">
                     <button className="py-1 px-2">

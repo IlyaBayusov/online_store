@@ -9,12 +9,12 @@ type Props = { arrival: IProductCategory };
 export default function NewArrivalsItem({ arrival }: Props) {
   return (
     <div className="flex flex-col justify-center">
-      <div>
+      <div className="relative w-full h-[228px] bg-[#F0F0F0] flex justify-center items-center rounded-md">
         <Image
           src={arrival.image}
           alt={arrival.name}
-          height={200}
-          width={200}
+          fill
+          objectFit="cover"
           className="rounded-md"
         />
       </div>

@@ -19,7 +19,7 @@ export default function HeaderAdmin() {
   return (
     <div className="w-full">
       <div className="flex flex-col items-center w-full">
-        <div className="flex justify-between items-center px-3 bg-red-400 py-1 w-full">
+        <div className="flex justify-between items-center px-3 bg-black py-1 w-full">
           <Link href="/" className="text-base">
             Перейти на главную
           </Link>
@@ -31,12 +31,12 @@ export default function HeaderAdmin() {
 
         <div className="flex justify-between items-center px-3 bg-white w-full border-b">
           <div className="flex items-center gap-3">
-            <FaHouse className="h-4 w-4 text-red-400 text-opacity-80" />
+            <FaHouse className="h-4 w-4 text-black text-opacity-80" />
 
-            {/* <button className="text-base text-red-400 text-opacity-80 py-2">
+            {/* <button className="text-base text-black text-opacity-80 py-2">
               Заказы
             </button> */}
-            <button className="text-base text-red-400 text-opacity-80 py-2">
+            <button className="text-base text-black text-opacity-80 py-2">
               Товары
             </button>
           </div>
@@ -59,7 +59,7 @@ export default function HeaderAdmin() {
               <IoMdArrowBack className="h-5 w-5 text-green-600" />
             </button>
 
-            <h1 className="text-red-400 py-2">Товар</h1>
+            <h1 className="text-black py-2">Товар</h1>
           </div>
 
           <div className="flex items-center gap-1">
