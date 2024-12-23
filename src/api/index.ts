@@ -131,12 +131,16 @@ export const getProductCount = async (productId: number, size: string) => {
   }
 };
 
-export const postEnableProductAdmin = async (productId: number) => {
+export const postEnableProductAdmin = async (
+  productId: number,
+  enable: boolean
+) => {
   try {
-    const response = await api.post(`/v1/products/enable/${productId}`);
-    const data: string = await response.data.enable;
+    const response = await api.post(`/v1/products/enable/${productId}`, {
+      enable,
+    });
 
-    return data;
+    return response;
   } catch (error) {
     console.error("Ошибка вкл./выкл. товара: ", error);
   }

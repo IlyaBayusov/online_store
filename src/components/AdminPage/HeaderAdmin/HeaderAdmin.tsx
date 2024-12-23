@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   IoIosNotifications,
   IoMdArrowBack,
@@ -12,9 +12,19 @@ import { IoSearchSharp } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { useModalStore } from "@/stores/useModalStore";
 import { modalNewProductAdmin } from "@/constans";
+import { usePathname } from "next/navigation";
 
 export default function HeaderAdmin() {
+  const [pageName, setPageName] = useState<string>("Товары");
+
   const { openModal } = useModalStore();
+
+  const path = usePathname();
+
+  useLayoutEffect(() => {
+    if (path === "/adminMenu/orders") setPageName("Заказы");
+    if (path === "/adminMenu") setPageName("Товары");
+  });
 
   return (
     <div className="w-full">
@@ -33,12 +43,18 @@ export default function HeaderAdmin() {
           <div className="flex items-center gap-3">
             <FaHouse className="h-4 w-4 text-black text-opacity-80" />
 
-            {/* <button className="text-base text-black text-opacity-80 py-2">
+            <Link
+              href="/adminMenu/orders"
+              className="text-base text-black text-opacity-80 py-2"
+            >
               Заказы
-            </button> */}
-            <button className="text-base text-black text-opacity-80 py-2">
+            </Link>
+            <Link
+              href="/adminMenu"
+              className="text-base text-black text-opacity-80 py-2"
+            >
               Товары
-            </button>
+            </Link>
           </div>
 
           <div className="flex items-center gap-1">
@@ -59,7 +75,7 @@ export default function HeaderAdmin() {
               <IoMdArrowBack className="h-5 w-5 text-green-600" />
             </button>
 
-            <h1 className="text-black py-2">Товар</h1>
+            <h1 className="text-black py-2">{pageName}</h1>
           </div>
 
           <div className="flex items-center gap-1">

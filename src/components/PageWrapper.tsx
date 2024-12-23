@@ -9,7 +9,7 @@ interface PageWrapperProps {
 
 export default function PageWrapper({ children }: PageWrapperProps) {
   const path = usePathname();
-  const noHeaderPages = ["/adminMenu"];
+  const noHeaderPages = ["/adminMenu", "/adminMenu/orders"];
   const showHeader = !noHeaderPages.includes(path);
 
   return (
