@@ -1,6 +1,6 @@
 "use client";
 
-import { getOrders } from "@/api";
+import { getOrdersAdmin } from "@/api";
 import OrdersItem from "@/components/Orders/OrdersItem/OrdersItem";
 import { IOrdersGet } from "@/interfaces";
 import Link from "next/link";
@@ -11,8 +11,9 @@ export default function OrdersAdmin() {
 
   useEffect(() => {
     const getOrdersList = async () => {
-      const data: IOrdersGet[] | undefined = await getOrders();
-      if (data) setOrders(data);
+      const data = await getOrdersAdmin();
+      console.log(data);
+      if (data.orders) setOrders(data.orders);
     };
 
     getOrdersList();

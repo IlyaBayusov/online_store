@@ -169,3 +169,14 @@ export const putUserRoleAdmin = async (userId: number, role: string) => {
     console.error("Ошибка изменения роли пользователя: ", error);
   }
 };
+
+export const getOrdersAdmin = async () => {
+  try {
+    const response = await api.get(`/v1/orders?size=10`);
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения товаров из корзины: ", error);
+  }
+};
