@@ -1,9 +1,9 @@
 "use client";
 
-import { postEnableProductAdmin } from "@/api";
+import { getProductAdmin, postEnableProductAdmin } from "@/api";
 import { IProductInfo } from "@/interfaces";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosOptions } from "react-icons/io";
 import {
   MdOutlineKeyboardArrowLeft,
@@ -12,12 +12,20 @@ import {
   MdOutlineKeyboardDoubleArrowRight,
 } from "react-icons/md";
 
-type Props = {
-  products: IProductInfo[];
-};
+export default function ProductsAdmin() {
+  const [isActive, setIsActive] = useState(true);
+  const [products, setProducts] = useState<IProductInfo[]>([]);
 
-export default function ProductsAdmin({ products }: Props) {
-  const [isActive, setIsActive] = useState(false);
+  useEffect(() => {
+    const getProducts = async () => {
+      const data = await getProductAdmin();
+
+      if (data) {
+        setProducts(data);
+      }
+    };
+    getProducts();
+  }, [isActive]);
 
   const handleClickIsActive = async (productId: number) => {
     const data = await postEnableProductAdmin(productId, !isActive);
@@ -26,7 +34,9 @@ export default function ProductsAdmin({ products }: Props) {
       setIsActive(!isActive);
     }
   };
-  console.log(products);
+
+  console.log("актив", isActive);
+
   return (
     <div className="flex flex-col w-full px-3 bg-white">
       <div className="flex justify-center items-center gap-1">

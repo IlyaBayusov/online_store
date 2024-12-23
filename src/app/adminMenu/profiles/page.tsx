@@ -80,13 +80,7 @@ export default function ProfilesAdmin() {
                 <td>{user.id}</td>
 
                 <td>{`${user.firstName} ${user.lastName}`}</td>
-                <td>
-                  {user.username === "admin" ? (
-                    <span className="text-red-500">{user.username}</span>
-                  ) : (
-                    <span>{user.username}</span>
-                  )}
-                </td>
+                <td>{user.username}</td>
                 <td>{user.email}</td>
                 <td className="h-full">
                   <button onClick={() => handleClickIsRole(user.id, user.role)}>
