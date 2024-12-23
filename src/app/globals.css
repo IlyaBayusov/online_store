@@ -203,3 +203,12 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.hide-scrollbar-y {
+  overflow-y: scroll;
+  scrollbar-width: none; /* Для Firefox */
+}
+
+.hide-scrollbar-y::-webkit-scrollbar {
+  display: none; /* Для Chrome, Safari и Edge */
+}

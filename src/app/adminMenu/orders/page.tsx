@@ -1,8 +1,9 @@
 "use client";
 
 import { getOrders } from "@/api";
-import OrdersList from "@/components/Orders/OrdersList/OrdersList";
+import OrdersItem from "@/components/Orders/OrdersItem/OrdersItem";
 import { IOrdersGet } from "@/interfaces";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 export default function OrdersAdmin() {
@@ -23,8 +24,17 @@ export default function OrdersAdmin() {
     return <div className="py-1 w-full flex justify-center">Loading...</div>;
 
   return (
-    <div>
-      <OrdersList orders={orders} />
+    <div className="w-full px-3">
+      <div className="my-2 w-full grid grid-cols-2 gap-3">
+        {orders.map((order, index) => (
+          <Link
+            key={index}
+            href={`/${order.categoryName.toLowerCase()}/${order.productId}`}
+          >
+            <OrdersItem order={order} />
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

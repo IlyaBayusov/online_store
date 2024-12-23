@@ -122,3 +122,12 @@ export interface ISizeAndQuantity {
   size: string;
   quantity: number;
 }
+
+export interface IGetUserAdmin {
+  id: number;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  role: string;
+}

@@ -145,3 +145,27 @@ export const postEnableProductAdmin = async (
     console.error("Ошибка вкл./выкл. товара: ", error);
   }
 };
+
+export const getUsersAdmin = async () => {
+  try {
+    const response = await api.get(`/v1/users`);
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения пользователей в админке: ", error);
+  }
+};
+
+export const putUserRoleAdmin = async (userId: number, role: string) => {
+  try {
+    const response = await api.put(`/v1/users/role/${userId}`, {
+      role,
+    });
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка изменения роли пользователя: ", error);
+  }
+};

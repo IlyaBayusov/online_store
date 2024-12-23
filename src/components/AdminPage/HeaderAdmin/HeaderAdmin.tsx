@@ -7,9 +7,8 @@ import {
   IoMdArrowBack,
   IoIosOptions,
 } from "react-icons/io";
-import { FaHouse } from "react-icons/fa6";
+import { FaPlus, FaUsers } from "react-icons/fa6";
 import { IoSearchSharp } from "react-icons/io5";
-import { FaPlus } from "react-icons/fa6";
 import { useModalStore } from "@/stores/useModalStore";
 import { modalNewProductAdmin } from "@/constans";
 import { usePathname } from "next/navigation";
@@ -41,7 +40,9 @@ export default function HeaderAdmin() {
 
         <div className="flex justify-between items-center px-3 bg-white w-full border-b">
           <div className="flex items-center gap-3">
-            <FaHouse className="h-4 w-4 text-black text-opacity-80" />
+            <Link href="/adminMenu/profiles" className="py-2">
+              <FaUsers className="h-5 w-5 text-black text-opacity-80" />
+            </Link>
 
             <Link
               href="/adminMenu/orders"

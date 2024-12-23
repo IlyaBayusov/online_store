@@ -9,13 +9,16 @@ export default function OrdersItem({ order }: Props) {
   return (
     <div className="flex flex-col justify-center">
       <div className="relative">
-        <Image
-          src={order.image}
-          alt={order.image}
-          height={200}
-          width={200}
-          className="rounded-md"
-        />
+        <div className="relative w-full h-[228px] bg-[#F0F0F0] flex justify-center items-center rounded-md">
+          <Image
+            src={order.image}
+            alt={order.productName}
+            fill
+            style={{ objectFit: "cover" }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="rounded-md"
+          />
+        </div>
 
         <div className="absolute top-1 right-0 z-10 flex flex-col justify-end">
           <p className="bg-orange-400 px-2 p-0.5 text-sm rounded-s-md">
