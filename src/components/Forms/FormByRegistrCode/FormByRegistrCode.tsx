@@ -62,7 +62,7 @@ export default function FormByRegistrCode({ isSubmit, setSubmit }: Props) {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/verification",
+        "http://localhost:8080/api/v1/mail/verification",
         { email: formData.email, code }
       );
       const data = await response.data;

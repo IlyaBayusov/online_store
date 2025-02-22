@@ -86,9 +86,7 @@ export default function FormByRegistr({ setSubmit }: Props) {
     setSubmit(); //callback для перенаправления на подтв. кода
 
     try {
-      await axios.get(
-        `http://localhost:8080/api/v1/verification?email=${email}`
-      );
+      await axios.get(`http://localhost:8080/api/v1/mail?email=${email}`);
     } catch (error) {
       console.log("Ошибка отправки запроса на подтверждение кода", error);
       return;
@@ -101,7 +99,7 @@ export default function FormByRegistr({ setSubmit }: Props) {
         Регистрация
       </h1>
       {error && (
-        <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs mt-1">
+        <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs">
           {error}
         </span>
       )}
@@ -128,7 +126,7 @@ export default function FormByRegistr({ setSubmit }: Props) {
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {
-            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs mt-1">
+            <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs">
               {errors?.firstName && (errors?.firstName?.message || "Ошибка!")}
             </span>
           }
@@ -152,7 +150,7 @@ export default function FormByRegistr({ setSubmit }: Props) {
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {
-            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs mt-1">
+            <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs">
               {errors?.lastName && (errors?.lastName?.message || "Ошибка!")}
             </span>
           }
@@ -176,12 +174,12 @@ export default function FormByRegistr({ setSubmit }: Props) {
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {errorMessageUsername && (
-            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs mt-1">
+            <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs">
               {errorMessageUsername}
             </span>
           )}
           {
-            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs mt-1">
+            <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs">
               {errors?.username && (errors?.username?.message || "Ошибка!")}
             </span>
           }
@@ -209,12 +207,12 @@ export default function FormByRegistr({ setSubmit }: Props) {
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {errorMessageEmail && (
-            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs mt-1">
+            <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs">
               {errorMessageEmail}
             </span>
           )}
           {
-            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs mt-1">
+            <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs">
               {errors?.email && (errors?.email?.message || "Ошибка!")}
             </span>
           }
@@ -238,7 +236,7 @@ export default function FormByRegistr({ setSubmit }: Props) {
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
           {
-            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs mt-1">
+            <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs">
               {errors?.password && (errors?.password?.message || "Ошибка!")}
             </span>
           }
@@ -264,14 +262,14 @@ export default function FormByRegistr({ setSubmit }: Props) {
           />
 
           {
-            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs mt-1">
+            <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs">
               {errors?.secondPassword &&
                 (errors?.secondPassword?.message || "Ошибка!")}
             </span>
           }
         </div>
 
-        <button className="bg-white py-2 px-5 rounded-md mt-3" type="submit">
+        <button className="bg-white py-2 px-5 rounded-md mt-1" type="submit">
           Зарегистрироваться
         </button>
       </form>
