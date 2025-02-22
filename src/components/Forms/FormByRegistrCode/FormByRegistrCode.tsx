@@ -5,7 +5,7 @@ import { useFormRegistrStore } from "@/stores/useFormRegistrStore";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface IFormByRegistrCode {
@@ -19,6 +19,15 @@ type Props = {
 
 export default function FormByRegistrCode({ isSubmit, setSubmit }: Props) {
   const [error, setError] = useState("");
+  const [timerExpired, setTimerExpired] = useState<boolean>(false);
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (isSubmit) {
+      startTimer();
+    }
+    return () => stopTimer();
+  }, [isSubmit]);
 
   const router = useRouter();
 
@@ -67,6 +76,10 @@ export default function FormByRegistrCode({ isSubmit, setSubmit }: Props) {
       );
       const data = await response.data;
 
+      if (data) {
+        startTimer();
+      }
+
       switch (data.message) {
         case "SUCCESS":
           postRegistr();
@@ -78,6 +91,7 @@ export default function FormByRegistrCode({ isSubmit, setSubmit }: Props) {
           return;
       }
     } catch (error) {
+      handlePrev();
       console.log("Ошибка отправки запроса с кодом", error);
     }
   };
@@ -114,6 +128,36 @@ export default function FormByRegistrCode({ isSubmit, setSubmit }: Props) {
     setSubmit();
   };
 
+  const handleClickSend = async () => {
+    try {
+      await axios.get(
+        `http://localhost:8080/api/v1/mail?email=${formData.email}`
+      );
+      startTimer();
+    } catch (error) {
+      handlePrev();
+      console.log("Ошибка отправки запроса на подтверждение кода", error);
+      return;
+    }
+  };
+
+  const startTimer = () => {
+    if (timerId) clearTimeout(timerId);
+
+    const newTimerId = setTimeout(() => {
+      setTimerExpired(true);
+    }, 1000 * 5);
+
+    setTimerId(newTimerId);
+  };
+
+  const stopTimer = () => {
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+    setTimerExpired(false);
+  };
+
   return (
     <div className="px-px flex flex-col justify-center items-center w-full max-w-72">
       <h1 className="text-lg font-bold uppercase text-center my-3">
@@ -123,9 +167,9 @@ export default function FormByRegistrCode({ isSubmit, setSubmit }: Props) {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col w-full items-center text-black"
+        className="flex flex-col gap-5 w-full items-center text-black"
       >
-        <div className="ralative flex flex-col justify-center text-base items-center w-full">
+        <div className="relative flex flex-col justify-center text-base items-center w-full">
           <input
             type="number"
             placeholder="Код"
@@ -142,6 +186,7 @@ export default function FormByRegistrCode({ isSubmit, setSubmit }: Props) {
             })}
             className="py-2 px-6 rounded-md mt-1 w-full max-w-72 text-white bg-transparent border border-[#6F00FF]"
           />
+
           {
             <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs mt-1">
               {errors?.code ? errors?.code?.message || "Ошибка!" : " "}
@@ -154,7 +199,17 @@ export default function FormByRegistrCode({ isSubmit, setSubmit }: Props) {
         </button>
       </form>
 
-      <button className="text-greenT text-base mt-1" onClick={handlePrev}>
+      <button
+        disabled={!timerExpired}
+        className={
+          "text-base mt-1" + (timerExpired ? " text-white" : " text-gray-300")
+        }
+        onClick={handleClickSend}
+      >
+        Отправить повторно
+      </button>
+
+      <button className="text-base mt-1" onClick={handlePrev}>
         Назад
       </button>
     </div>
