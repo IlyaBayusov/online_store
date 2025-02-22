@@ -180,3 +180,14 @@ export const getOrdersAdmin = async () => {
     console.error("Ошибка получения товаров из корзины: ", error);
   }
 };
+
+export const getCities = async () => {
+  try {
+    const response = await api.get(`/v1/cities`);
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения городов: ", error);
+  }
+};

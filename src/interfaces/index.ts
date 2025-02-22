@@ -145,3 +145,8 @@ export interface IFormByAuth {
   username: string;
   password: string;
 }
+
+export interface IGetCity {
+  id: number;
+  city: string;
+}

@@ -32,7 +32,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className="w-full mb-3">
       <div
         id="mainIntroBlock"
         className="py-10 flex justify-center items-center"

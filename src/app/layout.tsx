@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body>
-        <div className="wrapper flex flex-col">
+        <div className="relative wrapper flex flex-col">
           <PageWrapper>
             <main className="flex-grow">{children}</main>
           </PageWrapper>

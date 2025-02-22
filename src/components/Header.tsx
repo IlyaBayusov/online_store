@@ -1,40 +1,28 @@
 "use client";
 
-import { getProductsCart } from "@/api";
 import { modalNav } from "@/constans";
-import { IProductInCart } from "@/interfaces";
 import { useModalStore } from "@/stores/useModalStore";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FiMenu } from "react-icons/fi";
 import { RiShoppingBasketLine } from "react-icons/ri";
 import { MdOutlineShoppingBag, MdFavorite } from "react-icons/md";
 import { ProfileDropDownMenu } from "./DropDownMenu/ProfileDropDownMenu/ProfileDropDownMenu";
-import { useCartStore } from "@/stores/useCartStore";
+import { CitiesDDM } from "./DropDownMenu/CitiesDDM/CitiesDDM";
 
 export default function Header() {
-  const [products, setProducts] = useState<IProductInCart[]>([]);
   const { openModal } = useModalStore();
-  const { cart } = useCartStore();
-
-  useEffect(() => {
-    const getProducts = async () => {
-      const data: IProductInCart[] | undefined = await getProductsCart();
-
-      if (data) {
-        setProducts(data);
-      }
-    };
-
-    getProducts();
-  }, []);
 
   return (
-    <div className="bg-black w-full">
+    <header className="bg-black w-full">
       <div className="container px-3">
         <div className="relative -mx-1.5 flex justify-between items-center">
-          <div onClick={() => openModal(modalNav)}>
-            <FiMenu className="h-9 w-9 p-1.5" />
+          <div className="flex items-center gap-2">
+            <div onClick={() => openModal(modalNav)}>
+              <FiMenu className="h-9 w-9 p-1.5" />
+            </div>
+
+            <CitiesDDM />
           </div>
 
           <Link
@@ -67,6 +55,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
