@@ -10,8 +10,6 @@ export const ProfileDropDownMenu = () => {
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    console.log(decodeToken());
-
     if (decodeToken() !== undefined) {
       setIsAuth(true);
     } else {
