@@ -11,6 +11,17 @@ import img_acc from "../../public/main/category/img_acc.webp";
 import img_cloth from "../../public/main/category/img_cloth.jpg";
 import img_shoes from "../../public/main/category/img_shoes.jpg";
 
+export const mainPage = "/";
+export const cartPage = "/cart";
+export const favPage = "/favorites";
+export const ordersPage = "/orders";
+export const profilePage = "/profile";
+export const categoryListPages = "products";
+export const adminMenuPage = "/adminMenu";
+export const adminProfilesPage = "/adminMenu/profiles";
+export const adminOrdersPage = "/adminMenu/orders";
+export const authPage = "/auth";
+
 export const modalNav = "modalNav";
 export const modalNavCategory = "modalNavCategory";
 export const modalCartDeleteProduct = "modalCartDeleteProduct";

@@ -13,7 +13,7 @@ export default function Footer() {
   return (
     <>
       {showFooter && (
-        <footer className="bg-black mt-3 py-3 w-full">
+        <footer className="bg-black py-3 w-full">
           <div className="container px-2">
             <div className="flex justify-center items-center gap-5">
               <a href="#">
