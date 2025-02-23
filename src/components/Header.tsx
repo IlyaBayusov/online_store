@@ -3,7 +3,7 @@
 import { modalNav } from "@/constans";
 import { useModalStore } from "@/stores/useModalStore";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { FiMenu } from "react-icons/fi";
 import { RiShoppingBasketLine } from "react-icons/ri";
 import { MdOutlineShoppingBag, MdFavorite } from "react-icons/md";
@@ -13,7 +13,13 @@ import { useCartStore } from "@/stores/useCartStore";
 
 export default function Header() {
   const { openModal } = useModalStore();
-  const { cart } = useCartStore();
+
+  const cart = useCartStore((state) => state.cart);
+  const getProductsInCart = useCartStore((state) => state.getProductsInCart);
+
+  useEffect(() => {
+    getProductsInCart();
+  }, []);
 
   return (
     <header className="bg-black w-full">
