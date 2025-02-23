@@ -3,13 +3,23 @@
 import Link from "next/link";
 import React from "react";
 import ProductsItem from "../ProductsItem/ProductsItem";
-import { ICategory, IProductCategory } from "@/interfaces/index";
+import {
+  IGetCategories,
+  IPagination,
+  IProductCategory,
+} from "@/interfaces/index";
 
-type Props = { category: ICategory; products: IProductCategory[] };
+type Props = {
+  category: IGetCategories;
+  products: IProductCategory[];
+  pagination: IPagination;
+};
 
-export default function ProductsList({ category, products }: Props) {
-  console.log(products);
-
+export default function ProductsList({
+  category,
+  products,
+  pagination,
+}: Props) {
   return (
     <div className="container px-3">
       <div className="flex justify-center mt-3 mb-5">
@@ -21,7 +31,7 @@ export default function ProductsList({ category, products }: Props) {
         {products.map((product) => (
           <Link
             key={product.productId}
-            href={`/${category.url_name}/${product.productId}`}
+            href={`/${category.id}/${product.productId}`}
           >
             <ProductsItem
               name={product.name}

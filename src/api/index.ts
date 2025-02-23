@@ -191,3 +191,14 @@ export const getCities = async () => {
     console.error("Ошибка получения городов: ", error);
   }
 };
+
+export const getCategories = async () => {
+  try {
+    const response = await api.get(`/v1/categories`);
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения категорий: ", error);
+  }
+};

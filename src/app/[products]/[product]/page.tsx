@@ -1,6 +1,5 @@
 import ProductInfo from "@/components/ProductInfo/ProductInfo";
-import { categoriesList } from "@/constans";
-import { IProductInfo } from "@/interfaces/index";
+import { IGetCategories, IProductInfo } from "@/interfaces/index";
 import axios from "axios";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -10,14 +9,6 @@ const fetchProducts = async (productId: string) => {
     const response = await axios.get(
       `http://localhost:8080/api/v1/products/${productId}`
     );
-
-    if (response.status !== 200) {
-      throw {
-        status: response.status,
-        message: `Ошибка запроса товара с id: ${productId}`,
-      };
-    }
-
     const data = await response.data;
 
     return data;
@@ -28,6 +19,32 @@ const fetchProducts = async (productId: string) => {
   }
 };
 
+const getCategories = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:8080/api/v1/categories",
+      {
+        headers:
+          typeof window !== "undefined"
+            ? {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              }
+            : {},
+      }
+    );
+
+    if (response.status !== 200) {
+      console.error("Ошибка получения категорий: статус", response.status);
+      return null;
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка получения категорий:", error);
+    return null;
+  }
+};
+
 export default async function Product({
   params,
 }: {
@@ -35,25 +52,42 @@ export default async function Product({
 }) {
   const { product, products } = params;
 
-  const arrProduct: IProductInfo[] = await fetchProducts(product);
-
-  const productIdInArray = arrProduct
-    .map((item) => item.id)
-    .indexOf(Number(product));
-
-  if (
-    !categoriesList
-      .map((item) => item.name)
-      .find((item) => item.toLowerCase() === products.toLowerCase())
-  ) {
+  // Получаем продукт
+  const arrProduct: IProductInfo[] | null = await fetchProducts(product);
+  if (!arrProduct) {
     return notFound();
   }
 
-  if (arrProduct)
-    return (
-      <ProductInfo
-        productIdInArray={productIdInArray}
-        arrProduct={arrProduct}
-      />
-    );
+  // Проверяем, есть ли такой продукт
+  const productIndex = arrProduct.findIndex(
+    (item) => String(item.id) === product
+  );
+  if (productIndex === -1) {
+    return notFound();
+  }
+
+  // Получаем категории
+  const response = await getCategories();
+  console.warn("ОТВЕТ:", response);
+
+  const categoriesArr: IGetCategories[] = response.products;
+
+  // Проверяем, существует ли такая категория
+  const category = categoriesArr.find((item) => String(item.id) === products);
+  if (!category) {
+    return notFound();
+  }
+
+  // Проверяем, принадлежит ли продукт этой категории
+  if (arrProduct[productIndex].categoryName !== String(category.name)) {
+    return notFound();
+  }
+
+  return (
+    <ProductInfo
+      productIdInArray={productIndex}
+      arrProduct={arrProduct}
+      category={category}
+    />
+  );
 }

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import ModalNav from "@/components/Modals/ModalNav";
@@ -15,10 +15,10 @@ import PageWrapper from "@/components/PageWrapper";
 //   display: "swap", // Оптимизация отображения шрифта
 // });
 
-export const metadata: Metadata = {
-  title: "Главная",
-  description: "Главная страница",
-};
+// export const metadata: Metadata = {
+//   title: "Главная",
+//   description: "Главная страница",
+// };
 
 export default function RootLayout({
   children,

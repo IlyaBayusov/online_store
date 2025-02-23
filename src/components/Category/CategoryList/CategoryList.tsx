@@ -20,7 +20,7 @@ export default function CategoryList() {
           category.next?.map((subCategory) => (
             <Link
               key={subCategory.id}
-              href={subCategory.name}
+              href={String(subCategory.id)}
               onClick={() => updateCategory(category.name.toLowerCase())}
             >
               <CategoryItem name={subCategory.name} img={subCategory.img} />

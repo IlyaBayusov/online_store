@@ -8,6 +8,7 @@ import EmblaCarousel from "@/components/Carousels/EmblaCarousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { useEffect, useState } from "react";
 import { api } from "@/axios";
+import Head from "next/head";
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -32,55 +33,62 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full mb-3">
-      <div
-        id="mainIntroBlock"
-        className="py-10 flex justify-center items-center"
-      >
-        <div className="flex justify-center items-center border-white border-2 w-24 h-24">
-          <p id="textIntroBlock" className="relative text-xl">
-            MAN`S
-          </p>
-        </div>
-      </div>
+    <>
+      <Head>
+        <title>Главная</title>
+        <meta name="description" content="Главная страница" />
+      </Head>
 
-      <CategoryList />
-
-      <div className="bg-black w-full py-3">
-        <div className="container px-3 marker:">
-          <div className="flex flex-col justify-center items-center">
-            <p className="text-center text-xs">
-              Подписывайтесь в телеграм, а также покупайте понравившиеся вещи в
-              нашем интернет-магазине. У нас для вас готовые образы и всегда
-              свежие тренды сезона. Не упустите шанс оставаться в тренде!
-              Следуйте за нами в Telegram: @mjustdo, чтобы быть в курсе новых
-              продуктов и эксклюзивных предложений.
+      <div className="w-full mb-3">
+        <div
+          id="mainIntroBlock"
+          className="py-10 flex justify-center items-center"
+        >
+          <div className="flex justify-center items-center border-white border-2 w-24 h-24">
+            <p id="textIntroBlock" className="relative text-xl">
+              MAN`S
             </p>
+          </div>
+        </div>
 
-            <div className="max-w-12 max-h-12">
-              <Image src={img_tg} alt="" />
+        <CategoryList />
+
+        <div className="bg-black w-full py-3">
+          <div className="container px-3 marker:">
+            <div className="flex flex-col justify-center items-center">
+              <p className="text-center text-xs">
+                Подписывайтесь в телеграм, а также покупайте понравившиеся вещи
+                в нашем интернет-магазине. У нас для вас готовые образы и всегда
+                свежие тренды сезона. Не упустите шанс оставаться в тренде!
+                Следуйте за нами в Telegram: @mjustdo, чтобы быть в курсе новых
+                продуктов и эксклюзивных предложений.
+              </p>
+
+              <div className="max-w-12 max-h-12">
+                <Image src={img_tg} alt="" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {isLoading ? (
-        <h1>Loading...</h1>
-      ) : !newArrivals.length ? (
-        <h1>Список пуст</h1>
-      ) : (
-        <NewArrivalsList newArrivals={newArrivals} />
-      )}
+        {isLoading ? (
+          <h1>Loading...</h1>
+        ) : !newArrivals.length ? (
+          <h1>Список пуст</h1>
+        ) : (
+          <NewArrivalsList newArrivals={newArrivals} />
+        )}
 
-      <div className="container px-3">
-        <div className="flex justify-center mt-3 mb-5">
-          <h2 id="subTitleLine" className="relative uppercase font-medium">
-            Постоянные покупатели
-          </h2>
+        <div className="container px-3">
+          <div className="flex justify-center mt-3 mb-5">
+            <h2 id="subTitleLine" className="relative uppercase font-medium">
+              Постоянные покупатели
+            </h2>
+          </div>
+
+          <EmblaCarousel options={OPTIONS} />
         </div>
-
-        <EmblaCarousel options={OPTIONS} />
       </div>
-    </div>
+    </>
   );
 }

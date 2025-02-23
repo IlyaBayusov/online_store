@@ -94,6 +94,12 @@ export interface ICategory {
   url_name: string;
 }
 
+export interface IGetCategories {
+  id: number;
+  name: string;
+  categoryGroup: number;
+}
+
 export interface IPostFav {
   userId: number;
   productId: number;
@@ -149,4 +155,11 @@ export interface IFormByAuth {
 export interface IGetCity {
   id: number;
   city: string;
+}
+
+export interface IPagination {
+  currentItems: number;
+  currentPage: number;
+  totalItems: number;
+  totalPages: number;
 }

@@ -2,6 +2,7 @@
 
 import {
   IDecodedToken,
+  IGetCategories,
   IGetFav,
   IProductInCart,
   IProductInfo,
@@ -10,7 +11,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { decodeToken, getCategoryRu, getCodeColor } from "@/utils";
+import { decodeToken, getCodeColor } from "@/utils";
 import ProductTabs from "../Tabs/ProductTabs";
 import { RiShoppingBasketLine, RiShoppingBasketFill } from "react-icons/ri";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
@@ -21,9 +22,14 @@ import { useCartStore } from "@/stores/useCartStore";
 type Props = {
   arrProduct: IProductInfo[];
   productIdInArray: number;
+  category: IGetCategories;
 };
 
-export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
+export default function ProductInfo({
+  arrProduct,
+  productIdInArray,
+  category,
+}: Props) {
   const [arrProducts, setArrProducts] = useState<IProductInfo[]>(arrProduct);
   const [nowProduct, setNowProduct] = useState<IProductInfo>(
     arrProduct[productIdInArray]
@@ -161,7 +167,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
                   href={`/${params.products}`}
                   className="hover:text-orange-200 transition-all"
                 >
-                  {getCategoryRu(String(params.products)).name}
+                  {category.name}
                 </Link>
                 <p>/</p>
               </div>
