@@ -41,7 +41,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
 
   const params = useParams();
 
-  const { addProduct, removeProduct } = useCartStore();
+  const { getProductsInCart } = useCartStore();
 
   useEffect(() => {
     const setActiveBtnCart = async () => {
@@ -101,7 +101,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
         setIsActiveCart(false);
         //удаление из корзины
         await api.delete(`/v1/cart/${nowCartItem.cartItemId}`);
-        removeProduct(nowProduct);
+        getProductsInCart();
       } else {
         setIsActiveCart(true);
         //добавление в корзину
@@ -113,7 +113,7 @@ export default function ProductInfo({ arrProduct, productIdInArray }: Props) {
         });
         const data = await response.data;
         setNowCartItem(data);
-        addProduct(nowProduct);
+        getProductsInCart();
       }
     } catch (error) {
       console.error("Ошибка запроса добавления/удаления в корзину: ", error);

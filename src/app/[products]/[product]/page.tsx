@@ -43,7 +43,7 @@ export default async function Product({
 
   if (
     !categoriesList
-      .map((item) => item.url_name)
+      .map((item) => item.name)
       .find((item) => item.toLowerCase() === products.toLowerCase())
   ) {
     return notFound();

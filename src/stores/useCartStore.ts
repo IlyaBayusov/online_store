@@ -1,57 +1,30 @@
-import { IProductInfo } from "@/interfaces";
+import { getProductsCart } from "@/api";
+import { IProductInCart } from "@/interfaces";
 import { create } from "zustand";
 
 export interface ICartStore {
-  cart: IProductInfo[];
-  sum: number;
+  cart: IProductInCart[];
 
-  addProduct: (productItem: IProductInfo) => void;
-  removeProduct: (productItem: IProductInfo) => void;
-  updateProduct: (productItem: IProductInfo) => void;
+  getProductsInCart: () => Promise<void>;
 
-  plusSum: (amount: number) => void;
-  minusSum: (amount: number) => void;
-  updateSum: (amount: number) => void;
+  updateQuantity: (productId: number, quantity: number) => void;
 }
 
 export const useCartStore = create<ICartStore>((set) => ({
   cart: [],
-  sum: 0,
 
-  addProduct: (productItem: IProductInfo) =>
-    set((state) => {
-      const productExists = state.cart.some(
-        (item) => item.id === productItem.id
-      );
+  getProductsInCart: async () => {
+    const products = await getProductsCart();
 
-      return {
-        cart: productExists ? state.cart : [...state.cart, productItem],
-      };
-    }),
-  removeProduct: (productItem: IProductInfo) =>
     set((state) => ({
-      cart: state.cart.filter((item) => item.id !== productItem.id),
-    })),
+      cart: products ? [...products] : [...state.cart],
+    }));
+  },
 
-  updateProduct: (productItem: IProductInfo) =>
+  updateQuantity: (productId: number, quantity: number) =>
     set((state) => ({
-      cart: state.cart.map((item) =>
-        item.id === productItem.id ? productItem : item
+      cart: state.cart.map((item: IProductInCart) =>
+        item.productId === productId ? { ...item, quantity } : item
       ),
-    })),
-
-  plusSum: (amount: number) =>
-    set((state) => ({
-      sum: state.sum + amount,
-    })),
-
-  minusSum: (amount: number) =>
-    set((state) => ({
-      sum: state.sum - amount,
-    })),
-
-  updateSum: (amount: number) =>
-    set(() => ({
-      sum: amount,
     })),
 }));

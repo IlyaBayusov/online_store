@@ -18,7 +18,7 @@ import { ICategory } from "@/interfaces";
 const fetchProducts = async (products: string) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/v1/products/${products}/category`
+      `http://localhost:8080/api/v1/products/${products}/category&category=${products}`
     );
 
     const data = await response.data;
@@ -42,12 +42,7 @@ export default function Products() {
       setData(productsData.products);
     };
 
-    const categoryRu = categoriesList.find((item) => {
-      if (item.url_name.toLocaleLowerCase() === params.products.toLowerCase())
-        return item;
-    });
-
-    setCategory(categoryRu);
+    setCategory(params.products);
 
     getProducts();
   }, [params.products]);
@@ -55,7 +50,7 @@ export default function Products() {
 
   if (
     !categoriesList
-      .map((item) => item.url_name)
+      .map((item) => item.name)
       .find((item) => item.toLowerCase() === params.products.toLowerCase())
   ) {
     return notFound();

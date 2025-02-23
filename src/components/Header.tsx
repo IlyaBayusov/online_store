@@ -9,9 +9,11 @@ import { RiShoppingBasketLine } from "react-icons/ri";
 import { MdOutlineShoppingBag, MdFavorite } from "react-icons/md";
 import { ProfileDropDownMenu } from "./DropDownMenu/ProfileDropDownMenu/ProfileDropDownMenu";
 import { CitiesDDM } from "./DropDownMenu/CitiesDDM/CitiesDDM";
+import { useCartStore } from "@/stores/useCartStore";
 
 export default function Header() {
   const { openModal } = useModalStore();
+  const { cart } = useCartStore();
 
   return (
     <header className="bg-black w-full">
@@ -37,9 +39,11 @@ export default function Header() {
             <Link href="/cart">
               <div className="relative">
                 <RiShoppingBasketLine className="h-8 w-8 p-1.5" />
-                {/* <div className="flex justify-center items-center absolute bottom-0 right-0 z-10 w-4 h-4 bg-white rounded-full text-[11px] text-black font-bold border-2 border-black">
-                  {cart.length}
-                </div> */}
+                {cart.length !== 0 && (
+                  <div className="flex justify-center items-center absolute bottom-0 right-0 z-10 w-4 h-4 bg-white rounded-full text-[11px] text-black font-bold border-2 border-black">
+                    {cart.length}
+                  </div>
+                )}
               </div>
             </Link>
 

@@ -12,14 +12,18 @@ import React, { useEffect, useState } from "react";
 
 export default function Cart() {
   const [products, setProducts] = useState<IProductInCart[]>([]);
-  const { sum } = useCartStore();
+  const [sum, setSum] = useState<number>(0);
+
+  const { cart, getProductsInCart } = useCartStore();
   const { modalsProps } = useModalStore();
+
   const { updateProducts } = useByProductsStore();
 
   const router = useRouter();
 
   useEffect(() => {
     getProducts();
+    getProductsInCart();
   }, []);
 
   useEffect(() => {
@@ -27,6 +31,14 @@ export default function Cart() {
       getProducts();
     }
   }, [modalsProps]);
+
+  useEffect(() => {
+    const totalSum = cart.reduce(
+      (acc, product) => acc + product.price * product.quantity,
+      0
+    );
+    setSum(totalSum);
+  }, [cart]);
 
   const getProducts = async () => {
     const data: IProductInCart[] | undefined = await getProductsCart();
