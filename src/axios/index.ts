@@ -12,7 +12,7 @@ export const api = axios.create({
 });
 
 let isRefreshing = false;
-let refreshSubscribers: RefreshSubscriber[] = []; // Явно указываем тип
+let refreshSubscribers: RefreshSubscriber[] = [];
 
 const subscribeTokenRefresh = (callback: RefreshSubscriber) => {
   refreshSubscribers.push(callback);
@@ -66,9 +66,9 @@ api.interceptors.response.use(
           }
 
           const response = await api.post("/auth/refresh", { refreshToken });
-          console.log("Ответ от обновления токена: ", response.data);
-
           const data = response.data;
+
+          console.log("Ответ от обновления токена: ", response.data);
 
           localStorage.setItem("accessToken", data.accessToken);
           localStorage.setItem("refreshToken", data.refreshToken);
@@ -78,8 +78,6 @@ api.interceptors.response.use(
           originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
           return api(originalRequest);
         } catch (refreshError) {
-          console.log("ТЕСТ 2");
-
           console.error("Ошибка при обновлении токена:", refreshError);
 
           localStorage.removeItem("accessToken");
@@ -92,6 +90,12 @@ api.interceptors.response.use(
           isRefreshing = false;
         }
       } else {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+
+        console.log("Ошибка при обновлении токена, перенаправляем на /auth");
+        window.location.replace("/auth");
+
         return new Promise((resolve) => {
           subscribeTokenRefresh((accessToken: string) => {
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;

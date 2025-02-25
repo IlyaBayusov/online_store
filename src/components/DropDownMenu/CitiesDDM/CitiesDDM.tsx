@@ -6,6 +6,7 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import { getCities } from "@/api";
 import { IGetCity } from "@/interfaces";
+import Cookies from "js-cookie";
 
 export const CitiesDDM = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -16,14 +17,40 @@ export const CitiesDDM = () => {
     const fetchGetCities = async () => {
       const response = await getCities();
 
-      if (response) {
-        setCities(response);
+      if (!response) return;
+
+      setCities(response);
+
+      if (Cookies.get("userCityName") && Cookies.get("userCityId")) {
+        setCity({
+          city: Cookies.get("userCityName"),
+          id: Number(Cookies.get("userCityId")),
+        });
+      } else {
         setCity(response[0]);
       }
     };
 
     fetchGetCities();
   }, []);
+
+  useEffect(() => {
+    if (city.city) {
+      Cookies.set("userCityName", city.city, {
+        expires: 30, // срок действия (в днях)
+        path: "/", // доступно на всём сайте
+        secure: false, // только HTTPS
+        sameSite: "Strict", // предотвращает CSRF-атаки
+      });
+
+      Cookies.set("userCityId", String(city.id), {
+        expires: 30, // срок действия (в днях)
+        path: "/", // доступно на всём сайте
+        secure: false, // только HTTPS
+        sameSite: "Strict", // предотвращает CSRF-атаки
+      });
+    }
+  }, [city]);
 
   return (
     <DropdownMenu.Root open={isActive} onOpenChange={setIsActive}>
