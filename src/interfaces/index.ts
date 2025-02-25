@@ -2,10 +2,11 @@ import { StaticImageData } from "next/image";
 
 export interface IProductCategory {
   productId: number;
-  categoryName: string;
   name: string;
   image: string;
   price: number;
+  categoryName: string;
+  categoryId: number;
 }
 
 export interface IProductInfo {

@@ -16,7 +16,7 @@ type Props = { product: IProductInCart };
 export default function CartItem({ product }: Props) {
   const [quantity, setQuantity] = useState(product.quantity);
   const { openModal, addModalProps } = useModalStore();
-  const { plusSum, minusSum } = useCartStore();
+  const { plusSum, minusSum } = useCartStore(); // ---------------------- убрать
 
   const handleClickMinus = async () => {
     if (quantity > 1) {

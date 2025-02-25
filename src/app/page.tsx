@@ -19,13 +19,13 @@ export default function Home() {
   useEffect(() => {
     const fetchNewArrivals = async () => {
       try {
-        const response = await api.get("/v1/products?size=6");
+        const response = await api.get("/v1/products?size=10");
         const data = await response.data;
 
         setNewArrivals(data);
         setIsLoading(false);
       } catch (error) {
-        console.log("главная страница: ", error);
+        console.error("главная страница: ", error);
       }
     };
 
@@ -39,7 +39,7 @@ export default function Home() {
         <meta name="description" content="Главная страница" />
       </Head>
 
-      <div className="w-full mb-3">
+      <div className="w-full">
         <div
           id="mainIntroBlock"
           className="py-10 flex justify-center items-center"

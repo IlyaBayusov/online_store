@@ -70,8 +70,6 @@ export default function Products() {
     getCategoriesArr();
   }, [params.products]);
 
-  console.log(products);
-
   if (category) {
     return (
       <ProductsList
