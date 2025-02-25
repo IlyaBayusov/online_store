@@ -1,32 +1,35 @@
 "use client";
 
-import { categories } from "@/constans";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CategoryItem from "../CategoryItem/CategoryItem";
 import Link from "next/link";
-import { useCategoryStore } from "@/stores/useCategoryStore";
+import { getCategories } from "@/api";
+import { IGetCategories } from "@/interfaces";
 
 export default function CategoryList() {
-  const { updateCategory } = useCategoryStore();
+  const [categories, setCategories] = useState<IGetCategories[]>([]);
 
-  //
-  // ------------------- сделать табы
-  //
+  useEffect(() => {
+    const getCategoriesArr = async () => {
+      const response = await getCategories();
+      const categoriesArr: IGetCategories[] = await response.products;
+
+      if (response) {
+        setCategories(categoriesArr);
+      }
+    };
+
+    getCategoriesArr();
+  }, []);
 
   return (
     <div className="container px-3">
       <div className="my-3 w-full grid grid-cols-2 grid-rows-2 gap-3">
-        {categories.map((category) =>
-          category.next?.map((subCategory) => (
-            <Link
-              key={subCategory.id}
-              href={String(subCategory.id)}
-              onClick={() => updateCategory(category.name.toLowerCase())}
-            >
-              <CategoryItem name={subCategory.name} img={subCategory.img} />
-            </Link>
-          ))
-        )}
+        {categories.map((category) => (
+          <Link key={category.id} href={String(category.id)}>
+            <CategoryItem name={category.name} img={category.imageUrl} />
+          </Link>
+        ))}
       </div>
     </div>
   );

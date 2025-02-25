@@ -1,3 +1,5 @@
+import { StaticImageData } from "next/image";
+
 export interface IProductCategory {
   productId: number;
   categoryName: string;
@@ -98,6 +100,7 @@ export interface IGetCategories {
   id: number;
   name: string;
   categoryGroup: number;
+  imageUrl: StaticImageData;
 }
 
 export interface IPostFav {
