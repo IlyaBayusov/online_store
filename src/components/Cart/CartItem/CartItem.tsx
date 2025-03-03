@@ -118,7 +118,7 @@ export default function CartItem({ product }: Props) {
       <div className="flex justify-between w-full mb-2">
         <div className="flex justify-start gap-3 w-full">
           <Link
-            href={`/${product.categoryName.toLowerCase()}/${product.productId}`}
+            href={`/${product.subcategoryId}/${product.productId}`}
             className="max-w-20"
           >
             <Image
@@ -131,11 +131,7 @@ export default function CartItem({ product }: Props) {
           </Link>
 
           <div className="flex flex-col justify-start">
-            <Link
-              href={`/${product.categoryName.toLowerCase()}/${
-                product.productId
-              }`}
-            >
+            <Link href={`/${product.subcategoryId}/${product.productId}`}>
               <h2 className="text-base leading-5">{product.productName}</h2>
             </Link>
 

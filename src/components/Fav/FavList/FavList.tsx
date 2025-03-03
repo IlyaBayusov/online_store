@@ -15,16 +15,20 @@ export default function FavList({ favs }: Props) {
           Избранные
         </h2>
       </div>
-      <div className="my-2 w-full grid grid-cols-2 gap-3">
-        {favs.map((fav, index) => (
-          <Link
-            key={index}
-            href={`/${fav.categoryName.toLowerCase()}/${fav.productId}`}
-          >
-            <FavItem fav={fav} />
-          </Link>
-        ))}
-      </div>
+
+      {favs.length ? (
+        <div className="my-2 w-full grid grid-cols-2 gap-3">
+          {favs.map((fav, index) => (
+            <Link key={index} href={`/${fav.subcategoryId}/${fav.productId}`}>
+              <FavItem fav={fav} />
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-center text-[#B3B3B3] font-semibold mb-3">
+          Список пуст
+        </p>
+      )}
     </div>
   );
 }

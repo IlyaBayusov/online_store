@@ -18,7 +18,7 @@ export default function NewArrivalsList({ newArrivals }: Props) {
           newArrivals.map((arrival) => (
             <Link
               key={arrival.productId}
-              href={`/${arrival.categoryId}/${arrival.productId}`}
+              href={`/${arrival.subcategoryId}/${arrival.productId}`}
             >
               <NewArrivalsItem arrival={arrival} />
             </Link>

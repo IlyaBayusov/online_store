@@ -13,16 +13,22 @@ export default function OrdersList({ orders }: Props) {
           Заказы
         </h2>
       </div>
-      <div className="my-2 w-full grid grid-cols-2 gap-3">
-        {orders.map((order, index) => (
-          <Link
-            key={index}
-            href={`/${order.categoryName.toLowerCase()}/${order.productId}`}
-          >
-            <OrdersItem order={order} />
-          </Link>
-        ))}
-      </div>
+      {orders.length ? (
+        <div className="my-2 w-full grid grid-cols-2 gap-3">
+          {orders.map((order, index) => (
+            <Link
+              key={index}
+              href={`/${order.subcategoryId}/${order.productId}`}
+            >
+              <OrdersItem order={order} />
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-center text-[#B3B3B3] font-semibold mb-3">
+          Список пуст
+        </p>
+      )}
     </div>
   );
 }

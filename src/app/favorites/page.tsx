@@ -18,5 +18,7 @@ export default function Favorites() {
     getFavsList();
   }, []);
 
+  if (!favs) return <div>Loading...</div>;
+
   return <FavList favs={favs} />;
 }

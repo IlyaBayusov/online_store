@@ -36,6 +36,7 @@ export interface IDecodedToken {
 
 export interface IProductInCart {
   cartItemId: number;
+  subcategoryId: number;
   categoryName: string;
   productId: number;
   productName: string;
@@ -72,6 +73,7 @@ export interface IOrderPost {
 
 export interface IOrdersGet {
   productId: number;
+  subcategoryId: number;
   categoryName: string;
   productName: string;
   image: string;
@@ -86,6 +88,7 @@ export interface IOrdersGet {
 export interface IFavsGet {
   favoriteId: number;
   productId: number;
+  subcategoryId: number;
   categoryName: string;
   productName: string;
   image: string;
