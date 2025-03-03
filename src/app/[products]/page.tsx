@@ -5,8 +5,8 @@ import { notFound, useParams } from "next/navigation";
 import ProductsList from "@/components/Products/ProductsList/ProductsList";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import axios from "axios";
-import { IGetCategories, IPagination } from "@/interfaces";
-import { getCategories } from "@/api";
+import { IGetSubCategories, IPagination } from "@/interfaces";
+import { getSubCategories } from "@/api";
 import { IoMdSearch } from "react-icons/io";
 
 const fetchProducts = async (urlName: string) => {
@@ -25,7 +25,7 @@ const fetchProducts = async (urlName: string) => {
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState<IPagination>({} as IPagination);
-  const [category, setCategory] = useState<IGetCategories>();
+  const [category, setCategory] = useState<IGetSubCategories>();
   const [inputSearch, setInputSearch] = useState("");
 
   const params: Params = useParams();
@@ -48,11 +48,11 @@ export default function Products() {
 
   useEffect(() => {
     const getCategoriesArr = async () => {
-      const response = await getCategories();
-      const categoriesArr: IGetCategories[] = await response.products;
+      const response = await getSubCategories();
+      const categoriesArr: IGetSubCategories[] = await response.products;
 
       const categoryId = categoriesArr
-        .map((item: IGetCategories) => item.id)
+        .map((item: IGetSubCategories) => item.id)
         .find((item: number) => String(item) === params.products);
 
       if (!categoryId) {

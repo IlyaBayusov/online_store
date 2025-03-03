@@ -1,5 +1,7 @@
 import axios from "axios";
+import { warn } from "console";
 
+// Типизация для refreshSubscribers
 type RefreshSubscriber = (accessToken: string) => void;
 
 export const api = axios.create({
@@ -25,28 +27,36 @@ const onRefreshed = (accessToken: string) => {
 api.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem("accessToken");
+
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
+
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log("Ответ пришел: ", response);
+    return response;
+  },
   async (error) => {
-    const originalRequest: any = error.config;
+    const originalRequest = error.config;
+    const statusCode = error.response ? error.response.status : null;
 
-    // Проверка на отсутствие ответа (ошибка сети)
-    if (!error.response) {
-      console.error("Ошибка сети или сервер недоступен:", error);
-      return Promise.reject(error);
+    console.log("Ошибка: статус = ", statusCode, "ошибка: ", error);
+
+    if (error.response.data.message && error.response.data.code) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+
+      console.log("Ошибка при обновлении токена, перенаправляем на /auth");
+      window.location.replace("/auth");
     }
-
-    const statusCode = error.response.status;
-
-    console.log("Ошибка 401: статус =", statusCode, error);
 
     if (statusCode === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
@@ -63,11 +73,11 @@ api.interceptors.response.use(
             window.location.replace("/auth");
             return Promise.reject(new Error("No refresh token"));
           }
-
           const response = await api.post("/auth/refresh", { refreshToken });
+
           const data = response.data;
 
-          console.log("Ответ от обновления токена:", data);
+          console.log("Ответ от обновления токена: ", response.data);
 
           localStorage.setItem("accessToken", data.accessToken);
           localStorage.setItem("refreshToken", data.refreshToken);
@@ -78,13 +88,6 @@ api.interceptors.response.use(
           return api(originalRequest);
         } catch (refreshError) {
           console.error("Ошибка при обновлении токена:", refreshError);
-
-          if (refreshError.response?.status === 403) {
-            console.log("Refresh-токен истек, разлогиниваем пользователя");
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            window.location.replace("/auth");
-          }
 
           return Promise.reject(refreshError);
         } finally {

@@ -89,11 +89,6 @@ export const categoriesPages = [
 
 export const categories = [
   {
-    id: 1,
-    name: "Новинки",
-    img: img_warm,
-  },
-  {
     id: 2,
     name: "Одежда",
     img: img_cloth,

@@ -201,9 +201,20 @@ export const getCities = async () => {
   }
 };
 
-export const getCategories = async () => {
+export const getSupCategories = async () => {
   try {
     const response = await api.get(`/v1/categories`);
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения категорий: ", error);
+  }
+};
+
+export const getSubCategories = async () => {
+  try {
+    const response = await api.get(`/v1/subcategories`);
     const data = await response.data;
 
     return data;
@@ -217,11 +228,11 @@ export const getProductsSearchWithParams = async (
   size: number = sizePage,
   sortField: string = "id,asc",
   searchParam: string,
-  sizes: string[] = [],
-  colors: string[] = [],
-  minPrice: number,
-  maxPrice: number,
-  brands: string[] = []
+  sizes: string[] | null = null,
+  colors: string[] | null = null,
+  minPrice: number | null = null,
+  maxPrice: number | null = null,
+  brands: string[] | null = null
 ) => {
   try {
     const response = await api.get(

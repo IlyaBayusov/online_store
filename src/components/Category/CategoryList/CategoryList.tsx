@@ -3,19 +3,19 @@
 import React, { useEffect, useState } from "react";
 import CategoryItem from "../CategoryItem/CategoryItem";
 import Link from "next/link";
-import { getCategories } from "@/api";
-import { IGetCategories } from "@/interfaces";
+import { getSubCategories } from "@/api";
+import { IGetSubCategories } from "@/interfaces";
 
 export default function CategoryList() {
-  const [categories, setCategories] = useState<IGetCategories[]>([]);
+  const [subCategories, setSubCategories] = useState<IGetSubCategories[]>([]);
 
   useEffect(() => {
     const getCategoriesArr = async () => {
-      const response = await getCategories();
-      const categoriesArr: IGetCategories[] = await response;
+      const response = await getSubCategories();
+      const categoriesArr: IGetSubCategories[] = await response.products;
 
       if (response) {
-        setCategories(categoriesArr);
+        setSubCategories(categoriesArr);
       }
     };
 
@@ -25,16 +25,11 @@ export default function CategoryList() {
   return (
     <div className="container px-3">
       <div className="my-3 w-full grid grid-cols-2 grid-rows-2 gap-3">
-        {categories.map((category) =>
-          category.subcategories.map((subCategory) => (
-            <Link key={subCategory.id} href={String(subCategory.id)}>
-              <CategoryItem
-                name={subCategory.name}
-                img={subCategory.imageUrl}
-              />
-            </Link>
-          ))
-        )}
+        {subCategories.map((subCategory) => (
+          <Link key={subCategory.id} href={String(subCategory.id)}>
+            <CategoryItem name={subCategory.name} img={subCategory.imageUrl} />
+          </Link>
+        ))}
       </div>
     </div>
   );

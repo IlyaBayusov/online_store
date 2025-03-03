@@ -117,19 +117,14 @@ export default function ModalNav() {
                     }
                   >
                     <p className="uppercase">{category.name}</p>
-                    {index === 0 ? (
-                      <div className="absolute top-1/2 -translate-y-1/2 right-2 z-10">
-                        <MdFiberNew className="w-10 h-10" />
-                      </div>
-                    ) : (
-                      <div className="absolute top-0 right-0 z-10 h-full">
-                        <Image
-                          src={category.img}
-                          alt={category.name}
-                          className="object-cover h-full w-auto rounded-r-md"
-                        />
-                      </div>
-                    )}
+
+                    <div className="absolute top-0 right-0 z-10 h-full">
+                      <Image
+                        src={category.img}
+                        alt={category.name}
+                        className="object-cover h-full w-auto rounded-r-md"
+                      />
+                    </div>
                   </li>
                 ))}
               </ul>

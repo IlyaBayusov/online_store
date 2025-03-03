@@ -4,13 +4,13 @@ import Link from "next/link";
 import React from "react";
 import ProductsItem from "../ProductsItem/ProductsItem";
 import {
-  IGetCategories,
+  IGetSubCategories,
   IPagination,
   IProductCategory,
 } from "@/interfaces/index";
 
 type Props = {
-  category: IGetCategories;
+  category: IGetSubCategories;
   products: IProductCategory[];
   pagination: IPagination;
 };

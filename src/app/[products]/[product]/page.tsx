@@ -22,7 +22,7 @@ const fetchProducts = async (productId: string) => {
 const getCategories = async () => {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/v1/categories",
+      "http://localhost:8080/api/v1/subcategories",
       {
         headers:
           typeof window !== "undefined"
