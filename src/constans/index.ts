@@ -35,12 +35,28 @@ export const modalDeleteEditNewProduct = "modalDeleteEditNewProduct";
 
 export const messageCount = "Нет на складе";
 
-// Chelsea - id - 1
-// Sneakers - id - 2
-// Pants - id - 3
-// Shirts - id -4
-// Ties - id - 5
-// Belts - id - 6
+export const filtersUpDown = [
+  {
+    id: 0,
+    name: "Новые",
+    value: "id,desc",
+  },
+  {
+    id: 1,
+    name: "Старые",
+    value: "id,asc",
+  },
+  {
+    id: 2,
+    name: "Дорогие",
+    value: "totalPrice,desc",
+  },
+  {
+    id: 3,
+    name: "Дешевые",
+    value: "totalPrice,asc",
+  },
+];
 
 export const categoriesPages = [
   {

@@ -173,3 +173,9 @@ export interface IPagination {
   totalItems: number;
   totalPages: number;
 }
+
+export interface IFiltersUpDown {
+  id: number;
+  name: string;
+  value: string;
+}

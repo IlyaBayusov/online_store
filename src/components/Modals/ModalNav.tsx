@@ -6,14 +6,22 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
-import { categories, modalNav, modalNavCategory } from "@/constans";
+import {
+  categories,
+  filtersUpDown,
+  modalNav,
+  modalNavCategory,
+} from "@/constans";
 import { useCategoryStore } from "@/stores/useCategoryStore";
 import { decodeToken } from "@/utils";
 // import { MdFiberNew } from "react-icons/md";
 import { IoMdSearch } from "react-icons/io";
 import { getProductsSearchWithParams } from "@/api";
-import { IPagination, IProductCategory } from "@/interfaces";
+import { IFiltersUpDown, IPagination, IProductCategory } from "@/interfaces";
 import ProductsItem from "../Products/ProductsItem/ProductsItem";
+import { MdOutlineFilterList } from "react-icons/md";
+import { HiMiniArrowsUpDown } from "react-icons/hi2";
+import FilterUpDownDDM from "../DropDownMenu/FIltersUpDownDDM/FilterUpDownDDM";
 
 export default function ModalNav() {
   const { modals, openModal, closeModal, addModalProps } = useModalStore();
@@ -24,6 +32,9 @@ export default function ModalNav() {
   const [products, setProducts] = useState<IProductCategory[]>([]);
   const [pagination, setPagination] = useState<IPagination>({} as IPagination);
   const [isFetch, setIsFetch] = useState<boolean>(false);
+  const [filterUpDown, setFilterUpDown] = useState<IFiltersUpDown>(
+    filtersUpDown[0]
+  );
 
   useEffect(() => {
     const decodedToken = decodeToken();
@@ -93,18 +104,24 @@ export default function ModalNav() {
           </div>
 
           <div className="flex flex-col mt-3 overflow-y-auto hide-scrollbar-y">
-            <div className="w-full flex justify-center items-center gap-2">
-              <input
-                type="text"
-                placeholder="Поиск"
-                className="py-2 px-4 w-full text-sm bg-[#3A3A3A] text-white rounded-md"
-                onChange={handleChangeSearch}
-                value={inputSearch}
-                onKeyDown={(e) => e.key === "Enter" && handleClickSearch()}
-              />
-              <button className="py-2" onClick={handleClickSearch}>
-                <IoMdSearch className="h-5 w-5 text-white" />
-              </button>
+            <div className="w-full flex flex-col gap-2">
+              <div className="w-full flex justify-center items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Поиск"
+                  className="py-2 px-4 w-full text-sm bg-[#3A3A3A] text-white rounded-md"
+                  onChange={handleChangeSearch}
+                  value={inputSearch}
+                  onKeyDown={(e) => e.key === "Enter" && handleClickSearch()}
+                />
+                <button className="py-2" onClick={handleClickSearch}>
+                  <IoMdSearch className="h-5 w-5 text-white" />
+                </button>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <FilterUpDownDDM />
+              </div>
             </div>
 
             {!isFetch ? (
@@ -202,7 +219,7 @@ export default function ModalNav() {
                 </div>
               </>
             ) : products.length ? (
-              <div className="my-2 w-full grid grid-cols-2 gap-3">
+              <div className="mt-6 mb-2 w-full grid grid-cols-2 gap-3">
                 {products.map((product) => (
                   <Link
                     key={product.productId}
@@ -217,7 +234,7 @@ export default function ModalNav() {
                 ))}
               </div>
             ) : (
-              <span className="mt-3 text-center text-base leading-none text-[#B3B3B3]">
+              <span className="mt-6 text-center text-base leading-none text-[#B3B3B3]">
                 Список пуст
               </span>
             )}
