@@ -7,13 +7,7 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import axios from "axios";
 import { IGetCategories, IPagination } from "@/interfaces";
 import { getCategories } from "@/api";
-
-// Chelsea - id - 1
-// Sneakers - id - 2
-// Trousers - id - 3
-// Shirts - id -4
-// Ties - id - 5
-// Belts - id - 6
+import { IoMdSearch } from "react-icons/io";
 
 const fetchProducts = async (urlName: string) => {
   try {
@@ -32,6 +26,7 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState<IPagination>({} as IPagination);
   const [category, setCategory] = useState<IGetCategories>();
+  const [inputSearch, setInputSearch] = useState("");
 
   const params: Params = useParams();
 
@@ -70,13 +65,36 @@ export default function Products() {
     getCategoriesArr();
   }, [params.products]);
 
+  useEffect(() => {
+    setInterval(() => {}, 500);
+  }, [inputSearch]);
+
+  const handleClickSearch = (e) => {
+    setInputSearch(e.target.value);
+  };
+
   if (category) {
     return (
-      <ProductsList
-        category={category}
-        products={products}
-        pagination={pagination}
-      />
+      <>
+        <div className="mt-3 px-3 w-full flex justify-center items-center gap-2">
+          <input
+            type="text"
+            placeholder="Поиск"
+            className="py-2 px-4 w-full text-sm bg-[#3A3A3A] text-white rounded-md"
+            onChange={handleClickSearch}
+            value={inputSearch}
+          />
+          <button className="py-2">
+            <IoMdSearch className="h-5 w-5 text-white" />
+          </button>
+        </div>
+
+        <ProductsList
+          category={category}
+          products={products}
+          pagination={pagination}
+        />
+      </>
     );
   }
 }

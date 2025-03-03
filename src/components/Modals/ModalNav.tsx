@@ -10,12 +10,15 @@ import { categories, modalNav, modalNavCategory } from "@/constans";
 import { useCategoryStore } from "@/stores/useCategoryStore";
 import { decodeToken } from "@/utils";
 import { MdFiberNew } from "react-icons/md";
+import { IoMdSearch } from "react-icons/io";
+import { getProductsSearchWithParams } from "@/api";
 
 export default function ModalNav() {
   const { modals, openModal, closeModal, addModalProps } = useModalStore();
   const { updateCategory } = useCategoryStore();
 
   const [role, setRole] = useState<string>("");
+  const [inputSearch, setInputSearch] = useState("");
 
   useEffect(() => {
     const decodedToken = decodeToken();
@@ -33,6 +36,22 @@ export default function ModalNav() {
     addModalProps(modalNavCategory, nextCategory);
     openModal(modalNavCategory);
     closeModal(modalNav);
+  };
+
+  const handleClickSearch = async () => {
+    const response = await getProductsSearchWithParams(
+      undefined,
+      undefined,
+      undefined,
+      inputSearch
+    );
+    const data = await response.data;
+
+    console.log(data);
+  };
+
+  const handleChangeSearch = (e) => {
+    setInputSearch(e.target.value);
   };
 
   return (
@@ -54,11 +73,18 @@ export default function ModalNav() {
           </div>
 
           <div className="flex flex-col mt-3 overflow-y-auto">
-            <input
-              type="text"
-              placeholder="Поиск"
-              className="py-2 px-4 bg-[#3A3A3A] text-white rounded-md"
-            />
+            <div className="w-full flex justify-center items-center gap-2">
+              <input
+                type="text"
+                placeholder="Поиск"
+                className="py-2 px-4 w-full text-sm bg-[#3A3A3A] text-white rounded-md"
+                onChange={handleChangeSearch}
+                value={inputSearch}
+              />
+              <button className="py-2" onClick={handleClickSearch}>
+                <IoMdSearch className="h-5 w-5 text-white" />
+              </button>
+            </div>
 
             <nav className="mt-6">
               <ul className="flex flex-col gap-3">

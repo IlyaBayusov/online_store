@@ -100,7 +100,13 @@ export interface ICategory {
 export interface IGetCategories {
   id: number;
   name: string;
-  categoryGroup: number;
+  imageUrl: StaticImageData;
+  subcategories: IGetSubCategories[];
+}
+
+export interface IGetSubCategories {
+  id: number;
+  name: string;
   imageUrl: StaticImageData;
 }
 

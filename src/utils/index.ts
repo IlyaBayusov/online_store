@@ -7,14 +7,12 @@ export const decodeToken = () => {
   const token = localStorage.getItem("accessToken");
 
   if (!token) {
-    // window.location.href = "http://localhost:3000/auth";
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     return;
   }
 
   const decoded: IDecodedToken = jwtDecode(token);
-  console.log("jwt decoded: ", decoded);
 
   return decoded;
 };

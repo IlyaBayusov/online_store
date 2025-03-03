@@ -1,4 +1,5 @@
 import { api } from "@/axios";
+import { sizePage } from "@/constans";
 import {
   IDecodedToken,
   IGetFav,
@@ -208,5 +209,28 @@ export const getCategories = async () => {
     return data;
   } catch (error) {
     console.error("Ошибка получения категорий: ", error);
+  }
+};
+
+export const getProductsSearchWithParams = async (
+  page: number = 0,
+  size: number = sizePage,
+  sortField: string = "id,asc",
+  searchParam: string,
+  sizes: string[] = [],
+  colors: string[] = [],
+  minPrice: number,
+  maxPrice: number,
+  brands: string[] = []
+) => {
+  try {
+    const response = await api.get(
+      `/v1/product/search?page=${page}&size=${size}&sortField=${sortField}&searchParam=${searchParam}&sizes=${sizes}&colors=${colors}&minPrice=${minPrice}&maxPrice=${maxPrice}&brands=${brands}`
+    );
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения товаров по поиску: ", error);
   }
 };

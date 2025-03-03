@@ -11,6 +11,10 @@ import img_acc from "../../public/main/category/img_acc.webp";
 import img_cloth from "../../public/main/category/img_cloth.jpg";
 import img_shoes from "../../public/main/category/img_shoes.jpg";
 
+export const sizePage = 10;
+
+export const baseURL = "http://localhost:3000";
+
 export const mainPage = "/";
 export const cartPage = "/cart";
 export const favPage = "/favorites";
@@ -97,13 +101,11 @@ export const categories = [
       {
         id: 1,
         name: "Брюки",
-        urlName: "trousers",
         img: img_trousers,
       },
       {
         id: 2,
         name: "Рубашки",
-        urlName: "shirts",
         img: img_shirts,
       },
     ],
