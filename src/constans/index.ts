@@ -29,6 +29,8 @@ export const modalSuccessOrder = "modalSuccessOrder";
 export const modalNewProductAdmin = "modalNewProductAdmin";
 export const modalDeleteEditNewProduct = "modalDeleteEditNewProduct";
 
+export const messageCount = "Нет на складе";
+
 // Chelsea - id - 1
 // Sneakers - id - 2
 // Pants - id - 3
@@ -153,45 +155,6 @@ export const categoriesList = [
   { id: 4, name: "Рубашки" },
   { id: 5, name: "Галстуки" },
   { id: 6, name: "Ремни" },
-];
-
-export const newArrivals = [
-  {
-    id: 1,
-    name: "TYROLEAN SNEAKERS",
-    img: img_test_shoes1,
-    price: "59 руб",
-  },
-  {
-    id: 2,
-    name: "TYROLEAN SNEAKERS",
-    img: img_test_shoes1,
-    price: "59 руб",
-  },
-  {
-    id: 3,
-    name: "TYROLEAN SNEAKERS",
-    img: img_test_shoes1,
-    price: "59 руб",
-  },
-  {
-    id: 4,
-    name: "TYROLEAN SNEAKERS",
-    img: img_test_shoes1,
-    price: "59 руб",
-  },
-  {
-    id: 5,
-    name: "TYROLEAN SNEAKERS",
-    img: img_test_shoes1,
-    price: "59 руб",
-  },
-  {
-    id: 6,
-    name: "TYROLEAN SNEAKERS",
-    img: img_test_shoes1,
-    price: "59 руб",
-  },
 ];
 
 export const colors = [

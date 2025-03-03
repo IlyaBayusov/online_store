@@ -68,7 +68,6 @@ export default async function Product({
 
   // Получаем категории
   const response = await getCategories();
-  console.warn("ОТВЕТ:", response);
 
   const categoriesArr: IGetCategories[] = response.products;
 

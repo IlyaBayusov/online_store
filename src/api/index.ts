@@ -40,14 +40,23 @@ export const putProductCart = async (
 ) => {
   try {
     const response = await api.put(`/v1/cart/${product.cartItemId}`, {
-      ...product,
       quantity: updateQuantity,
     });
-    console.log("Кол-во изменено: ", response);
 
     return response;
   } catch (error) {
     console.error("Ошибка изменения кол-ва товара в корзине: ", error);
+  }
+};
+
+export const postCount = async (productId: number, size: string) => {
+  try {
+    const response = await api.post(`/v1/products/count`, { productId, size });
+    const data: { productCount: number } = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения количества товара: ", error);
   }
 };
 

@@ -58,10 +58,10 @@ api.interceptors.response.use(
           const refreshToken = localStorage.getItem("refreshToken");
 
           if (!refreshToken) {
-            console.log("Refresh token не найден, перенаправляем на /auth");
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            window.location.replace("/auth");
+            // console.log("Refresh token не найден, перенаправляем на /auth");
+            // localStorage.removeItem("accessToken");
+            // localStorage.removeItem("refreshToken");
+            // window.location.replace("/auth");
             return Promise.reject(new Error("No refresh token"));
           }
 
@@ -80,21 +80,21 @@ api.interceptors.response.use(
         } catch (refreshError) {
           console.error("Ошибка при обновлении токена:", refreshError);
 
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
+          // localStorage.removeItem("accessToken");
+          // localStorage.removeItem("refreshToken");
 
-          console.log("Ошибка при обновлении токена, перенаправляем на /auth");
-          window.location.replace("/auth");
+          // console.log("Ошибка при обновлении токена, перенаправляем на /auth");
+          // window.location.replace("/auth");
           return Promise.reject(refreshError);
         } finally {
           isRefreshing = false;
         }
       } else {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+        // localStorage.removeItem("accessToken");
+        // localStorage.removeItem("refreshToken");
 
-        console.log("Ошибка при обновлении токена, перенаправляем на /auth");
-        window.location.replace("/auth");
+        // console.log("Ошибка при обновлении токена, перенаправляем на /auth");
+        // window.location.replace("/auth");
 
         return new Promise((resolve) => {
           subscribeTokenRefresh((accessToken: string) => {

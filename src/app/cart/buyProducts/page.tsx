@@ -104,7 +104,7 @@ export default function BuyProducts() {
             </div>
           </div>
 
-          <div className="p-3 bg-black rounded-md w-full mb-[4.5rem]">
+          <div className="p-3 bg-black rounded-md w-full mb-[6.25rem]">
             <p className="text-[#B3B3B3] uppercase text-sm">
               Заполнение данных
             </p>

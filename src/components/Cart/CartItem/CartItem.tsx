@@ -1,13 +1,13 @@
 "use client";
 
-import { getProductCount, putProductCart } from "@/api";
-import { modalCartDeleteProduct } from "@/constans";
+import { postCount, putProductCart } from "@/api";
+import { messageCount, modalCartDeleteProduct } from "@/constans";
 import { IProductInCart } from "@/interfaces";
 import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
@@ -15,26 +15,89 @@ type Props = { product: IProductInCart };
 
 export default function CartItem({ product }: Props) {
   const [quantity, setQuantity] = useState(product.quantity);
-  const { openModal, addModalProps } = useModalStore();
-  const { plusSum, minusSum } = useCartStore(); // ---------------------- убрать
+  const [count, setCount] = useState({} as { productCount: number });
+  const [titleCount, setTitleCount] = useState<string>("");
+  const [isDisabledPlus, setIsDisabledPlus] = useState(false);
+  const [isDisabledMinus, setIsDisabledMinus] = useState(false);
 
-  const handleClickMinus = async () => {
+  const { updateQuantity } = useCartStore();
+  const { openModal, addModalProps } = useModalStore();
+
+  useEffect(() => {
+    const getCount = async () => {
+      const dataCount = await postCount(product.productId, product.size);
+      console.log(dataCount, product.productId);
+
+      if (dataCount) {
+        setCount(dataCount);
+      }
+
+      if (!quantity) {
+        setIsDisabledPlus(true);
+        setIsDisabledMinus(true);
+
+        setQuantity(0);
+        setTitleCount(messageCount);
+        return;
+      }
+
+      setQuantity(product.quantity);
+      setTitleCount("");
+    };
+
+    getCount();
+  }, []);
+
+  useEffect(() => {
+    updateQuantity(product.productId, quantity);
+
+    if (quantity <= 1 && !titleCount) {
+      setIsDisabledMinus(true);
+      setIsDisabledPlus(false);
+      setQuantity(1);
+    }
+
+    if (quantity >= 100) {
+      setIsDisabledPlus(true);
+      setIsDisabledMinus(false);
+      setQuantity(100);
+    }
+  }, [quantity]);
+
+  const putQuantity = async () => {
+    const response = await putProductCart(product, quantity);
+    const data = await response?.data;
+
+    if (data) {
+      return data.quantity;
+    }
+  };
+
+  const handleClickMinus = () => {
     if (quantity > 1) {
-      const newQuantity = quantity - 1;
-      await putProductCart(product, newQuantity);
-      setQuantity(newQuantity);
-      minusSum(product.price);
+      setIsDisabledPlus(false);
+
+      setQuantity(quantity - 1);
     }
   };
 
   const handleClickPlus = async () => {
-    const productCount = await getProductCount(product.productId, product.size);
+    const dataQuantity = await putQuantity();
+    console.log(dataQuantity);
 
-    if (quantity < 99 && quantity < productCount) {
-      const newQuantity = quantity + 1;
-      await putProductCart(product, newQuantity);
-      setQuantity(newQuantity);
-      plusSum(product.price);
+    if (!dataQuantity) {
+      setIsDisabledPlus(true);
+      return;
+    }
+
+    setIsDisabledMinus(false);
+
+    if (quantity < 100 && quantity < count.productCount) {
+      setQuantity((prev) => prev + 1);
+    }
+
+    if (quantity + 1 === 100 || quantity + 1 === count.productCount) {
+      setIsDisabledPlus(true);
     }
   };
 
@@ -83,7 +146,7 @@ export default function CartItem({ product }: Props) {
 
             <div className="flex justify-start items-center mt-2">
               <button
-                disabled={quantity <= 1}
+                disabled={isDisabledMinus}
                 className="w-6 h-6 flex justify-center items-center disabled:bg-[#3A3A3A] bg-fuchsia-700 rounded-md"
                 onClick={handleClickMinus}
               >
@@ -93,7 +156,7 @@ export default function CartItem({ product }: Props) {
                 <p className="text-base text-center">{quantity}</p>
               </div>
               <button
-                disabled={quantity > 99}
+                disabled={isDisabledPlus}
                 className="w-6 h-6 flex justify-center items-center disabled:bg-[#3A3A3A] bg-fuchsia-700 rounded-md"
                 onClick={handleClickPlus}
               >
