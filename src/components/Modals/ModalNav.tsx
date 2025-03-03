@@ -9,9 +9,11 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { categories, modalNav, modalNavCategory } from "@/constans";
 import { useCategoryStore } from "@/stores/useCategoryStore";
 import { decodeToken } from "@/utils";
-import { MdFiberNew } from "react-icons/md";
+// import { MdFiberNew } from "react-icons/md";
 import { IoMdSearch } from "react-icons/io";
 import { getProductsSearchWithParams } from "@/api";
+import { IPagination, IProductCategory } from "@/interfaces";
+import ProductsItem from "../Products/ProductsItem/ProductsItem";
 
 export default function ModalNav() {
   const { modals, openModal, closeModal, addModalProps } = useModalStore();
@@ -19,6 +21,9 @@ export default function ModalNav() {
 
   const [role, setRole] = useState<string>("");
   const [inputSearch, setInputSearch] = useState("");
+  const [products, setProducts] = useState<IProductCategory[]>([]);
+  const [pagination, setPagination] = useState<IPagination>({} as IPagination);
+  const [isFetch, setIsFetch] = useState<boolean>(false);
 
   useEffect(() => {
     const decodedToken = decodeToken();
@@ -27,6 +32,13 @@ export default function ModalNav() {
       setRole(decodedToken.roles);
     }
   }, []);
+
+  useEffect(() => {
+    if (!inputSearch) {
+      setProducts([]);
+      setIsFetch(false);
+    }
+  }, [inputSearch]);
 
   const handleModalNav = (
     nextCategory: INextCategoryProps[],
@@ -45,12 +57,20 @@ export default function ModalNav() {
       undefined,
       inputSearch
     );
-    const data = await response.data;
 
-    console.log(data);
+    if (response) {
+      setIsFetch(true);
+      setProducts(response.items);
+      setPagination({
+        currentItems: response.currentItems,
+        currentPage: response.currentPage,
+        totalItems: response.totalItems,
+        totalPages: response.totalPages,
+      });
+    }
   };
 
-  const handleChangeSearch = (e) => {
+  const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputSearch(e.target.value);
   };
 
@@ -72,7 +92,7 @@ export default function ModalNav() {
             </div>
           </div>
 
-          <div className="flex flex-col mt-3 overflow-y-auto">
+          <div className="flex flex-col mt-3 overflow-y-auto hide-scrollbar-y">
             <div className="w-full flex justify-center items-center gap-2">
               <input
                 type="text"
@@ -80,91 +100,127 @@ export default function ModalNav() {
                 className="py-2 px-4 w-full text-sm bg-[#3A3A3A] text-white rounded-md"
                 onChange={handleChangeSearch}
                 value={inputSearch}
+                onKeyDown={(e) => e.key === "Enter" && handleClickSearch()}
               />
               <button className="py-2" onClick={handleClickSearch}>
                 <IoMdSearch className="h-5 w-5 text-white" />
               </button>
             </div>
 
-            <nav className="mt-6">
-              <ul className="flex flex-col gap-3">
-                <Link
-                  href="/"
-                  className="mb-3 bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
-                  onClick={() => closeModal(modalNav)}
-                >
-                  Главная
-                </Link>
+            {!isFetch ? (
+              <>
+                <nav className="mt-6">
+                  <ul className="flex flex-col gap-3">
+                    <Link
+                      href="/"
+                      className="mb-3 bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
+                      onClick={() => closeModal(modalNav)}
+                    >
+                      Главная
+                    </Link>
 
-                {role === "ADMIN" && (
+                    {role === "ADMIN" && (
+                      <Link
+                        href="/adminMenu"
+                        className="mb-3 bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
+                        onClick={() => closeModal(modalNav)}
+                      >
+                        Админ панель
+                      </Link>
+                    )}
+
+                    {categories.map((category, index) => (
+                      <li
+                        key={index}
+                        className="relative bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center"
+                        onClick={() =>
+                          category.next
+                            ? handleModalNav(category.next, category.name)
+                            : null
+                        }
+                      >
+                        <p className="uppercase">{category.name}</p>
+
+                        <div className="absolute top-0 right-0 z-10 h-full">
+                          <Image
+                            src={category.img}
+                            alt={category.name}
+                            className="object-cover h-full w-auto rounded-r-md"
+                          />
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+
+                <div className="flex flex-col justify-start uppercase mt-6 gap-3">
                   <Link
-                    href="/adminMenu"
-                    className="mb-3 bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
+                    href="/cart"
+                    className="bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
                     onClick={() => closeModal(modalNav)}
                   >
-                    Админ панель
+                    Корзина
                   </Link>
-                )}
-
-                {categories.map((category, index) => (
-                  <li
-                    key={index}
-                    className="relative bg-[#3A3A3A] rounded-md px-2 py-4 flex justify-between items-center"
-                    onClick={() =>
-                      category.next
-                        ? handleModalNav(category.next, category.name)
-                        : null
-                    }
+                  <Link
+                    href="/orders"
+                    className="bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
+                    onClick={() => closeModal(modalNav)}
                   >
-                    <p className="uppercase">{category.name}</p>
+                    Заказы
+                  </Link>
+                </div>
 
-                    <div className="absolute top-0 right-0 z-10 h-full">
-                      <Image
-                        src={category.img}
-                        alt={category.name}
-                        className="object-cover h-full w-auto rounded-r-md"
-                      />
-                    </div>
-                  </li>
+                <div className="mt-3">
+                  <Link
+                    href="#"
+                    className="flex items-center my-3 text-[#B3B3B3]"
+                  >
+                    <FaPhoneAlt className="mr-3" />
+                    <p>+375 (44) 123 11 11</p>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="flex items-center my-3 text-[#B3B3B3]"
+                  >
+                    <FaPhoneAlt className="mr-3" />
+                    <p>+375 (44) 123 11 11</p>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="flex items-center my-3 text-[#B3B3B3]"
+                  >
+                    <FaPhoneAlt className="mr-3" />
+                    <p>+375 (44) 123 11 11</p>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="flex items-center my-3 text-[#B3B3B3]"
+                  >
+                    <FaPhoneAlt className="mr-3" />
+                    <p>+375 (44) 123 11 11</p>
+                  </Link>
+                </div>
+              </>
+            ) : products.length ? (
+              <div className="my-2 w-full grid grid-cols-2 gap-3">
+                {products.map((product) => (
+                  <Link
+                    key={product.productId}
+                    href={`/${product.subcategoryId}/${product.productId}`}
+                  >
+                    <ProductsItem
+                      name={product.name}
+                      img={product.image}
+                      price={product.price}
+                    />
+                  </Link>
                 ))}
-              </ul>
-            </nav>
-
-            <div className="flex flex-col justify-start uppercase mt-6 gap-3">
-              <Link
-                href="/cart"
-                className="bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
-                onClick={() => closeModal(modalNav)}
-              >
-                Корзина
-              </Link>
-              <Link
-                href="/orders"
-                className="bg-[#3A3A3A] rounded-md px-2 py-4 uppercase"
-                onClick={() => closeModal(modalNav)}
-              >
-                Заказы
-              </Link>
-            </div>
-
-            <div className="mt-3">
-              <Link href="#" className="flex items-center my-3 text-[#B3B3B3]">
-                <FaPhoneAlt className="mr-3" />
-                <p>+375 (44) 123 11 11</p>
-              </Link>
-              <Link href="#" className="flex items-center my-3 text-[#B3B3B3]">
-                <FaPhoneAlt className="mr-3" />
-                <p>+375 (44) 123 11 11</p>
-              </Link>
-              <Link href="#" className="flex items-center my-3 text-[#B3B3B3]">
-                <FaPhoneAlt className="mr-3" />
-                <p>+375 (44) 123 11 11</p>
-              </Link>
-              <Link href="#" className="flex items-center my-3 text-[#B3B3B3]">
-                <FaPhoneAlt className="mr-3" />
-                <p>+375 (44) 123 11 11</p>
-              </Link>
-            </div>
+              </div>
+            ) : (
+              <span className="mt-3 text-center text-base leading-none text-[#B3B3B3]">
+                Список пуст
+              </span>
+            )}
           </div>
         </div>
       </div>

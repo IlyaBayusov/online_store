@@ -228,16 +228,27 @@ export const getProductsSearchWithParams = async (
   size: number = sizePage,
   sortField: string = "id,asc",
   searchParam: string,
-  sizes: string[] | null = null,
-  colors: string[] | null = null,
+  sizes: string[] = [],
+  colors: string[] = [],
   minPrice: number | null = null,
   maxPrice: number | null = null,
-  brands: string[] | null = null
+  brands: string[] = []
 ) => {
   try {
-    const response = await api.get(
-      `/v1/product/search?page=${page}&size=${size}&sortField=${sortField}&searchParam=${searchParam}&sizes=${sizes}&colors=${colors}&minPrice=${minPrice}&maxPrice=${maxPrice}&brands=${brands}`
-    );
+    const response = await api.get(`/v1/products/search`, {
+      params: {
+        ...(page !== undefined && { page }),
+        ...(size !== undefined && { size }),
+        ...(sortField !== undefined && { sortField }),
+        ...(searchParam !== undefined && { searchParam }),
+        ...(sizes !== undefined && { sizes }),
+        ...(colors !== undefined && { colors }),
+        ...(minPrice !== undefined && { minPrice }),
+        ...(maxPrice !== undefined && { maxPrice }),
+        ...(brands !== undefined && { brands }),
+      },
+    });
+
     const data = await response.data;
 
     return data;
