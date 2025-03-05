@@ -8,6 +8,7 @@ import ModalSuccessOrder from "@/components/Modals/ModalSuccessOrder";
 import ModalNewProductAdmin from "@/components/Modals/ModalNewProductAdmin";
 import ModalDeleteEditNewProduct from "@/components/Modals/ModalDeleteEditNewProduct";
 import PageWrapper from "@/components/PageWrapper";
+import ModalFilters from "@/components/Modals/ModalFilters";
 
 // const oswald = Oswald({
 //   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default function RootLayout({
           <ModalSuccessOrder />
           <ModalNewProductAdmin />
           <ModalDeleteEditNewProduct />
+          <ModalFilters />
 
           <Footer />
         </div>

@@ -5,6 +5,7 @@ import {
   modalSuccessOrder,
   modalNewProductAdmin,
   modalDeleteEditNewProduct,
+  modalFilters,
 } from "@/constans";
 import { ISizeAndQuantity } from "@/interfaces";
 import { StaticImageData } from "next/image";
@@ -48,6 +49,7 @@ type ModalPropsMap = {
   [modalSuccessOrder]: null;
   [modalNewProductAdmin]: null;
   [modalDeleteEditNewProduct]: IDeleteEditNewProductProps;
+  [modalFilters]: { categoryId: number };
 };
 
 export interface IModalStore {

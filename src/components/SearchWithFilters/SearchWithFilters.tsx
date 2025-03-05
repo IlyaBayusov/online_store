@@ -4,9 +4,22 @@ import React, { useEffect, useState } from "react";
 import FilterUpDownDDM from "../DropDownMenu/FIltersUpDownDDM/FilterUpDownDDM";
 import { IoMdSearch } from "react-icons/io";
 import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
+import { FiFilter } from "react-icons/fi";
+import { useModalStore } from "@/stores/useModalStore";
+import { modalFilters } from "@/constans";
 
-export default function SearchWithFilters() {
+type Props = {
+  disabledFilters?: boolean;
+  categoryId?: number;
+};
+
+export default function SearchWithFilters({
+  disabledFilters,
+  categoryId,
+}: Props) {
   const [inputSearch, setInputSearch] = useState("");
+
+  const { openModal, addModalProps } = useModalStore();
 
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
   const setProducts = useSearchWithFilters((state) => state.setProducts);
@@ -27,6 +40,16 @@ export default function SearchWithFilters() {
     setInputSearch(e.target.value);
   };
 
+  const handleClickFilters = () => {
+    openModal(modalFilters);
+
+    if (categoryId !== undefined) {
+      console.log(123123);
+
+      addModalProps(modalFilters, { categoryId });
+    }
+  };
+
   return (
     <div className="w-full flex flex-col gap-2">
       <div className="w-full flex justify-center items-center gap-2">
@@ -43,9 +66,20 @@ export default function SearchWithFilters() {
         </button>
       </div>
 
-      <div className="flex justify-between items-center">
-        <FilterUpDownDDM />
-      </div>
+      {disabledFilters && (
+        <div className="flex justify-between items-center">
+          <FilterUpDownDDM />
+
+          <button
+            className="flex items-center gap-1 rounded-md text-sm text-white"
+            onClick={handleClickFilters}
+          >
+            <FiFilter className="h-5 w-5" />
+
+            <p>Фильтры</p>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

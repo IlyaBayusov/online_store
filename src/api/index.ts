@@ -256,3 +256,14 @@ export const getProductsSearchWithParams = async (
     console.error("Ошибка получения товаров по поиску: ", error);
   }
 };
+
+export const getFiltersByCategory = async (categoryId: number) => {
+  try {
+    const response = await api.get(`/v1/filters/${categoryId}`);
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения фильтров по категории: ", error);
+  }
+};

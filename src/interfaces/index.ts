@@ -182,3 +182,9 @@ export interface IFiltersUpDown {
   name: string;
   value: string;
 }
+
+export interface IGetFiltersByCategory {
+  brands: string[];
+  sizes: string[];
+  colors: string[];
+}

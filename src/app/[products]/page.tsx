@@ -7,7 +7,7 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import axios from "axios";
 import { IGetSubCategories, IPagination } from "@/interfaces";
 import { getSubCategories } from "@/api";
-import { IoMdSearch } from "react-icons/io";
+import SearchWithFilters from "@/components/SearchWithFilters/SearchWithFilters";
 
 const fetchProducts = async (urlName: string) => {
   try {
@@ -26,7 +26,6 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState<IPagination>({} as IPagination);
   const [category, setCategory] = useState<IGetSubCategories>();
-  const [inputSearch, setInputSearch] = useState("");
 
   const params: Params = useParams();
 
@@ -65,28 +64,11 @@ export default function Products() {
     getCategoriesArr();
   }, [params.products]);
 
-  useEffect(() => {
-    setInterval(() => {}, 500);
-  }, [inputSearch]);
-
-  const handleClickSearch = (e) => {
-    setInputSearch(e.target.value);
-  };
-
   if (category) {
     return (
       <>
         <div className="mt-3 px-3 w-full flex justify-center items-center gap-2">
-          <input
-            type="text"
-            placeholder="Поиск"
-            className="py-2 px-4 w-full text-sm bg-[#3A3A3A] text-white rounded-md"
-            onChange={handleClickSearch}
-            value={inputSearch}
-          />
-          <button className="py-2">
-            <IoMdSearch className="h-5 w-5 text-white" />
-          </button>
+          <SearchWithFilters disabledFilters={true} categoryId={category.id} />
         </div>
 
         <ProductsList

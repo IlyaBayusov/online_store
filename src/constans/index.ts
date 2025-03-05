@@ -32,6 +32,7 @@ export const modalCartDeleteProduct = "modalCartDeleteProduct";
 export const modalSuccessOrder = "modalSuccessOrder";
 export const modalNewProductAdmin = "modalNewProductAdmin";
 export const modalDeleteEditNewProduct = "modalDeleteEditNewProduct";
+export const modalFilters = "modalFilters";
 
 export const messageCount = "Нет на складе";
 
