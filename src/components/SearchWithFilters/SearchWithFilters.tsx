@@ -44,8 +44,6 @@ export default function SearchWithFilters({
     openModal(modalFilters);
 
     if (categoryId !== undefined) {
-      console.log(123123);
-
       addModalProps(modalFilters, { categoryId });
     }
   };

@@ -3,7 +3,7 @@
 import { useModalStore } from "@/stores/useModalStore";
 import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { modalFilters } from "@/constans";
+import { minMaxValueInputFilter, modalFilters } from "@/constans";
 import { getFiltersByCategory } from "@/api";
 import { IGetFiltersByCategory } from "@/interfaces";
 
@@ -11,19 +11,23 @@ export default function ModalFilters() {
   const [filters, setFilters] = useState<IGetFiltersByCategory>(
     {} as IGetFiltersByCategory
   );
+  const [optionBrands, setOptionBrands] = useState<string[]>([]);
+  const [optionSizes, setOptionSizes] = useState<string[]>([]);
+  const [optionColors, setOptionColors] = useState<string[]>([]);
+  const [minValue, setMinValue] = useState<string>("");
+  const [maxValue, setMaxValue] = useState<string>("");
 
   const { modals, closeModal, modalsProps } = useModalStore();
+  console.log(minValue, maxValue);
 
   useEffect(() => {
     const getFilters = async () => {
-      console.log(modalsProps[modalFilters]);
       if (!modalsProps[modalFilters]) return;
 
       const response = await getFiltersByCategory(
         modalsProps[modalFilters]?.categoryId
       );
 
-      console.log(response);
       if (response) {
         setFilters(response);
       }
@@ -31,6 +35,32 @@ export default function ModalFilters() {
 
     getFilters();
   }, [modalsProps[modalFilters]]);
+
+  console.log(optionBrands, optionColors, optionSizes);
+
+  const handleClickFilterBrands = (value: string) => {
+    setOptionBrands((prev) =>
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
+    );
+  };
+
+  const handleClickFilterColors = (value: string) => {
+    setOptionColors((prev) =>
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
+    );
+  };
+
+  const handleClickFilterSizes = (value: string) => {
+    setOptionSizes((prev) =>
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
+    );
+  };
 
   return (
     <div
@@ -57,10 +87,72 @@ export default function ModalFilters() {
 
                 {filters.brands.map((brand) => (
                   <div key={brand}>
-                    <input type="checkbox" className="" />
-                    <label htmlFor={brand}>{brand}</label>
+                    <input
+                      type="checkbox"
+                      id={`brand-${brand}`}
+                      className=""
+                      onChange={() => handleClickFilterBrands(brand)}
+                    />
+                    <label htmlFor={`brand-${brand}`}>{brand}</label>
                   </div>
                 ))}
+              </div>
+
+              <div>
+                <h2>Цвет</h2>
+
+                {filters.colors.map((color) => (
+                  <div key={color}>
+                    <input
+                      type="checkbox"
+                      id={`color-${color}`}
+                      className=""
+                      onChange={() => handleClickFilterColors(color)}
+                    />
+                    <label htmlFor={`color-${color}`}>{color}</label>
+                  </div>
+                ))}
+              </div>
+
+              <div>
+                <h2>Размер</h2>
+
+                {filters.sizes.map((size) => (
+                  <div key={size}>
+                    <input
+                      type="checkbox"
+                      id={`size-${size}`}
+                      className=""
+                      onChange={() => handleClickFilterSizes(size)}
+                    />
+                    <label htmlFor={`size-${size}`}>{size}</label>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  placeholder="от"
+                  className="border border-[#3A3A3A] rounded-md text-black"
+                  value={minValue}
+                  onChange={(e) =>
+                    +e.target.value > minMaxValueInputFilter
+                      ? setMinValue(String(minMaxValueInputFilter))
+                      : setMinValue(e.target.value.slice(0, 6))
+                  }
+                />
+                <input
+                  type="number"
+                  placeholder="до"
+                  className="border border-[#3A3A3A] rounded-md text-black"
+                  value={maxValue}
+                  onChange={(e) =>
+                    +e.target.value > minMaxValueInputFilter
+                      ? setMaxValue(String(minMaxValueInputFilter))
+                      : setMaxValue(e.target.value.slice(0, 6))
+                  }
+                />
               </div>
             </div>
           ) : (

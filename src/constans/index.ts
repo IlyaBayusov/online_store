@@ -36,6 +36,8 @@ export const modalFilters = "modalFilters";
 
 export const messageCount = "Нет на складе";
 
+export const minMaxValueInputFilter = 100000;
+
 export const filtersUpDown = [
   {
     id: 0,
