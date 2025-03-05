@@ -26,8 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
-      <body>
+    <html lang="ru" className="hide-scrollbar-y">
+      <body className="hide-scrollbar-y">
         <div className="relative wrapper flex flex-col">
           <PageWrapper>
             <main className="flex-grow">{children}</main>

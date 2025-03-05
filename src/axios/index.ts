@@ -41,14 +41,14 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    console.log("Ответ пришел: ", response);
+    // console.log("Ответ пришел: ", response);
     return response;
   },
   async (error) => {
     const originalRequest = error.config;
     const statusCode = error.response ? error.response.status : null;
 
-    console.log("Ошибка: статус = ", statusCode, "ошибка: ", error);
+    // console.log("Ошибка: статус = ", statusCode, "ошибка: ", error);
 
     if (error.response.data.message && error.response.data.code) {
       localStorage.removeItem("accessToken");

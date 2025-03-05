@@ -6,9 +6,7 @@ import { HiMiniArrowsUpDown } from "react-icons/hi2";
 import { filtersUpDown } from "@/constans";
 import { IFiltersUpDown } from "@/interfaces";
 
-type Props = {};
-
-export default function FilterUpDownDDM({}: Props) {
+export default function FilterUpDownDDM() {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [filterObj, setFilterObj] = useState<IFiltersUpDown>(filtersUpDown[0]);
 
@@ -32,7 +30,7 @@ export default function FilterUpDownDDM({}: Props) {
           className="relative left-0 top-0 z-[1000] min-w-[220px] rounded-md bg-[#121212] border border-white border-opacity-30 "
           sideOffset={5}
         >
-          <div className="max-h-40 overflow-y-scroll">
+          <div className="max-h-40">
             {filtersUpDown.map((item) => (
               <div key={item.id}>
                 <DropdownMenu.Item
