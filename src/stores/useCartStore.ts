@@ -14,11 +14,15 @@ export const useCartStore = create<ICartStore>((set) => ({
   cart: [],
 
   getProductsInCart: async () => {
-    const products = await getProductsCart();
+    const response = await getProductsCart();
 
-    set((state) => ({
-      cart: products ? [...products] : [...state.cart],
-    }));
+    if (response) {
+      const products = await response.items;
+
+      set((state) => ({
+        cart: products ? [...products] : [...state.cart],
+      }));
+    }
   },
 
   updateQuantity: (productId: number, quantity: number) =>

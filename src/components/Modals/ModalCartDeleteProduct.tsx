@@ -2,12 +2,14 @@
 
 import { api } from "@/axios";
 import { modalCartDeleteProduct } from "@/constans";
+import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
 import React from "react";
 import { IoClose } from "react-icons/io5";
 
 export default function ModalCartDeleteProduct() {
   const { modals, closeModal, modalsProps, addModalProps } = useModalStore();
+  const getProductsInCart = useCartStore((state) => state.getProductsInCart);
 
   const handleDeleteProduct = async () => {
     try {
@@ -19,6 +21,8 @@ export default function ModalCartDeleteProduct() {
         ...modalsProps[modalCartDeleteProduct],
         isDeleted: true,
       });
+
+      getProductsInCart();
 
       closeModal(modalCartDeleteProduct);
       console.log("Товар удален из корзины: ", response);

@@ -44,8 +44,10 @@ export default function Cart() {
   }, [cart]);
 
   const getProducts = async () => {
-    const data: IProductInCart[] | undefined = await getProductsCart();
-    if (data) {
+    const response = await getProductsCart();
+    if (response) {
+      const data = await response.items;
+
       setProducts(data);
     }
   };
@@ -54,8 +56,6 @@ export default function Cart() {
     updateProducts(products);
     router.push("/cart/buyProducts");
   };
-
-  console.log("рендер");
 
   return (
     <>
@@ -70,7 +70,13 @@ export default function Cart() {
             <h1 className="py-2 px-3 text-xl uppercase">Корзина</h1>
           </div>
 
-          <CartList products={products} />
+          {products.length ? (
+            <CartList products={products} />
+          ) : (
+            <span className="mt-3 text-base leading-none text-[#B3B3B3]">
+              Корзина пуста
+            </span>
+          )}
         </div>
 
         {products.length ? (
