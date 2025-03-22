@@ -235,6 +235,17 @@ export const getProductsSearchWithParams = async (
   brands: string[] = []
 ) => {
   try {
+    console.log(
+      page,
+      size,
+      sortField,
+      searchParam,
+      sizes,
+      colors,
+      minPrice,
+      maxPrice,
+      brands
+    );
     const response = await api.get(`/v1/products/search`, {
       params: {
         ...(page !== undefined && { page }),

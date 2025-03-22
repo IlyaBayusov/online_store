@@ -58,7 +58,7 @@ export default function FormByRegistr({ setSubmit }: Props) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const response = await axios.post(
-          "http://localhost:8080/api/v1/users/email",
+          "http://localhost:8080/api/v1/users/email/check",
           {
             field: email,
           }

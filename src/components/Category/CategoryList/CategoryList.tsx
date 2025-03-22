@@ -12,7 +12,7 @@ export default function CategoryList() {
   useEffect(() => {
     const getCategoriesArr = async () => {
       const response = await getSubCategories();
-      const categoriesArr: IGetSubCategories[] = await response.products;
+      const categoriesArr: IGetSubCategories[] = await response.items;
 
       if (response) {
         setSubCategories(categoriesArr);
@@ -25,11 +25,18 @@ export default function CategoryList() {
   return (
     <div className="container px-3">
       <div className="my-3 w-full grid grid-cols-2 grid-rows-2 gap-3">
-        {subCategories.map((subCategory) => (
-          <Link key={subCategory.id} href={String(subCategory.id)}>
-            <CategoryItem name={subCategory.name} img={subCategory.imageUrl} />
-          </Link>
-        ))}
+        {subCategories.length ? (
+          subCategories.map((subCategory) => (
+            <Link key={subCategory.id} href={String(subCategory.id)}>
+              <CategoryItem
+                name={subCategory.name}
+                img={subCategory.imageUrl}
+              />
+            </Link>
+          ))
+        ) : (
+          <h1>Loading...</h1>
+        )}
       </div>
     </div>
   );

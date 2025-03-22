@@ -43,8 +43,8 @@ export default function SearchWithFilters({
   const handleClickFilters = () => {
     openModal(modalFilters);
 
-    if (categoryId !== undefined) {
-      addModalProps(modalFilters, { categoryId });
+    if (categoryId) {
+      addModalProps(modalFilters, { categoryId, inputSearch });
     }
   };
 

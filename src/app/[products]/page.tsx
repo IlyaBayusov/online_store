@@ -5,9 +5,10 @@ import { notFound, useParams } from "next/navigation";
 import ProductsList from "@/components/Products/ProductsList/ProductsList";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import axios from "axios";
-import { IGetSubCategories, IPagination } from "@/interfaces";
+import { IGetSubCategories, IPagination, IProductCategory } from "@/interfaces";
 import { getSubCategories } from "@/api";
 import SearchWithFilters from "@/components/SearchWithFilters/SearchWithFilters";
+import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
 
 const fetchProducts = async (urlName: string) => {
   try {
@@ -23,9 +24,13 @@ const fetchProducts = async (urlName: string) => {
 };
 
 export default function Products() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<IProductCategory[]>([]);
   const [pagination, setPagination] = useState<IPagination>({} as IPagination);
   const [category, setCategory] = useState<IGetSubCategories>();
+
+  const productsSearch = useSearchWithFilters((state) => state.products);
+  const isFetch = useSearchWithFilters((state) => state.isFetch);
+  const setIsFetch = useSearchWithFilters((state) => state.setIsFetch);
 
   const params: Params = useParams();
 
@@ -63,6 +68,13 @@ export default function Products() {
 
     getCategoriesArr();
   }, [params.products]);
+
+  useEffect(() => {
+    if (isFetch) {
+      setProducts(productsSearch);
+      setIsFetch(false);
+    }
+  }, [productsSearch]);
 
   if (category) {
     return (

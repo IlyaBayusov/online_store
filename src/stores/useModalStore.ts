@@ -49,7 +49,7 @@ type ModalPropsMap = {
   [modalSuccessOrder]: null;
   [modalNewProductAdmin]: null;
   [modalDeleteEditNewProduct]: IDeleteEditNewProductProps;
-  [modalFilters]: { categoryId: number };
+  [modalFilters]: { categoryId: number; inputSearch: string };
 };
 
 export interface IModalStore {

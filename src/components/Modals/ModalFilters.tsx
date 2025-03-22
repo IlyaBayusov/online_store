@@ -6,6 +6,7 @@ import { IoClose } from "react-icons/io5";
 import { minMaxValueInputFilter, modalFilters } from "@/constans";
 import { getFiltersByCategory } from "@/api";
 import { IGetFiltersByCategory } from "@/interfaces";
+import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
 
 export default function ModalFilters() {
   const [filters, setFilters] = useState<IGetFiltersByCategory>(
@@ -14,11 +15,12 @@ export default function ModalFilters() {
   const [optionBrands, setOptionBrands] = useState<string[]>([]);
   const [optionSizes, setOptionSizes] = useState<string[]>([]);
   const [optionColors, setOptionColors] = useState<string[]>([]);
-  const [minValue, setMinValue] = useState<string>("");
-  const [maxValue, setMaxValue] = useState<string>("");
+  const [minValue, setMinValue] = useState<string>("0");
+  const [maxValue, setMaxValue] = useState<string>("0");
 
   const { modals, closeModal, modalsProps } = useModalStore();
-  console.log(minValue, maxValue);
+
+  const clickSearch = useSearchWithFilters((state) => state.clickSearch);
 
   useEffect(() => {
     const getFilters = async () => {
@@ -35,8 +37,6 @@ export default function ModalFilters() {
 
     getFilters();
   }, [modalsProps[modalFilters]]);
-
-  console.log(optionBrands, optionColors, optionSizes);
 
   const handleClickFilterBrands = (value: string) => {
     setOptionBrands((prev) =>
@@ -62,6 +62,21 @@ export default function ModalFilters() {
     );
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (modalsProps[modalFilters]?.inputSearch) {
+      clickSearch({
+        searchParam: modalsProps[modalFilters]?.inputSearch,
+        brands: optionBrands,
+        colors: optionColors,
+        sizes: optionSizes,
+        minPrice: +minValue,
+        maxPrice: +maxValue,
+      });
+    }
+  };
+
   return (
     <div
       className={
@@ -81,7 +96,10 @@ export default function ModalFilters() {
           </div>
 
           {Object.keys(filters).length > 0 ? (
-            <div className="flex flex-col mt-3 overflow-y-auto hide-scrollbar-y">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col mt-3 overflow-y-auto hide-scrollbar-y"
+            >
               <div>
                 <h2>Производитель</h2>
 
@@ -154,7 +172,14 @@ export default function ModalFilters() {
                   }
                 />
               </div>
-            </div>
+
+              <button
+                type="submit"
+                className="mt-3 px-4 py-1 bg-orange-600 rounded-md"
+              >
+                Найти
+              </button>
+            </form>
           ) : (
             <h1>Loading...</h1>
           )}

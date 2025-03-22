@@ -9,6 +9,7 @@ const fetchProducts = async (productId: string) => {
     const response = await axios.get(
       `http://localhost:8080/api/v1/products/${productId}`
     );
+
     const data = await response.data;
 
     return data;
@@ -69,7 +70,7 @@ export default async function Product({
   // Получаем категории
   const response = await getCategories();
 
-  const categoriesArr: IGetCategories[] = response.products;
+  const categoriesArr: IGetCategories[] = response.items;
 
   // Проверяем, существует ли такая категория
   const category = categoriesArr.find((item) => String(item.id) === products);

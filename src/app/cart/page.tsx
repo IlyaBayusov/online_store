@@ -15,10 +15,12 @@ export default function Cart() {
   const [products, setProducts] = useState<IProductInCart[]>([]);
   const [sum, setSum] = useState<number>(0);
 
-  const { cart, getProductsInCart } = useCartStore();
-  const { modalsProps } = useModalStore();
+  const cart = useCartStore((state) => state.cart);
+  const getProductsInCart = useCartStore((state) => state.getProductsInCart);
 
-  const { updateProducts } = useByProductsStore();
+  const modalsProps = useModalStore((state) => state.modalsProps);
+
+  const updateProducts = useByProductsStore((state) => state.updateProducts);
 
   const router = useRouter();
 
@@ -52,6 +54,8 @@ export default function Cart() {
     updateProducts(products);
     router.push("/cart/buyProducts");
   };
+
+  console.log("рендер");
 
   return (
     <>

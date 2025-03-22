@@ -87,20 +87,22 @@ export const CitiesDDM = () => {
             </p>
           </DropdownMenu.Label>
 
-          <div className="max-h-40 overflow-y-scroll">
-            {cities.map((item) => (
-              <div key={item.city}>
-                <DropdownMenu.Separator className="h-[1px] bg-white bg-opacity-30" />
+          {cities.length && (
+            <div className="max-h-40 overflow-y-scroll">
+              {cities.map((item) => (
+                <div key={item.city}>
+                  <DropdownMenu.Separator className="h-[1px] bg-white bg-opacity-30" />
 
-                <DropdownMenu.Item
-                  className="group text-sm px-3 cursor-pointer"
-                  onClick={() => setCity(item)}
-                >
-                  <p className="py-1 rounded-md">{item.city}</p>
-                </DropdownMenu.Item>
-              </div>
-            ))}
-          </div>
+                  <DropdownMenu.Item
+                    className="group text-sm px-3 cursor-pointer"
+                    onClick={() => setCity(item)}
+                  >
+                    <p className="py-1 rounded-md">{item.city}</p>
+                  </DropdownMenu.Item>
+                </div>
+              ))}
+            </div>
+          )}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
