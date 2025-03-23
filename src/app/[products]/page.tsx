@@ -4,50 +4,41 @@ import React, { useEffect, useState } from "react";
 import { notFound, useParams } from "next/navigation";
 import ProductsList from "@/components/Products/ProductsList/ProductsList";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import axios from "axios";
-import { IGetSubCategories, IPagination, IProductCategory } from "@/interfaces";
+import { IGetSubCategories, IProductCategory } from "@/interfaces";
 import { getSubCategories } from "@/api";
 import SearchWithFilters from "@/components/SearchWithFilters/SearchWithFilters";
 import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
 
-const fetchProducts = async (urlName: string) => {
-  try {
-    const response = await axios.get(
-      `http://localhost:8080/api/v1/products/${urlName}/category`
-    );
-    const data = await response.data;
+// const fetchProducts = async (urlName: string) => {
+//   try {
+//     const response = await axios.get(
+//       `http://localhost:8080/api/v1/products/${urlName}/category`
+//     );
+//     const data = await response.data;
 
-    return data;
-  } catch (error) {
-    console.error("ERROR PRODUCTS", error);
-  }
-};
+//     return data;
+//   } catch (error) {
+//     console.error("ERROR PRODUCTS", error);
+//   }
+// };
 
 export default function Products() {
-  const [products, setProducts] = useState<IProductCategory[]>([]);
-  const [pagination, setPagination] = useState<IPagination>({} as IPagination);
+  // const [products, setProducts] = useState<IProductCategory[]>([]);
+  // const [pagination, setPagination] = useState<IPagination>({} as IPagination);
   const [category, setCategory] = useState<IGetSubCategories>();
 
-  const productsSearch = useSearchWithFilters((state) => state.products);
-  const isFetch = useSearchWithFilters((state) => state.isFetch);
-  const setIsFetch = useSearchWithFilters((state) => state.setIsFetch);
+  // const productsSearch = useSearchWithFilters((state) => state.products);
+  // const isFetch = useSearchWithFilters((state) => state.isFetch);
+  // const setIsFetch = useSearchWithFilters((state) => state.setIsFetch);
+
+  const clickSearch = useSearchWithFilters((state) => state.clickSearch);
+  const pagination = useSearchWithFilters((state) => state.pagination);
+  const products = useSearchWithFilters((state) => state.products);
 
   const params: Params = useParams();
 
   useEffect(() => {
-    const getProducts = async () => {
-      const productsData = await fetchProducts(params.products);
-
-      setProducts(productsData.items);
-      setPagination({
-        currentItems: productsData.currentItems,
-        currentPage: productsData.currentPage,
-        totalItems: productsData.totalItems,
-        totalPages: productsData.totalPages,
-      });
-    };
-
-    getProducts();
+    clickSearch({ searchParam: "", categoryId: params.products });
   }, [params.products]);
 
   useEffect(() => {
@@ -73,18 +64,22 @@ export default function Products() {
     getCategoriesArr();
   }, [params.products]);
 
-  useEffect(() => {
-    if (isFetch) {
-      setProducts(productsSearch);
-      setIsFetch(false);
-    }
-  }, [productsSearch]);
+  // useEffect(() => {
+  //   if (isFetch) {
+  //     setProducts(productsSearch);
+  //     setIsFetch(false);
+  //   }
+  // }, [productsSearch]);
 
   if (category) {
     return (
       <>
         <div className="mt-3 px-3 w-full flex justify-center items-center gap-2">
-          <SearchWithFilters disabledFilters={true} categoryId={category.id} />
+          <SearchWithFilters
+            disabledSearch={false}
+            disabledFilters={true}
+            categoryId={category.id}
+          />
         </div>
 
         <ProductsList

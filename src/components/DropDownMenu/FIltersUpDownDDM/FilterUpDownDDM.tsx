@@ -43,7 +43,7 @@ export default function FilterUpDownDDM() {
                   onClick={() => {
                     setFilterObj(item);
                     setSortsField(item);
-                    clickSearch({ searchParam: searchP });
+                    clickSearch({ searchParam: searchP, categoryId });
                   }}
                 >
                   <p className="py-1 rounded-md">{item.name}</p>

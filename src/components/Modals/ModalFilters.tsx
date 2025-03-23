@@ -66,17 +66,27 @@ export default function ModalFilters() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (modalsProps[modalFilters]?.inputSearch) {
-      clickSearch({
-        searchParam: searchP,
-        brands: optionBrands,
-        colors: optionColors,
-        sizes: optionSizes,
-        minPrice: +minValue,
-        maxPrice: +maxValue,
-        categoryId: modalsProps[modalFilters]?.categoryId,
-      });
-    }
+    clickSearch({
+      searchParam: searchP,
+      brands: optionBrands,
+      colors: optionColors,
+      sizes: optionSizes,
+      minPrice: +minValue,
+      maxPrice: +maxValue,
+      categoryId: modalsProps[modalFilters]?.categoryId,
+    });
+
+    console.log({
+      searchParam: searchP,
+      brands: optionBrands,
+      colors: optionColors,
+      sizes: optionSizes,
+      minPrice: +minValue,
+      maxPrice: +maxValue,
+      categoryId: modalsProps[modalFilters]?.categoryId,
+    });
+
+    closeModal(modalFilters);
   };
 
   return (
