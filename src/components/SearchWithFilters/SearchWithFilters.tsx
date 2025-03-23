@@ -24,6 +24,7 @@ export default function SearchWithFilters({
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
   const setProducts = useSearchWithFilters((state) => state.setProducts);
   const setIsFetch = useSearchWithFilters((state) => state.setIsFetch);
+  const setSearchP = useSearchWithFilters((state) => state.setSearchP);
 
   useEffect(() => {
     if (!inputSearch) {
@@ -38,6 +39,7 @@ export default function SearchWithFilters({
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputSearch(e.target.value);
+    setSearchP(e.target.value);
   };
 
   const handleClickFilters = () => {

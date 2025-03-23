@@ -53,7 +53,7 @@ export default function Products() {
   useEffect(() => {
     const getCategoriesArr = async () => {
       const response = await getSubCategories();
-      const categoriesArr: IGetSubCategories[] = await response.products;
+      const categoriesArr: IGetSubCategories[] = await response.items;
 
       const categoryId = categoriesArr
         .map((item: IGetSubCategories) => item.id)

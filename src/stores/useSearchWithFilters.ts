@@ -1,5 +1,6 @@
 import { getProductsSearchWithParams } from "@/api";
-import { IPagination, IProductCategory } from "@/interfaces";
+import { filtersUpDown } from "@/constans";
+import { IFiltersUpDown, IPagination, IProductCategory } from "@/interfaces";
 import { create } from "zustand";
 
 export interface ISearchWithFiltersStore {
@@ -11,6 +12,10 @@ export interface ISearchWithFiltersStore {
   setPagination: (pagination: IPagination) => void;
   isFetch: boolean;
   setIsFetch: (isFetch: boolean) => void;
+  sortsField: IFiltersUpDown;
+  setSortsField: (sortsField: IFiltersUpDown) => void;
+  searchP: string;
+  setSearchP: (searchP: string) => void;
 
   clickSearch: (
     params: {
@@ -28,50 +33,73 @@ export interface ISearchWithFiltersStore {
   ) => void;
 }
 
-export const useSearchWithFilters = create<ISearchWithFiltersStore>((set) => ({
-  isLoading: true,
-  setIsLoading: (isLoading: boolean) => set({ isLoading }),
-  products: [],
-  setProducts: (products: IProductCategory[]) => set({ products }),
-  pagination: {} as IPagination,
-  setPagination: (pagination: IPagination) => set({ pagination }),
-  isFetch: false,
-  setIsFetch: (isFetch: boolean) => set({ isFetch }),
-  clickSearch: async ({
-    searchParam,
-    page = 0,
-    size = 10,
-    sortField = "id,asc",
-    sizes = [],
-    colors = [],
-    minPrice = null,
-    maxPrice = null,
-    brands = [],
-  }) => {
-    const response = await getProductsSearchWithParams(
-      page,
-      size,
-      sortField,
-      searchParam,
-      sizes,
-      colors,
-      minPrice,
-      maxPrice,
-      brands
-    );
+export const useSearchWithFilters = create<ISearchWithFiltersStore>(
+  (set, get) => ({
+    //get
+    isLoading: true,
+    setIsLoading: (isLoading: boolean) => set({ isLoading }),
+    products: [],
+    setProducts: (products: IProductCategory[]) => set({ products }),
+    pagination: {} as IPagination,
+    setPagination: (pagination: IPagination) => set({ pagination }),
+    isFetch: false,
+    setIsFetch: (isFetch: boolean) => set({ isFetch }),
+    sortsField: { ...filtersUpDown[0] } as IFiltersUpDown,
+    setSortsField: (sortsField: IFiltersUpDown) => set({ sortsField }),
+    searchP: "",
+    setSearchP: (searchP: string) => set({ searchP }),
 
-    if (response) {
-      set({ isFetch: true });
-      set({ products: response.items });
-      set({ isLoading: false });
-      set({
-        pagination: {
-          currentItems: response.currentItems,
-          currentPage: response.currentPage,
-          totalItems: response.totalItems,
-          totalPages: response.totalPages,
-        },
-      });
-    }
-  },
-}));
+    clickSearch: async ({
+      searchParam,
+      page = 0,
+      size = 10,
+      sortField = undefined,
+      sizes = [],
+      colors = [],
+      minPrice = null,
+      maxPrice = null,
+      brands = [],
+    }) => {
+      const { sortsField } = get(); // Берем `sortsField` напрямую из стора
+      const finalSortField = sortField || sortsField.value; // Если sortField не передан, берем значение из стора
+
+      console.log(
+        page,
+        size,
+        finalSortField,
+        searchParam,
+        sizes,
+        colors,
+        minPrice,
+        maxPrice,
+        brands
+      );
+
+      const response = await getProductsSearchWithParams(
+        page,
+        size,
+        finalSortField,
+        searchParam,
+        sizes,
+        colors,
+        minPrice,
+        maxPrice,
+        brands
+      );
+
+      if (response) {
+        set({ isFetch: true });
+        set({ products: response.items });
+        set({ isLoading: false });
+        set({
+          pagination: {
+            currentItems: response.currentItems,
+            currentPage: response.currentPage,
+            totalItems: response.totalItems,
+            totalPages: response.totalPages,
+          },
+        });
+      }
+    },
+  })
+);

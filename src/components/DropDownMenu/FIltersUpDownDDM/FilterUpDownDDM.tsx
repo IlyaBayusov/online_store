@@ -5,10 +5,15 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { HiMiniArrowsUpDown } from "react-icons/hi2";
 import { filtersUpDown } from "@/constans";
 import { IFiltersUpDown } from "@/interfaces";
+import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
 
 export default function FilterUpDownDDM() {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [filterObj, setFilterObj] = useState<IFiltersUpDown>(filtersUpDown[0]);
+
+  const setSortsField = useSearchWithFilters((state) => state.setSortsField);
+  const clickSearch = useSearchWithFilters((state) => state.clickSearch);
+  const searchP = useSearchWithFilters((state) => state.searchP);
 
   return (
     <DropdownMenu.Root open={isActive} onOpenChange={setIsActive}>
@@ -30,12 +35,16 @@ export default function FilterUpDownDDM() {
           className="relative left-0 top-0 z-[1000] min-w-[220px] rounded-md bg-[#121212] border border-white border-opacity-30 "
           sideOffset={5}
         >
-          <div className="max-h-40">
+          <div className="max-h-43 overflow-y-scroll hide-scrollbar-y">
             {filtersUpDown.map((item) => (
               <div key={item.id}>
                 <DropdownMenu.Item
                   className="group text-sm px-3 cursor-pointer"
-                  onClick={() => setFilterObj(item)}
+                  onClick={() => {
+                    setFilterObj(item);
+                    setSortsField(item);
+                    clickSearch({ searchParam: searchP });
+                  }}
                 >
                   <p className="py-1 rounded-md">{item.name}</p>
                 </DropdownMenu.Item>

@@ -21,6 +21,7 @@ export default function ModalFilters() {
   const { modals, closeModal, modalsProps } = useModalStore();
 
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
+  const searchP = useSearchWithFilters((state) => state.searchP);
 
   useEffect(() => {
     const getFilters = async () => {
@@ -67,7 +68,7 @@ export default function ModalFilters() {
 
     if (modalsProps[modalFilters]?.inputSearch) {
       clickSearch({
-        searchParam: modalsProps[modalFilters]?.inputSearch,
+        searchParam: searchP,
         brands: optionBrands,
         colors: optionColors,
         sizes: optionSizes,
@@ -177,7 +178,7 @@ export default function ModalFilters() {
                 type="submit"
                 className="mt-3 px-4 py-1 bg-orange-600 rounded-md"
               >
-                Найти
+                Готово
               </button>
             </form>
           ) : (

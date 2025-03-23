@@ -52,12 +52,22 @@ export const filtersUpDown = [
   {
     id: 2,
     name: "Дорогие",
-    value: "totalPrice,desc",
+    value: "price,desc",
   },
   {
     id: 3,
     name: "Дешевые",
-    value: "totalPrice,asc",
+    value: "price,asc",
+  },
+  {
+    id: 4,
+    name: "По имени, а-я",
+    value: "name,asc",
+  },
+  {
+    id: 5,
+    name: "По имени, я-а",
+    value: "name,desc",
   },
 ];
 
