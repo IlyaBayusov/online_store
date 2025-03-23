@@ -62,7 +62,11 @@ export default function Products() {
       if (!categoryId) {
         return notFound();
       } else {
-        setCategory(categoriesArr[categoryId - 1]);
+        setCategory(
+          categoriesArr[
+            categoriesArr.findIndex((item) => item.id === categoryId)
+          ]
+        );
       }
     };
 

@@ -74,6 +74,7 @@ export default function ModalFilters() {
         sizes: optionSizes,
         minPrice: +minValue,
         maxPrice: +maxValue,
+        categoryId: modalsProps[modalFilters]?.categoryId,
       });
     }
   };

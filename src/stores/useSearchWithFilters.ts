@@ -16,6 +16,8 @@ export interface ISearchWithFiltersStore {
   setSortsField: (sortsField: IFiltersUpDown) => void;
   searchP: string;
   setSearchP: (searchP: string) => void;
+  categorId: number | null;
+  setCategorId: (categorId: number | null) => void;
 
   clickSearch: (
     params: {
@@ -29,6 +31,8 @@ export interface ISearchWithFiltersStore {
       minPrice: number;
       maxPrice: number;
       brands: string[];
+
+      categoryId: number;
     }>
   ) => void;
 }
@@ -48,6 +52,8 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
     setSortsField: (sortsField: IFiltersUpDown) => set({ sortsField }),
     searchP: "",
     setSearchP: (searchP: string) => set({ searchP }),
+    categorId: null,
+    setCategorId: (categorId: number | null) => set({ categorId }),
 
     clickSearch: async ({
       searchParam,
@@ -59,9 +65,13 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
       minPrice = null,
       maxPrice = null,
       brands = [],
+      categoryId = null,
     }) => {
       const { sortsField } = get(); // Берем `sortsField` напрямую из стора
       const finalSortField = sortField || sortsField.value; // Если sortField не передан, берем значение из стора
+
+      const { categorId } = get();
+      const finalCategoryId = categoryId || categorId;
 
       console.log(
         page,
@@ -72,7 +82,8 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
         colors,
         minPrice,
         maxPrice,
-        brands
+        brands,
+        finalCategoryId
       );
 
       const response = await getProductsSearchWithParams(
@@ -84,7 +95,8 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
         colors,
         minPrice,
         maxPrice,
-        brands
+        brands,
+        finalCategoryId
       );
 
       if (response) {

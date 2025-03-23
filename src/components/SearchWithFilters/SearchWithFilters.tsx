@@ -34,7 +34,7 @@ export default function SearchWithFilters({
   }, [inputSearch]);
 
   const handleClickSearch = () => {
-    clickSearch({ searchParam: inputSearch });
+    clickSearch({ searchParam: inputSearch, categoryId });
   };
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

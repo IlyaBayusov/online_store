@@ -232,7 +232,8 @@ export const getProductsSearchWithParams = async (
   colors: string[] = [],
   minPrice: number | null = null,
   maxPrice: number | null = null,
-  brands: string[] = []
+  brands: string[] = [],
+  categoryId: number | null = null
 ) => {
   try {
     console.log(
@@ -244,7 +245,8 @@ export const getProductsSearchWithParams = async (
       colors,
       minPrice,
       maxPrice,
-      brands
+      brands,
+      categoryId
     );
     const response = await api.get(`/v1/products/search`, {
       params: {
@@ -257,6 +259,7 @@ export const getProductsSearchWithParams = async (
         ...(minPrice !== undefined && { minPrice }),
         ...(maxPrice !== undefined && { maxPrice }),
         ...(brands !== undefined && { brands }),
+        ...(categoryId !== undefined && { categoryId }),
       },
     });
 

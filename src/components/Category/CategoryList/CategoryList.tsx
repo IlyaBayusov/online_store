@@ -13,6 +13,7 @@ export default function CategoryList() {
     const getCategoriesArr = async () => {
       const response = await getSubCategories();
       const categoriesArr: IGetSubCategories[] = await response.items;
+      console.log(response);
 
       if (response) {
         setSubCategories(categoriesArr);
