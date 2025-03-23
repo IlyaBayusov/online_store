@@ -9,9 +9,9 @@ import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 
-export default function Cart() {
+export default memo(function Cart() {
   const [products, setProducts] = useState<IProductInCart[]>([]);
   const [sum, setSum] = useState<number>(0);
 
@@ -45,6 +45,7 @@ export default function Cart() {
 
   const getProducts = async () => {
     const response = await getProductsCart();
+
     if (response) {
       const data = await response.items;
 
@@ -56,6 +57,8 @@ export default function Cart() {
     updateProducts(products);
     router.push("/cart/buyProducts");
   };
+
+  const cartList = useMemo(() => <CartList products={products} />, [products]);
 
   return (
     <>
@@ -71,7 +74,7 @@ export default function Cart() {
           </div>
 
           {products.length ? (
-            <CartList products={products} />
+            cartList
           ) : (
             <span className="mt-3 text-base leading-none text-[#B3B3B3]">
               Корзина пуста
@@ -100,4 +103,4 @@ export default function Cart() {
       </div>
     </>
   );
-}
+});

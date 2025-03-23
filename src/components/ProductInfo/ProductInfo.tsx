@@ -52,9 +52,11 @@ export default function ProductInfo({
   useEffect(() => {
     const setActiveBtnCart = async () => {
       try {
-        const data: IProductInCart[] | undefined = await getProductsCart();
+        const response = await getProductsCart();
 
-        if (data) {
+        if (response) {
+          const data: IProductInCart[] = await response.items;
+
           data.map((item) => {
             if (item.productId === nowProduct.id) {
               setIsActiveCart(true);
@@ -73,9 +75,11 @@ export default function ProductInfo({
   useEffect(() => {
     const setActiveBtnFav = async () => {
       try {
-        const data: IGetFav[] | undefined = await getFav();
+        const response = await getFav();
 
-        if (data) {
+        if (response) {
+          const data: IGetFav[] = await response.items;
+
           data.map((item) => {
             if (item.productId === nowProduct.id) {
               setIsActiveFav(true);
@@ -90,12 +94,6 @@ export default function ProductInfo({
 
     setActiveBtnFav();
   }, [nowProduct]);
-
-  // useEffect(() => {
-  //   if() {
-
-  //   }
-  // }, [selectedSize])
 
   console.log("nowproduct", nowProduct);
 

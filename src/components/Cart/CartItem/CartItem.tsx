@@ -7,13 +7,13 @@ import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 type Props = { product: IProductInCart };
 
-export default function CartItem({ product }: Props) {
+export default memo(function CartItem({ product }: Props) {
   const [quantity, setQuantity] = useState(product.quantity);
   const [count, setCount] = useState({} as { productCount: number });
   const [titleCount, setTitleCount] = useState<string>("");
@@ -26,7 +26,6 @@ export default function CartItem({ product }: Props) {
   useEffect(() => {
     const getCount = async () => {
       const dataCount = await postCount(product.productId, product.size);
-      console.log(dataCount, product.productId);
 
       if (dataCount) {
         setCount(dataCount);
@@ -64,8 +63,14 @@ export default function CartItem({ product }: Props) {
     }
   }, [quantity]);
 
-  const putQuantity = async () => {
-    const response = await putProductCart(product, quantity);
+  useEffect(() => {
+    if (quantity === count.productCount) {
+      setIsDisabledPlus(true);
+    }
+  }, [count]);
+
+  const putQuantity = async (quant: number) => {
+    const response = await putProductCart(product, quant);
     const data = await response?.data;
 
     if (data) {
@@ -73,23 +78,22 @@ export default function CartItem({ product }: Props) {
     }
   };
 
-  const handleClickMinus = () => {
-    if (quantity > 1) {
-      setIsDisabledPlus(false);
+  const handleClickMinus = async () => {
+    if (quantity < 1) return;
 
-      setQuantity(quantity - 1);
+    setIsDisabledPlus(false);
+    setQuantity((prev) => prev - 1);
+
+    const dataQuantity = await putQuantity(quantity - 1);
+
+    if (!dataQuantity) {
+      setQuantity((prev) => prev + 1);
+
+      return;
     }
   };
 
   const handleClickPlus = async () => {
-    const dataQuantity = await putQuantity();
-    console.log(dataQuantity);
-
-    if (!dataQuantity) {
-      setIsDisabledPlus(true);
-      return;
-    }
-
     setIsDisabledMinus(false);
 
     if (quantity < 100 && quantity < count.productCount) {
@@ -98,6 +102,13 @@ export default function CartItem({ product }: Props) {
 
     if (quantity + 1 === 100 || quantity + 1 === count.productCount) {
       setIsDisabledPlus(true);
+    }
+
+    const dataQuantity = await putQuantity(quantity + 1);
+
+    if (!dataQuantity) {
+      setQuantity((prev) => prev - 1);
+      return;
     }
   };
 
@@ -179,4 +190,4 @@ export default function CartItem({ product }: Props) {
       </div>
     </div>
   );
-}
+});
