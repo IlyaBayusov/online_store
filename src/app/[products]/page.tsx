@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { notFound, useParams } from "next/navigation";
 import ProductsList from "@/components/Products/ProductsList/ProductsList";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import { IGetSubCategories, IProductCategory } from "@/interfaces";
+import { IGetSubCategories } from "@/interfaces";
 import { getSubCategories } from "@/api";
 import SearchWithFilters from "@/components/SearchWithFilters/SearchWithFilters";
 import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
@@ -34,6 +34,7 @@ export default function Products() {
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
   const pagination = useSearchWithFilters((state) => state.pagination);
   const products = useSearchWithFilters((state) => state.products);
+  const setCategorId = useSearchWithFilters((state) => state.setCategorId);
 
   const params: Params = useParams();
 
@@ -53,6 +54,7 @@ export default function Products() {
       if (!categoryId) {
         return notFound();
       } else {
+        setCategorId(categoryId);
         setCategory(
           categoriesArr[
             categoriesArr.findIndex((item) => item.id === categoryId)

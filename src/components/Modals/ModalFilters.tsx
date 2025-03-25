@@ -71,8 +71,8 @@ export default function ModalFilters() {
       brands: optionBrands,
       colors: optionColors,
       sizes: optionSizes,
-      minPrice: +minValue,
-      maxPrice: +maxValue,
+      minPrice: +minValue || null,
+      maxPrice: +maxValue || null,
       categoryId: modalsProps[modalFilters]?.categoryId,
     });
 

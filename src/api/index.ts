@@ -9,6 +9,7 @@ import {
   IProductInCart,
 } from "@/interfaces";
 import { decodeToken } from "@/utils";
+import qs from "qs";
 
 export const getProductsCart = async () => {
   try {
@@ -261,9 +262,13 @@ export const getProductsSearchWithParams = async (
         ...(brands !== undefined && { brands }),
         ...(categoryId !== undefined && { categoryId }),
       },
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: "repeat" }),
     });
 
     const data = await response.data;
+
+    console.log(data);
 
     return data;
   } catch (error) {

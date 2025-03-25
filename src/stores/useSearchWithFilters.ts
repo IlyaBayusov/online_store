@@ -28,11 +28,11 @@ export interface ISearchWithFiltersStore {
       sortField: string;
       sizes: string[];
       colors: string[];
-      minPrice: number;
-      maxPrice: number;
+      minPrice: number | null;
+      maxPrice: number | null;
       brands: string[];
 
-      categoryId: number;
+      categoryId: number | null;
     }>
   ) => void;
 }

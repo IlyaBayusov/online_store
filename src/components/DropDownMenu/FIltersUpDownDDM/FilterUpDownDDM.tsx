@@ -14,6 +14,7 @@ export default function FilterUpDownDDM() {
   const setSortsField = useSearchWithFilters((state) => state.setSortsField);
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
   const searchP = useSearchWithFilters((state) => state.searchP);
+  const categorId = useSearchWithFilters((state) => state.categorId);
 
   return (
     <DropdownMenu.Root open={isActive} onOpenChange={setIsActive}>
@@ -43,7 +44,10 @@ export default function FilterUpDownDDM() {
                   onClick={() => {
                     setFilterObj(item);
                     setSortsField(item);
-                    clickSearch({ searchParam: searchP, categoryId });
+                    clickSearch({
+                      searchParam: searchP,
+                      categoryId: categorId,
+                    });
                   }}
                 >
                   <p className="py-1 rounded-md">{item.name}</p>

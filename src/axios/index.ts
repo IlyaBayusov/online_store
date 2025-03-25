@@ -1,5 +1,4 @@
 import axios from "axios";
-import { warn } from "console";
 
 // Типизация для refreshSubscribers
 type RefreshSubscriber = (accessToken: string) => void;
