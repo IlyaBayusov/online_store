@@ -1,11 +1,11 @@
 import {
-  modalNav,
-  modalNavCategory,
   modalCartDeleteProduct,
-  modalSuccessOrder,
-  modalNewProductAdmin,
   modalDeleteEditNewProduct,
   modalFilters,
+  modalNav,
+  modalNavCategory,
+  modalNewProductAdmin,
+  modalSuccessOrder,
 } from "@/constans";
 import { ISizeAndQuantity } from "@/interfaces";
 import { StaticImageData } from "next/image";
@@ -42,6 +42,16 @@ export const defaultDeleteEditNewProductProps =
     isDeleted: false,
   });
 
+export const defaultFiltersProps = (): {
+  categoryId: number | null;
+  inputSearch: string;
+  keyName: string;
+} => ({
+  categoryId: null,
+  inputSearch: "",
+  keyName: "",
+});
+
 type ModalPropsMap = {
   [modalNav]: null;
   [modalNavCategory]: INextCategoryProps[];
@@ -49,7 +59,11 @@ type ModalPropsMap = {
   [modalSuccessOrder]: null;
   [modalNewProductAdmin]: null;
   [modalDeleteEditNewProduct]: IDeleteEditNewProductProps;
-  [modalFilters]: { categoryId: number; inputSearch: string };
+  [modalFilters]: {
+    categoryId: number | null;
+    inputSearch: string;
+    keyName: string;
+  };
 };
 
 export interface IModalStore {
@@ -70,6 +84,7 @@ export const useModalStore = create<IModalStore>((set) => ({
   modals: {},
   modalsProps: {
     [modalDeleteEditNewProduct]: defaultDeleteEditNewProductProps(),
+    [modalFilters]: defaultFiltersProps(),
   },
 
   openModal: (modalName) =>

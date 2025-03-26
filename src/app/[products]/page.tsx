@@ -1,35 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { notFound, useParams } from "next/navigation";
-import ProductsList from "@/components/Products/ProductsList/ProductsList";
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import { IGetSubCategories } from "@/interfaces";
 import { getSubCategories } from "@/api";
+import ProductsList from "@/components/Products/ProductsList/ProductsList";
 import SearchWithFilters from "@/components/SearchWithFilters/SearchWithFilters";
+import { filtersKeyProductsPage } from "@/constans";
+import { IGetSubCategories } from "@/interfaces";
 import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
-
-// const fetchProducts = async (urlName: string) => {
-//   try {
-//     const response = await axios.get(
-//       `http://localhost:8080/api/v1/products/${urlName}/category`
-//     );
-//     const data = await response.data;
-
-//     return data;
-//   } catch (error) {
-//     console.error("ERROR PRODUCTS", error);
-//   }
-// };
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import { notFound, useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Products() {
-  // const [products, setProducts] = useState<IProductCategory[]>([]);
-  // const [pagination, setPagination] = useState<IPagination>({} as IPagination);
   const [category, setCategory] = useState<IGetSubCategories>();
-
-  // const productsSearch = useSearchWithFilters((state) => state.products);
-  // const isFetch = useSearchWithFilters((state) => state.isFetch);
-  // const setIsFetch = useSearchWithFilters((state) => state.setIsFetch);
 
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
   const pagination = useSearchWithFilters((state) => state.pagination);
@@ -39,7 +21,11 @@ export default function Products() {
   const params: Params = useParams();
 
   useEffect(() => {
-    clickSearch({ searchParam: "", categoryId: params.products });
+    clickSearch({
+      searchParam: "",
+      categoryId: params.products,
+      keyName: filtersKeyProductsPage,
+    });
   }, [params.products]);
 
   useEffect(() => {
@@ -54,7 +40,7 @@ export default function Products() {
       if (!categoryId) {
         return notFound();
       } else {
-        setCategorId(categoryId);
+        setCategorId(filtersKeyProductsPage, categoryId);
         setCategory(
           categoriesArr[
             categoriesArr.findIndex((item) => item.id === categoryId)
@@ -66,13 +52,6 @@ export default function Products() {
     getCategoriesArr();
   }, [params.products]);
 
-  // useEffect(() => {
-  //   if (isFetch) {
-  //     setProducts(productsSearch);
-  //     setIsFetch(false);
-  //   }
-  // }, [productsSearch]);
-
   if (category) {
     return (
       <>
@@ -81,13 +60,14 @@ export default function Products() {
             disabledSearch={false}
             disabledFilters={true}
             categoryId={category.id}
+            keyName={filtersKeyProductsPage}
           />
         </div>
 
         <ProductsList
           category={category}
-          products={products}
-          pagination={pagination}
+          products={products[filtersKeyProductsPage]}
+          pagination={pagination[filtersKeyProductsPage]}
         />
       </>
     );

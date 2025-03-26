@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { HiMiniArrowsUpDown } from "react-icons/hi2";
 import { filtersUpDown } from "@/constans";
 import { IFiltersUpDown } from "@/interfaces";
 import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { useState } from "react";
+import { HiMiniArrowsUpDown } from "react-icons/hi2";
 
-export default function FilterUpDownDDM() {
+type Props = {
+  keyName: string;
+};
+
+export default function FilterUpDownDDM({ keyName }: Props) {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [filterObj, setFilterObj] = useState<IFiltersUpDown>(filtersUpDown[0]);
 
@@ -43,10 +47,11 @@ export default function FilterUpDownDDM() {
                   className="group text-sm px-3 cursor-pointer"
                   onClick={() => {
                     setFilterObj(item);
-                    setSortsField(item);
+                    setSortsField(keyName, item);
                     clickSearch({
-                      searchParam: searchP,
-                      categoryId: categorId,
+                      searchParam: searchP[keyName],
+                      categoryId: categorId[keyName],
+                      keyName,
                     });
                   }}
                 >

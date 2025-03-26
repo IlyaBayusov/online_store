@@ -1,12 +1,12 @@
 "use client";
 
+import { getFiltersByCategory } from "@/api";
+import { minMaxValueInputFilter, modalFilters } from "@/constans";
+import { IGetFiltersByCategory } from "@/interfaces";
 import { useModalStore } from "@/stores/useModalStore";
+import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
 import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { minMaxValueInputFilter, modalFilters } from "@/constans";
-import { getFiltersByCategory } from "@/api";
-import { IGetFiltersByCategory } from "@/interfaces";
-import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
 
 export default function ModalFilters() {
   const [filters, setFilters] = useState<IGetFiltersByCategory>(
@@ -25,10 +25,11 @@ export default function ModalFilters() {
 
   useEffect(() => {
     const getFilters = async () => {
-      if (!modalsProps[modalFilters]) return;
+      if (!modalsProps[modalFilters] || !modalsProps[modalFilters].categoryId)
+        return;
 
       const response = await getFiltersByCategory(
-        modalsProps[modalFilters]?.categoryId
+        modalsProps[modalFilters].categoryId
       );
 
       if (response) {
@@ -66,24 +67,30 @@ export default function ModalFilters() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!modalsProps[modalFilters]) {
+      // ------------------------------------------выкинуть ошибку
+      return;
+    }
+
     clickSearch({
-      searchParam: searchP,
+      searchParam: searchP[modalsProps[modalFilters].keyName],
+      keyName: modalsProps[modalFilters].keyName,
       brands: optionBrands,
       colors: optionColors,
       sizes: optionSizes,
       minPrice: +minValue || null,
       maxPrice: +maxValue || null,
-      categoryId: modalsProps[modalFilters]?.categoryId,
+      categoryId: modalsProps[modalFilters].categoryId,
     });
 
     console.log({
-      searchParam: searchP,
+      searchParam: searchP[modalsProps[modalFilters].keyName],
       brands: optionBrands,
       colors: optionColors,
       sizes: optionSizes,
       minPrice: +minValue,
       maxPrice: +maxValue,
-      categoryId: modalsProps[modalFilters]?.categoryId,
+      categoryId: modalsProps[modalFilters].categoryId,
     });
 
     closeModal(modalFilters);

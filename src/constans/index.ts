@@ -1,11 +1,9 @@
-import img_warm from "../../public/main/category/img_warm.png";
-import img_test_shoes1 from "../../public/testImg/img_test_shoes1.png";
 import img_belts from "../../public/main/category/img_belts.webp";
 import img_chelsea from "../../public/main/category/img_chelsea.webp";
 import img_shirts from "../../public/main/category/img_shirts.webp";
+import img_sneakers from "../../public/main/category/img_sneakers.webp";
 import img_ties from "../../public/main/category/img_ties.webp";
 import img_trousers from "../../public/main/category/img_trousers.webp";
-import img_sneakers from "../../public/main/category/img_sneakers.webp";
 
 import img_acc from "../../public/main/category/img_acc.webp";
 import img_cloth from "../../public/main/category/img_cloth.jpg";
@@ -33,6 +31,9 @@ export const modalSuccessOrder = "modalSuccessOrder";
 export const modalNewProductAdmin = "modalNewProductAdmin";
 export const modalDeleteEditNewProduct = "modalDeleteEditNewProduct";
 export const modalFilters = "modalFilters";
+
+export const filtersKeyProductsPage = "filtersKeyProductsPage";
+export const filtersKeyModalNav = "filtersKeyModalNav";
 
 export const messageCount = "Нет на складе";
 

@@ -1,23 +1,25 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import FilterUpDownDDM from "../DropDownMenu/FIltersUpDownDDM/FilterUpDownDDM";
-import { IoMdSearch } from "react-icons/io";
-import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
-import { FiFilter } from "react-icons/fi";
-import { useModalStore } from "@/stores/useModalStore";
 import { modalFilters } from "@/constans";
+import { useModalStore } from "@/stores/useModalStore";
+import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
+import React, { useEffect, useState } from "react";
+import { FiFilter } from "react-icons/fi";
+import { IoMdSearch } from "react-icons/io";
+import FilterUpDownDDM from "../DropDownMenu/FIltersUpDownDDM/FilterUpDownDDM";
 
 type Props = {
   disabledFilters?: boolean;
   disabledSearch?: boolean;
   categoryId?: number;
+  keyName: string;
 };
 
 export default function SearchWithFilters({
   disabledFilters,
   disabledSearch,
   categoryId,
+  keyName,
 }: Props) {
   const [inputSearch, setInputSearch] = useState("");
 
@@ -25,30 +27,30 @@ export default function SearchWithFilters({
 
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
   const setProducts = useSearchWithFilters((state) => state.setProducts);
-  const setIsFetch = useSearchWithFilters((state) => state.setIsFetch);
   const setSearchP = useSearchWithFilters((state) => state.setSearchP);
+  const setIsFetch = useSearchWithFilters((state) => state.setIsFetch);
 
   useEffect(() => {
     if (!inputSearch) {
-      setProducts([]);
-      setIsFetch(false);
+      setProducts(keyName, []);
     }
   }, [inputSearch]);
 
   const handleClickSearch = () => {
-    clickSearch({ searchParam: inputSearch, categoryId });
+    setIsFetch(keyName, true);
+    clickSearch({ searchParam: inputSearch, categoryId, keyName });
   };
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputSearch(e.target.value);
-    setSearchP(e.target.value);
+    setSearchP(keyName, e.target.value);
   };
 
   const handleClickFilters = () => {
     openModal(modalFilters);
 
     if (categoryId) {
-      addModalProps(modalFilters, { categoryId, inputSearch });
+      addModalProps(modalFilters, { categoryId, inputSearch, keyName });
     }
   };
 
@@ -72,7 +74,7 @@ export default function SearchWithFilters({
 
       {disabledFilters && (
         <div className="flex justify-between items-center">
-          <FilterUpDownDDM />
+          <FilterUpDownDDM keyName={keyName} />
 
           <button
             className="flex items-center gap-1 rounded-md text-sm text-white"
