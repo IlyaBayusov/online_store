@@ -25,9 +25,10 @@ export default function ModalNav() {
 
   const isLoading = useSearchWithFilters((state) => state.isLoading);
   const products = useSearchWithFilters((state) => state.products);
-  const pagination = useSearchWithFilters((state) => state.pagination);
+  // const pagination = useSearchWithFilters((state) => state.pagination);
   const searchP = useSearchWithFilters((state) => state.searchP);
   const isFetch = useSearchWithFilters((state) => state.isFetch);
+  const clearAll = useSearchWithFilters((state) => state.clearAll);
 
   const [role, setRole] = useState<string>("");
 
@@ -48,7 +49,6 @@ export default function ModalNav() {
     openModal(modalNavCategory);
     closeModal(modalNav);
   };
-  console.log(!isFetch[filtersKeyModalNav]);
 
   const showElements = () => {
     if (
@@ -170,6 +170,12 @@ export default function ModalNav() {
     }
   };
 
+  const handleClickClose = () => {
+    closeModal(modalNav);
+
+    setTimeout(() => clearAll(filtersKeyModalNav), 750);
+  };
+
   return (
     <div
       className={
@@ -180,7 +186,7 @@ export default function ModalNav() {
       <div className="container absolute top-0 left-0 z-10 h-full">
         <div className="flex flex-col h-full w-full bg-[#121212] p-3">
           <div className="flex justify-end">
-            <div onClick={() => closeModal(modalNav)}>
+            <div onClick={handleClickClose}>
               <IoClose
                 className="text-[#B3B3B3] w-5 h-5"
                 viewBox="75 75 350 350"
@@ -190,7 +196,7 @@ export default function ModalNav() {
 
           <div className="flex flex-col mt-3 overflow-y-auto hide-scrollbar-y">
             <SearchWithFilters
-              disabledFilters={true}
+              disabledFilters={false}
               disabledSearch={true}
               keyName={filtersKeyModalNav}
             />

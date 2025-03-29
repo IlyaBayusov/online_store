@@ -11,6 +11,7 @@ import {
   sortsFieldDefaultValue,
   typeStoreDefaultValue,
 } from "./SearchWithFiltersKeysValues";
+import { filtersUpDown } from "@/constans";
 
 export interface ISearchWithFiltersStore {
   isLoading: { [key: string]: boolean };
@@ -47,6 +48,7 @@ export interface ISearchWithFiltersStore {
       categoryId: number | null;
     }>
   ) => void;
+  clearAll: (keyName: string) => void;
 }
 
 export const useSearchWithFilters = create<ISearchWithFiltersStore>(
@@ -157,6 +159,32 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
           },
         }));
       }
+    },
+    clearAll: (keyName) => {
+      set(() => ({
+        isLoading: { [keyName]: true },
+      }));
+      set(() => ({
+        isFetch: { [keyName]: false },
+      }));
+      set(() => ({
+        products: { [keyName]: [] },
+      }));
+      set(() => ({
+        pagination: { [keyName]: {} as IPagination },
+      }));
+      set(() => ({
+        sortsField: { [keyName]: { ...filtersUpDown[0] } as IFiltersUpDown },
+      }));
+      set(() => ({
+        searchP: { [keyName]: "" },
+      }));
+      set(() => ({
+        categorId: { [keyName]: null },
+      }));
+      set(() => ({
+        typeStore: { [keyName]: "" },
+      }));
     },
   })
 );

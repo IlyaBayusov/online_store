@@ -19,7 +19,7 @@ export const CitiesDDM = () => {
 
       if (!response) return;
 
-      setCities(response);
+      setCities(response.items);
 
       if (Cookies.get("userCityName") && Cookies.get("userCityId")) {
         setCity({

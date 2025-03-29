@@ -3,7 +3,7 @@
 import { filtersKeyModalNav, modalFilters } from "@/constans";
 import { useModalStore } from "@/stores/useModalStore";
 import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { FiFilter } from "react-icons/fi";
 import { IoMdSearch } from "react-icons/io";
 import FilterUpDownDDM from "../DropDownMenu/FIltersUpDownDDM/FilterUpDownDDM";
@@ -21,29 +21,30 @@ export default function SearchWithFilters({
   categoryId,
   keyName,
 }: Props) {
-  const [inputSearch, setInputSearch] = useState("");
+  // const [inputSearch, setInputSearch] = useState("");
 
   const { openModal, addModalProps } = useModalStore();
 
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
   const setProducts = useSearchWithFilters((state) => state.setProducts);
   const setSearchP = useSearchWithFilters((state) => state.setSearchP);
+  const searchP = useSearchWithFilters((state) => state.searchP);
   const setIsFetch = useSearchWithFilters((state) => state.setIsFetch);
 
   useEffect(() => {
-    if (!inputSearch) {
+    if (!searchP[keyName]) {
       setProducts(keyName, []);
       setIsFetch(filtersKeyModalNav, false);
     }
-  }, [inputSearch]);
+  }, [searchP[keyName]]);
 
   const handleClickSearch = () => {
     setIsFetch(keyName, true);
-    clickSearch({ searchParam: inputSearch, categoryId, keyName });
+    clickSearch({ searchParam: searchP[keyName], categoryId, keyName });
   };
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputSearch(e.target.value);
+    // setInputSearch(e.target.value);
     setSearchP(keyName, e.target.value);
   };
 
@@ -51,7 +52,11 @@ export default function SearchWithFilters({
     openModal(modalFilters);
 
     if (categoryId) {
-      addModalProps(modalFilters, { categoryId, inputSearch, keyName });
+      addModalProps(modalFilters, {
+        categoryId,
+        inputSearch: searchP[keyName],
+        keyName,
+      });
     }
   };
 
@@ -64,7 +69,7 @@ export default function SearchWithFilters({
             placeholder="Поиск"
             className="py-2 px-4 w-full text-sm bg-[#3A3A3A] text-white rounded-md"
             onChange={handleChangeSearch}
-            value={inputSearch}
+            value={searchP[keyName]}
             onKeyDown={(e) => e.key === "Enter" && handleClickSearch()}
           />
           <button className="py-2" onClick={handleClickSearch}>

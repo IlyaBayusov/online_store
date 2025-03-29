@@ -2,7 +2,6 @@
 
 import { getSubCategories } from "@/api";
 import ProductsList from "@/components/Products/ProductsList/ProductsList";
-import SearchWithFilters from "@/components/SearchWithFilters/SearchWithFilters";
 import { filtersKeyProductsPage } from "@/constans";
 import { IGetSubCategories } from "@/interfaces";
 import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
@@ -55,15 +54,6 @@ export default function Products() {
   if (category) {
     return (
       <>
-        <div className="mt-3 px-3 w-full flex justify-center items-center gap-2">
-          <SearchWithFilters
-            disabledSearch={false}
-            disabledFilters={true}
-            categoryId={category.id}
-            keyName={filtersKeyProductsPage}
-          />
-        </div>
-
         <ProductsList
           category={category}
           products={products[filtersKeyProductsPage]}

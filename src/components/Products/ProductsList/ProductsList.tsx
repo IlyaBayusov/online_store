@@ -8,6 +8,8 @@ import {
   IPagination,
   IProductCategory,
 } from "@/interfaces/index";
+import SearchWithFilters from "@/components/SearchWithFilters/SearchWithFilters";
+import { filtersKeyProductsPage } from "@/constans";
 
 type Props = {
   category: IGetSubCategories;
@@ -27,6 +29,16 @@ export default function ProductsList({
           {category.name}
         </h2>
       </div>
+
+      <div className="w-full flex justify-center items-center gap-2">
+        <SearchWithFilters
+          disabledSearch={false}
+          disabledFilters={true}
+          categoryId={category.id}
+          keyName={filtersKeyProductsPage}
+        />
+      </div>
+
       {products.length ? (
         <div className="my-2 w-full grid grid-cols-2 gap-3">
           {products.map((product) => (
