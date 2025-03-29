@@ -48,7 +48,7 @@ export default function ModalNav() {
     openModal(modalNavCategory);
     closeModal(modalNav);
   };
-  console.log(!isFetch, isFetch && !searchP[filtersKeyModalNav].length);
+  console.log(!isFetch[filtersKeyModalNav]);
 
   const showElements = () => {
     if (
