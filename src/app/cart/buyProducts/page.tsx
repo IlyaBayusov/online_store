@@ -23,12 +23,15 @@ export default function BuyProducts() {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await getProductsCart();
+      const response = await getProductsCart();
 
-      if (data) {
-        setProductsCart(data);
+      if (response) {
+        setProductsCart(response.items);
 
-        const sum = data.reduce((sum, item) => sum + item.price, 0);
+        const sum = response.items.reduce(
+          (sum: number, item: IProductInCart) => sum + item.price,
+          0
+        );
         setSumPrice(sum);
       }
     };

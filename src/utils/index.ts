@@ -9,6 +9,7 @@ export const decodeToken = () => {
   if (!token) {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    window.location.href = "/auth";
     return;
   }
 

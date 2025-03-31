@@ -71,6 +71,15 @@ export interface IOrderPost {
   orderItemRequest: IProductInCart[];
 }
 
+export interface IOrdersList {
+  orders: IOrdersGet[];
+  totalPrice: 63;
+  status: string;
+  paymentMethod: string;
+  buysIn: string;
+  orderId: 1;
+}
+
 export interface IOrdersGet {
   productId: number;
   subcategoryId: number;
@@ -78,11 +87,7 @@ export interface IOrdersGet {
   productName: string;
   image: string;
   price: number;
-  size: string;
   quantity: number;
-  totalPrice: number;
-  paymentMethod: string;
-  status: string;
 }
 
 export interface IFavsGet {

@@ -1,5 +1,4 @@
 import { IOrdersGet } from "@/interfaces";
-import { getStatusRu } from "@/utils";
 import Image from "next/image";
 import React from "react";
 
@@ -18,12 +17,6 @@ export default function OrdersItem({ order }: Props) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="rounded-md"
           />
-        </div>
-
-        <div className="absolute top-1 right-0 z-10 flex flex-col justify-end">
-          <p className="bg-orange-400 px-2 p-0.5 text-sm rounded-s-md">
-            {getStatusRu(order.status)}
-          </p>
         </div>
 
         <div className="absolute bottom-0 right-0 z-10 flex flex-col justify-end bg-black bg-opacity-50 rounded-tl-md rounded-br-md p-1">

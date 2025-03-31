@@ -1,17 +1,19 @@
 "use client";
 
 import { getOrders } from "@/api";
-import OrdersList from "@/components/Orders/OrdersList/OrdersList";
-import { IOrdersGet } from "@/interfaces";
+import OrderItem from "@/components/Orders/OrderItem/OrderItem";
+import { IOrdersList } from "@/interfaces";
 import React, { useEffect, useState } from "react";
 
 export default function Orders() {
-  const [orders, setOrders] = useState<IOrdersGet[]>([]);
+  const [orders, setOrders] = useState<IOrdersList[]>([]);
 
   useEffect(() => {
     const getOrdersList = async () => {
-      const data: IOrdersGet[] | undefined = await getOrders();
-      if (data) setOrders(data);
+      const response = await getOrders();
+      if (response) {
+        setOrders(response.items);
+      }
     };
 
     getOrdersList();
@@ -19,5 +21,5 @@ export default function Orders() {
 
   if (!orders) return <div>Loading...</div>;
 
-  return <OrdersList orders={orders} />;
+  return orders.map((order) => <OrderItem key={order.orderId} order={order} />);
 }

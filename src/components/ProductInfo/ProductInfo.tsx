@@ -95,8 +95,6 @@ export default function ProductInfo({
     setActiveBtnFav();
   }, [nowProduct]);
 
-  console.log("nowproduct", nowProduct);
-
   const handleClickCart = async () => {
     try {
       const decodedToken: IDecodedToken = decodeToken();

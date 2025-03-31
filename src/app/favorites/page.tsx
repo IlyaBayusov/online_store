@@ -10,9 +10,12 @@ export default function Favorites() {
 
   useEffect(() => {
     const getFavsList = async () => {
-      const data: IFavsGet[] | undefined = await getFav();
+      const response = await getFav();
+      console.log(response);
 
-      if (data !== undefined) setFavs(data);
+      if (response) {
+        setFavs(response.items);
+      }
     };
 
     getFavsList();
