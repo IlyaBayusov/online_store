@@ -6,6 +6,8 @@ import OrdersItem from "../OrdersItem/OrdersItem";
 type Props = { products: IOrdersGet[] };
 
 export default function OrdersList({ products }: Props) {
+  console.log("render ORDERSLIST ");
+
   return (
     <div className="container px-3">
       <div className="flex justify-center mt-3 mb-5">

@@ -1,6 +1,5 @@
 import { IOrdersGet } from "@/interfaces";
 import Image from "next/image";
-import React from "react";
 
 type Props = { order: IOrdersGet };
 

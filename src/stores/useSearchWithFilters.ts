@@ -11,7 +11,7 @@ import {
   sortsFieldDefaultValue,
   typeStoreDefaultValue,
 } from "./SearchWithFiltersKeysValues";
-import { filtersUpDown } from "@/constans";
+import { filtersUpDown, sizePage } from "@/constans";
 
 export interface ISearchWithFiltersStore {
   isLoading: { [key: string]: boolean };
@@ -97,7 +97,7 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
       keyName,
 
       page = 0,
-      size = 10,
+      size = sizePage,
       sortField = undefined,
       sizes = [],
       colors = [],

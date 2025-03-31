@@ -10,6 +10,7 @@ import {
 } from "@/interfaces/index";
 import SearchWithFilters from "@/components/SearchWithFilters/SearchWithFilters";
 import { filtersKeyProductsPage } from "@/constans";
+import Pagination from "@/components/Pagination/Pagination";
 
 type Props = {
   category: IGetSubCategories;
@@ -38,6 +39,8 @@ export default function ProductsList({
           keyName={filtersKeyProductsPage}
         />
       </div>
+
+      {pagination && <Pagination pagination={pagination} />}
 
       {products.length ? (
         <div className="my-2 w-full grid grid-cols-2 gap-3">

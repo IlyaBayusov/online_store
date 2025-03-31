@@ -39,6 +39,9 @@ export const messageCount = "Нет на складе";
 
 export const minMaxValueInputFilter = 100000;
 
+export const maxPagesInPagination = 9;
+export const maxButtonsUpToDotsInPagin = maxPagesInPagination - 2;
+
 export const filtersUpDown = [
   {
     id: 0,
