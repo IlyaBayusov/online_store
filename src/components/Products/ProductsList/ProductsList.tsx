@@ -16,12 +16,14 @@ type Props = {
   category: IGetSubCategories;
   products: IProductCategory[];
   pagination: IPagination;
+  keyName: string;
 };
 
 export default function ProductsList({
   category,
   products,
   pagination,
+  keyName,
 }: Props) {
   return (
     <div className="container px-3">
@@ -40,7 +42,7 @@ export default function ProductsList({
         />
       </div>
 
-      {pagination && <Pagination pagination={pagination} />}
+      {pagination && <Pagination pagination={pagination} keyName={keyName} />}
 
       {products.length ? (
         <div className="my-2 w-full grid grid-cols-2 gap-3">

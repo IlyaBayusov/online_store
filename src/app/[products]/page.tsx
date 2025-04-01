@@ -58,6 +58,7 @@ export default function Products() {
           category={category}
           products={products[filtersKeyProductsPage]}
           pagination={pagination[filtersKeyProductsPage]}
+          keyName={filtersKeyProductsPage}
         />
       </>
     );
