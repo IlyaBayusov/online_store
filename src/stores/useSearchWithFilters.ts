@@ -13,6 +13,14 @@ import {
 } from "./SearchWithFiltersKeysValues";
 import { filtersUpDown, sizePage } from "@/constans";
 
+export interface FiltersInSearch {
+  sizes?: string[];
+  colors?: string[];
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  brands?: string[];
+}
+
 export interface ISearchWithFiltersStore {
   isLoading: { [key: string]: boolean };
   setIsLoading: (keyName: string, valueBool: boolean) => void;
@@ -30,6 +38,8 @@ export interface ISearchWithFiltersStore {
   setCategorId: (keyName: string, categorId: number | null) => void;
   typeStore: { [key: string]: string };
   setTypeStore: (keyName: string, typeStore: string) => void;
+  filters: { [key: string]: FiltersInSearch };
+  setFilters: (keyName: string, filters: FiltersInSearch) => void;
 
   clickSearch: (
     params: {
@@ -91,6 +101,8 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
       set((state) => ({
         typeStore: { ...state.typeStore, [keyName]: typeStore },
       })),
+    filters: {},
+    setFilters: (keyName, filters) => set({ [keyName]: filters }),
 
     clickSearch: async ({
       searchParam,
@@ -184,6 +196,9 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
       }));
       set(() => ({
         typeStore: { [keyName]: "" },
+      }));
+      set(() => ({
+        filters: { [keyName]: {} },
       }));
     },
   })

@@ -29,12 +29,14 @@ export default function Pagination({ pagination, keyName }: Props) {
       startPage + maxButtonsUpToDotsInPagin - 1
     );
 
-    for (
-      let i = startPage;
-      endPage - startPage + 1 < maxButtonsUpToDotsInPagin;
-      i--
-    ) {
-      startPage--;
+    if (totalPages >= maxButtonsUpToDotsInPagin) {
+      for (
+        let i = startPage;
+        endPage - startPage + 1 < maxButtonsUpToDotsInPagin;
+        i--
+      ) {
+        startPage--;
+      }
     }
 
     for (let i = startPage; i <= endPage; i++) {
@@ -66,15 +68,13 @@ export default function Pagination({ pagination, keyName }: Props) {
     if (totalPages - maxPagesInPagination / 3 > currentPage + 1) {
       return (
         <>
-          <button
-            disabled
-            className="px-2 py-0.5 text-white hover:text-gray-400 transition "
-          >
+          <button disabled className="px-2 py-0.5 text-white">
             ...
           </button>
           <button
             value={totalPages}
             className="px-2 py-0.5 text-white hover:text-gray-400 transition "
+            onClick={handleClickBtn}
           >
             {totalPages}
           </button>
@@ -83,11 +83,37 @@ export default function Pagination({ pagination, keyName }: Props) {
     }
   };
 
+  const handleClickPrevArrow = () => {
+    if (currentPage) {
+      clickSearch({
+        searchParam: searchP[keyName],
+        keyName,
+        categoryId: categorId[keyName],
+        page: currentPage - 1,
+      });
+    }
+  };
+
+  const handleClickNextArrow = () => {
+    if (currentPage < totalPages - 1) {
+      clickSearch({
+        searchParam: searchP[keyName],
+        keyName,
+        categoryId: categorId[keyName],
+        page: currentPage + 1,
+      });
+    }
+  };
+
   return (
     <div className="mt-1 mb-4 w-full flex justify-center text-base">
       <div className="max-w-[360px] flex flex-nowrap flex-row items-center">
-        <button className="px-2 py-0.5 text-white hover:text-gray-400 transition ">
-          <MdOutlineKeyboardArrowLeft className="h-6 w-6 p-px text-white" />
+        <button
+          className="px-2 py-0.5 text-white hover:text-gray-400 transition disabled:text-gray-400"
+          onClick={handleClickPrevArrow}
+          disabled={currentPage <= 0}
+        >
+          <MdOutlineKeyboardArrowLeft className="h-6 w-6 p-px" />
         </button>
 
         <>
@@ -112,8 +138,12 @@ export default function Pagination({ pagination, keyName }: Props) {
           {showBtnDots()}
         </>
 
-        <button className="px-2 py-0.5 text-white hover:text-gray-400 transition ">
-          <MdOutlineKeyboardArrowRight className="h-6 w-6 p-px text-white" />
+        <button
+          className="px-2 py-0.5 text-white hover:text-gray-400 transition disabled:text-gray-400"
+          onClick={handleClickNextArrow}
+          disabled={currentPage >= totalPages - 1}
+        >
+          <MdOutlineKeyboardArrowRight className="h-6 w-6 p-px" />
         </button>
       </div>
     </div>
