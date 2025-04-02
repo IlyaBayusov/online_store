@@ -16,6 +16,8 @@ export default function Pagination({ pagination, keyName }: Props) {
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
   const searchP = useSearchWithFilters((state) => state.searchP);
   const categorId = useSearchWithFilters((state) => state.categorId);
+  const filters = useSearchWithFilters((state) => state.filters);
+  const sortsField = useSearchWithFilters((state) => state.sortsField);
 
   const getPaginationButtons = () => {
     const pages = [];
@@ -58,6 +60,8 @@ export default function Pagination({ pagination, keyName }: Props) {
         keyName,
         categoryId: categorId[keyName],
         page: Number(value) - 1,
+        ...filters[keyName],
+        sortField: sortsField[keyName].value,
       });
     }
   };
@@ -90,9 +94,13 @@ export default function Pagination({ pagination, keyName }: Props) {
         keyName,
         categoryId: categorId[keyName],
         page: currentPage - 1,
+        ...filters[keyName],
+        sortField: sortsField[keyName].value,
       });
     }
   };
+
+  console.log(filters[keyName]);
 
   const handleClickNextArrow = () => {
     if (currentPage < totalPages - 1) {
@@ -101,6 +109,8 @@ export default function Pagination({ pagination, keyName }: Props) {
         keyName,
         categoryId: categorId[keyName],
         page: currentPage + 1,
+        ...filters[keyName],
+        sortField: sortsField[keyName].value,
       });
     }
   };

@@ -102,7 +102,10 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
         typeStore: { ...state.typeStore, [keyName]: typeStore },
       })),
     filters: {},
-    setFilters: (keyName, filters) => set({ [keyName]: filters }),
+    setFilters: (keyName, filters) =>
+      set(() => ({
+        filters: { [keyName]: filters },
+      })),
 
     clickSearch: async ({
       searchParam,

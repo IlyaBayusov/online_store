@@ -10,7 +10,7 @@ import { IoClose } from "react-icons/io5";
 import CheckBoxFilters from "../ui/CheckBoxFilters";
 
 export default function ModalFilters() {
-  const [filters, setFilters] = useState<IGetFiltersByCategory>(
+  const [filtersState, setFiltersState] = useState<IGetFiltersByCategory>(
     {} as IGetFiltersByCategory
   );
   const [optionBrands, setOptionBrands] = useState<string[]>([]);
@@ -23,6 +23,8 @@ export default function ModalFilters() {
 
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
   const searchP = useSearchWithFilters((state) => state.searchP);
+  const setFilters = useSearchWithFilters((state) => state.setFilters);
+  const filters = useSearchWithFilters((state) => state.filters);
 
   useEffect(() => {
     const getFilters = async () => {
@@ -34,7 +36,7 @@ export default function ModalFilters() {
       );
 
       if (response) {
-        setFilters(response);
+        setFiltersState(response);
       }
     };
 
@@ -72,6 +74,14 @@ export default function ModalFilters() {
       // ------------------------------------------выкинуть ошибку
       return;
     }
+
+    setFilters(modalsProps[modalFilters].keyName, {
+      brands: optionBrands,
+      colors: optionColors,
+      sizes: optionSizes,
+      minPrice: +minValue || null,
+      maxPrice: +maxValue || null,
+    });
 
     clickSearch({
       searchParam: searchP[modalsProps[modalFilters].keyName],
@@ -115,7 +125,7 @@ export default function ModalFilters() {
             </div>
           </div>
 
-          {Object.keys(filters).length > 0 ? (
+          {Object.keys(filtersState).length > 0 ? (
             <form
               onSubmit={handleSubmit}
               className="flex flex-col mt-3 overflow-y-auto hide-scrollbar-y"
@@ -124,7 +134,7 @@ export default function ModalFilters() {
                 <>
                   <h2>Производитель</h2>
 
-                  {filters.brands.map((brand) => (
+                  {filtersState.brands.map((brand) => (
                     <CheckBoxFilters
                       key={brand}
                       textValue={brand}
@@ -136,7 +146,7 @@ export default function ModalFilters() {
                 <>
                   <h2>Цвет</h2>
 
-                  {filters.colors.map((color) => (
+                  {filtersState.colors.map((color) => (
                     <CheckBoxFilters
                       key={color}
                       textValue={color}
@@ -148,7 +158,7 @@ export default function ModalFilters() {
                 <>
                   <h2>Размер</h2>
 
-                  {filters.sizes.map((size) => (
+                  {filtersState.sizes.map((size) => (
                     <CheckBoxFilters
                       key={size}
                       textValue={size}
