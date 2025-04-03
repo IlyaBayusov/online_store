@@ -24,7 +24,6 @@ export default function ModalFilters() {
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
   const searchP = useSearchWithFilters((state) => state.searchP);
   const setFilters = useSearchWithFilters((state) => state.setFilters);
-  const filters = useSearchWithFilters((state) => state.filters);
 
   useEffect(() => {
     const getFilters = async () => {

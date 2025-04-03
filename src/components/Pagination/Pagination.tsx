@@ -66,6 +66,8 @@ export default function Pagination({ pagination, keyName }: Props) {
     }
   };
 
+  console.log(sortsField[keyName].value);
+
   const showBtnDots = () => {
     if (getPaginationButtons().length < maxButtonsUpToDotsInPagin) return;
 
@@ -77,7 +79,7 @@ export default function Pagination({ pagination, keyName }: Props) {
           </button>
           <button
             value={totalPages}
-            className="px-2 py-0.5 text-white hover:text-gray-400 transition "
+            className="px-2 py-0.5 text-white md:hover:text-gray-400 transition "
             onClick={handleClickBtn}
           >
             {totalPages}
@@ -115,47 +117,48 @@ export default function Pagination({ pagination, keyName }: Props) {
     }
   };
 
-  return (
-    <div className="mt-1 mb-4 w-full flex justify-center text-base">
-      <div className="max-w-[360px] flex flex-nowrap flex-row items-center">
-        <button
-          className="px-2 py-0.5 text-white hover:text-gray-400 transition disabled:text-gray-400"
-          onClick={handleClickPrevArrow}
-          disabled={currentPage <= 0}
-        >
-          <MdOutlineKeyboardArrowLeft className="h-6 w-6 p-px" />
-        </button>
+  if (totalPages !== 0)
+    return (
+      <div className="mt-1 mb-4 w-full flex justify-center text-base">
+        <div className="max-w-[360px] flex flex-nowrap flex-row items-center">
+          <button
+            className="px-2 py-0.5 text-white md:hover:text-gray-400 transition disabled:text-gray-400"
+            onClick={handleClickPrevArrow}
+            disabled={currentPage <= 0}
+          >
+            <MdOutlineKeyboardArrowLeft className="h-6 w-6 p-px" />
+          </button>
 
-        <>
-          {getPaginationButtons().map((number, index) => (
-            <button
-              key={index}
-              value={number}
-              disabled={currentPage + 1 === number}
-              className={
-                "px-2 py-0.5  " +
-                `${
-                  currentPage + 1 === number
-                    ? "text-gray-400 border-b border-gray-400"
-                    : "text-white   transition"
-                }`
-              }
-              onClick={handleClickBtn}
-            >
-              {number}
-            </button>
-          ))}
-          {showBtnDots()}
-        </>
+          <>
+            {getPaginationButtons().map((number, index) => (
+              <button
+                key={index}
+                value={number}
+                disabled={currentPage + 1 === number}
+                className={
+                  "px-2 py-0.5  " +
+                  `${
+                    currentPage + 1 === number
+                      ? "text-gray-400 border-b border-gray-400"
+                      : "text-white   transition"
+                  }`
+                }
+                onClick={handleClickBtn}
+              >
+                {number}
+              </button>
+            ))}
+            {showBtnDots()}
+          </>
 
-        <button
-          className="px-2 py-0.5 text-white hover:text-gray-400 transition disabled:text-gray-400"
-          onClick={handleClickNextArrow}
-          disabled={currentPage >= totalPages - 1}
-        >
-          <MdOutlineKeyboardArrowRight className="h-6 w-6 p-px" />
-        </button>
+          <button
+            className="px-2 py-0.5 text-white md:hover:text-gray-400 transition disabled:text-gray-400"
+            onClick={handleClickNextArrow}
+            disabled={currentPage >= totalPages - 1}
+          >
+            <MdOutlineKeyboardArrowRight className="h-6 w-6 p-px" />
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
 }

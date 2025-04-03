@@ -19,6 +19,7 @@ export default function FilterUpDownDDM({ keyName }: Props) {
   const clickSearch = useSearchWithFilters((state) => state.clickSearch);
   const searchP = useSearchWithFilters((state) => state.searchP);
   const categorId = useSearchWithFilters((state) => state.categorId);
+  const filters = useSearchWithFilters((state) => state.filters);
 
   return (
     <DropdownMenu.Root open={isActive} onOpenChange={setIsActive}>
@@ -52,6 +53,7 @@ export default function FilterUpDownDDM({ keyName }: Props) {
                       searchParam: searchP[keyName],
                       categoryId: categorId[keyName],
                       keyName,
+                      ...filters[keyName],
                     });
                   }}
                 >
