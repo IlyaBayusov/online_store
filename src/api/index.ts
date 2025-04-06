@@ -227,8 +227,8 @@ export const getSubCategories = async () => {
 export const getProductsSearchWithParams = async (
   page: number = 0,
   size: number = sizePage,
-  sortField: string = "id,asc",
   searchParam: string,
+  sortField: string = "id,asc",
   sizes: string[] = [],
   colors: string[] = [],
   minPrice: number | null = null,

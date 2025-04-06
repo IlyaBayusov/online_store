@@ -58,6 +58,23 @@ export interface ISearchWithFiltersStore {
       categoryId: number | null;
     }>
   ) => void;
+  getProductsLoading: (
+    params: {
+      searchParam: string;
+      keyName: string;
+    } & Partial<{
+      page: number;
+      size: number;
+      sortField: string;
+      sizes: string[];
+      colors: string[];
+      minPrice: number | null;
+      maxPrice: number | null;
+      brands: string[];
+
+      categoryId: number | null;
+    }>
+  ) => void;
   clearAll: (keyName: string) => void;
 }
 
@@ -124,7 +141,7 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
       set((state) => ({ isLoading: { ...state.isLoading, [keyName]: true } }));
 
       const { sortsField } = get(); // Берем `sortsField` напрямую из стора
-      const finalSortField = sortField || sortsField[keyName].value; // Если sortField не передан, берем значение из стора
+      const finalSortField = sortField || sortsField[keyName]?.value; // Если sortField не передан, берем значение из стора
 
       const { categorId } = get();
       const finalCategoryId = categoryId || categorId[keyName];
@@ -175,33 +192,99 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
         }));
       }
     },
+    getProductsLoading: async ({
+      searchParam,
+      keyName,
+
+      page = 0,
+      size = sizePage,
+      sortField = undefined,
+      sizes = [],
+      colors = [],
+      minPrice = null,
+      maxPrice = null,
+      brands = [],
+      categoryId = null,
+    }) => {
+      const { pagination, products } = get();
+
+      if (pagination[keyName].currentPage >= pagination[keyName].totalPages - 1)
+        return products[keyName];
+
+      set((state) => ({ isLoading: { ...state.isLoading, [keyName]: true } }));
+
+      const { sortsField } = get(); // Берем `sortsField` напрямую из стора
+      const finalSortField = sortField || sortsField[keyName]?.value;
+
+      const { categorId } = get();
+      const finalCategoryId = categoryId || categorId[keyName];
+
+      const response = await getProductsSearchWithParams(
+        page,
+        size,
+        searchParam,
+        finalSortField,
+        sizes,
+        colors,
+        minPrice,
+        maxPrice,
+        brands,
+        finalCategoryId
+      );
+
+      if (response) {
+        set((state) => ({
+          products: {
+            ...state.products,
+            [keyName]: [...products[keyName], ...response.items],
+          },
+        }));
+        set((state) => ({
+          isLoading: { ...state.isLoading, [keyName]: false },
+        }));
+        set((state) => ({
+          pagination: {
+            ...state.pagination,
+            [keyName]: {
+              currentItems: response.currentItems,
+              currentPage: response.currentPage,
+              totalItems: response.totalItems,
+              totalPages: response.totalPages,
+            },
+          },
+        }));
+      }
+    },
     clearAll: (keyName) => {
-      set(() => ({
-        isLoading: { [keyName]: true },
+      set((state) => ({
+        isLoading: { ...state.isLoading, [keyName]: true },
       }));
-      set(() => ({
-        isFetch: { [keyName]: false },
+      set((state) => ({
+        isFetch: { ...state.isFetch, [keyName]: false },
       }));
-      set(() => ({
-        products: { [keyName]: [] },
+      set((state) => ({
+        products: { ...state.products, [keyName]: [] },
       }));
-      set(() => ({
-        pagination: { [keyName]: {} as IPagination },
+      set((state) => ({
+        pagination: { ...state.pagination, [keyName]: {} as IPagination },
       }));
-      set(() => ({
-        sortsField: { [keyName]: { ...filtersUpDown[0] } as IFiltersUpDown },
+      set((state) => ({
+        sortsField: {
+          ...state.sortsField,
+          [keyName]: { ...filtersUpDown[0] } as IFiltersUpDown,
+        },
       }));
-      set(() => ({
-        searchP: { [keyName]: "" },
+      set((state) => ({
+        searchP: { ...state.searchP, [keyName]: "" },
       }));
-      set(() => ({
-        categorId: { [keyName]: null },
+      set((state) => ({
+        categorId: { ...state.categorId, [keyName]: null },
       }));
-      set(() => ({
-        typeStore: { [keyName]: "" },
+      set((state) => ({
+        typeStore: { ...state.typeStore, [keyName]: "" },
       }));
-      set(() => ({
-        filters: { [keyName]: {} },
+      set((state) => ({
+        filters: { ...state.filters, [keyName]: {} },
       }));
     },
   })

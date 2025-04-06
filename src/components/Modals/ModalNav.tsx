@@ -10,7 +10,7 @@ import { useCategoryStore } from "@/stores/useCategoryStore";
 import { INextCategoryProps, useModalStore } from "@/stores/useModalStore";
 import { decodeToken } from "@/utils";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
 import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
@@ -18,19 +18,25 @@ import Image from "next/image";
 import { FaPhoneAlt } from "react-icons/fa";
 import ProductsItem from "../Products/ProductsItem/ProductsItem";
 import SearchWithFilters from "../SearchWithFilters/SearchWithFilters";
+import Loader from "../Loader/Loader";
 
 export default function ModalNav() {
+  const productsRef = useRef<HTMLDivElement | null>(null);
+
   const { modals, openModal, closeModal, addModalProps } = useModalStore();
   const { updateCategory } = useCategoryStore();
 
   const isLoading = useSearchWithFilters((state) => state.isLoading);
   const products = useSearchWithFilters((state) => state.products);
-  // const pagination = useSearchWithFilters((state) => state.pagination);
+  const getProductsLoading = useSearchWithFilters(
+    (state) => state.getProductsLoading
+  );
   const searchP = useSearchWithFilters((state) => state.searchP);
   const isFetch = useSearchWithFilters((state) => state.isFetch);
   const clearAll = useSearchWithFilters((state) => state.clearAll);
 
   const [role, setRole] = useState<string>("");
+  const [height, setHeight] = useState<number>(0);
 
   useEffect(() => {
     const decodedToken = decodeToken();
@@ -39,6 +45,35 @@ export default function ModalNav() {
       setRole(decodedToken.roles);
     }
   }, []);
+
+  useEffect(() => {
+    if (!productsRef.current) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry.contentRect) {
+        setHeight(entry.contentRect.height);
+      }
+    });
+
+    observer.observe(productsRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  // useEffect(() => {
+  //   const getProductsLoadingFn = async () => {
+  //     console.log("test");
+
+  //     getProductsLoading({
+  //       searchParam: searchP[filtersKeyModalNav],
+  //       keyName: filtersKeyModalNav,
+  //     });
+  //   };
+
+  //   getProductsLoadingFn();
+  // }, [height]);
+
+  console.log(products);
 
   const handleModalNav = (
     nextCategory: INextCategoryProps[],
@@ -140,13 +175,16 @@ export default function ModalNav() {
       );
     }
 
-    if (isLoading[filtersKeyModalNav] && isFetch) {
-      return <h1>Loading...</h1>;
+    if (isLoading[filtersKeyModalNav] && isFetch[filtersKeyModalNav]) {
+      return <Loader />;
     }
 
-    if (products[filtersKeyModalNav].length && isFetch) {
+    if (products[filtersKeyModalNav].length && isFetch[filtersKeyModalNav]) {
       return (
-        <div className="mt-6 mb-2 w-full grid grid-cols-2 gap-3">
+        <div
+          ref={productsRef}
+          className="mt-6 mb-2 w-full grid grid-cols-2 gap-3"
+        >
           {products[filtersKeyModalNav].map((product) => (
             <Link
               key={product.productId}

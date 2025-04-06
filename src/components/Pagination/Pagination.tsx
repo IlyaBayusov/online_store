@@ -24,7 +24,10 @@ export default function Pagination({ pagination, keyName }: Props) {
 
     let startPage = Math.max(
       1,
-      currentPage + 1 - Math.floor(maxPagesInPagination / 3)
+      currentPage +
+        1 -
+        Math.floor(maxPagesInPagination / 3) -
+        (currentPage + 1 === totalPages ? 1 : 0)
     );
     const endPage = Math.min(
       totalPages,
@@ -53,8 +56,6 @@ export default function Pagination({ pagination, keyName }: Props) {
     const value = btn.value;
 
     if (value) {
-      console.log(value);
-
       clickSearch({
         searchParam: searchP[keyName],
         keyName,
@@ -65,8 +66,6 @@ export default function Pagination({ pagination, keyName }: Props) {
       });
     }
   };
-
-  console.log(sortsField[keyName].value);
 
   const showBtnDots = () => {
     if (getPaginationButtons().length < maxButtonsUpToDotsInPagin) return;
@@ -101,8 +100,6 @@ export default function Pagination({ pagination, keyName }: Props) {
       });
     }
   };
-
-  console.log(filters[keyName]);
 
   const handleClickNextArrow = () => {
     if (currentPage < totalPages - 1) {

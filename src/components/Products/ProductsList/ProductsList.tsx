@@ -44,7 +44,7 @@ export default function ProductsList({
 
       {pagination && <Pagination pagination={pagination} keyName={keyName} />}
 
-      {products.length ? (
+      {products?.length ? (
         <div className="my-2 w-full grid grid-cols-2 gap-3">
           {products.map((product) => (
             <Link

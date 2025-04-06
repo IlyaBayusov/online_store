@@ -1,6 +1,6 @@
 "use client";
 
-import { filtersKeyModalNav, modalFilters } from "@/constans";
+import { modalFilters } from "@/constans";
 import { useModalStore } from "@/stores/useModalStore";
 import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
 import React, { useEffect } from "react";
@@ -30,11 +30,12 @@ export default function SearchWithFilters({
   const setSearchP = useSearchWithFilters((state) => state.setSearchP);
   const searchP = useSearchWithFilters((state) => state.searchP);
   const setIsFetch = useSearchWithFilters((state) => state.setIsFetch);
+  const isFetch = useSearchWithFilters((state) => state.isFetch);
 
   useEffect(() => {
-    if (!searchP[keyName]) {
+    if (!searchP[keyName] && isFetch) {
       setProducts(keyName, []);
-      setIsFetch(filtersKeyModalNav, false);
+      setIsFetch(keyName, false);
     }
   }, [searchP[keyName]]);
 
