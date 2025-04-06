@@ -162,8 +162,8 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
       const response = await getProductsSearchWithParams(
         page,
         size,
-        finalSortField,
         searchParam,
+        finalSortField,
         sizes,
         colors,
         minPrice,
