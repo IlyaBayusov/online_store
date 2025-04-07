@@ -10,7 +10,7 @@ import { useCategoryStore } from "@/stores/useCategoryStore";
 import { INextCategoryProps, useModalStore } from "@/stores/useModalStore";
 import { decodeToken } from "@/utils";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
 import { useSearchWithFilters } from "@/stores/useSearchWithFilters";
@@ -19,9 +19,11 @@ import { FaPhoneAlt } from "react-icons/fa";
 import ProductsItem from "../Products/ProductsItem/ProductsItem";
 import SearchWithFilters from "../SearchWithFilters/SearchWithFilters";
 import Loader from "../Loader/Loader";
+// import { IProductCategory } from "@/interfaces";
 
 export default function ModalNav() {
-  const productsRef = useRef<HTMLDivElement | null>(null);
+  const isFetchingRef = useRef(false);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const { modals, openModal, closeModal, addModalProps } = useModalStore();
   const { updateCategory } = useCategoryStore();
@@ -34,9 +36,13 @@ export default function ModalNav() {
   const searchP = useSearchWithFilters((state) => state.searchP);
   const isFetch = useSearchWithFilters((state) => state.isFetch);
   const clearAll = useSearchWithFilters((state) => state.clearAll);
+  const pagination = useSearchWithFilters((state) => state.pagination);
 
   const [role, setRole] = useState<string>("");
-  const [height, setHeight] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  // const [renderedProducts, setRenderedProducts] = useState<IProductCategory[]>(
+  //   []
+  // );
 
   useEffect(() => {
     const decodedToken = decodeToken();
@@ -46,34 +52,56 @@ export default function ModalNav() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!productsRef.current) return;
-
-    const observer = new ResizeObserver(([entry]) => {
-      if (entry.contentRect) {
-        setHeight(entry.contentRect.height);
-      }
-    });
-
-    observer.observe(productsRef.current);
-
-    return () => observer.disconnect();
-  }, []);
-
   // useEffect(() => {
-  //   const getProductsLoadingFn = async () => {
-  //     console.log("test");
+  //   const allProducts = products[filtersKeyModalNav];
 
-  //     getProductsLoading({
-  //       searchParam: searchP[filtersKeyModalNav],
-  //       keyName: filtersKeyModalNav,
-  //     });
-  //   };
+  //   const newProducts = allProducts.filter(
+  //     (product) =>
+  //       !renderedProducts.some((p) => p.productId === product.productId)
+  //   );
 
-  //   getProductsLoadingFn();
-  // }, [height]);
+  //   if (newProducts.length > 0) {
+  //     setRenderedProducts((prev) => [...prev, ...newProducts]);
+  //   }
+  // }, [products[filtersKeyModalNav]]);
 
-  console.log(products);
+  const handleScroll = useCallback(async () => {
+    const scrollElement = scrollContainerRef.current;
+
+    if (
+      !scrollElement ||
+      !modals[modalNav] ||
+      !hasMore ||
+      isFetchingRef.current
+    )
+      return;
+
+    if (
+      pagination[filtersKeyModalNav].currentPage ===
+      pagination[filtersKeyModalNav].totalPages - 1
+    ) {
+      setHasMore(false);
+    }
+
+    const { scrollTop, scrollHeight, clientHeight } = scrollElement;
+
+    if (scrollTop + clientHeight >= scrollHeight - 200) {
+      isFetchingRef.current = true;
+      console.log("Достигли низа, подгружаем ещё...");
+
+      const prevScrollTop = scrollTop;
+
+      await getProductsLoading({
+        searchParam: searchP[filtersKeyModalNav],
+        keyName: filtersKeyModalNav,
+      });
+
+      requestAnimationFrame(() => {
+        scrollElement.scrollTop = prevScrollTop;
+        isFetchingRef.current = false;
+      });
+    }
+  }, [modals, searchP]);
 
   const handleModalNav = (
     nextCategory: INextCategoryProps[],
@@ -181,10 +209,7 @@ export default function ModalNav() {
 
     if (products[filtersKeyModalNav].length && isFetch[filtersKeyModalNav]) {
       return (
-        <div
-          ref={productsRef}
-          className="mt-6 mb-2 w-full grid grid-cols-2 gap-3"
-        >
+        <div className="mt-6 mb-2 w-full grid grid-cols-2 gap-3">
           {products[filtersKeyModalNav].map((product) => (
             <Link
               key={product.productId}
@@ -213,6 +238,7 @@ export default function ModalNav() {
 
     setTimeout(() => clearAll(filtersKeyModalNav), 750);
   };
+  console.log(isFetchingRef.current);
 
   return (
     <div
@@ -221,6 +247,12 @@ export default function ModalNav() {
         (modals[modalNav] ? "translate-x-full" : "")
       }
     >
+      {/* {products[filtersKeyModalNav].length > 0 && isFetchingRef.current && (
+        <div className="absolute top-0 left-0 z-[1000] flex justify-center items-center w-full h-full bg-white bg-opacity-35">
+          <Loader />
+        </div>
+      )} */}
+
       <div className="container absolute top-0 left-0 z-10 h-full">
         <div className="flex flex-col h-full w-full bg-[#121212] p-3">
           <div className="flex justify-end">
@@ -232,7 +264,14 @@ export default function ModalNav() {
             </div>
           </div>
 
-          <div className="flex flex-col mt-3 overflow-y-auto hide-scrollbar-y">
+          <div
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className={
+              "flex flex-col mt-3 hide-scrollbar-y " +
+              (isFetchingRef.current ? "overflow-y-hidden" : "overflow-y-auto")
+            }
+          >
             <SearchWithFilters
               disabledFilters={false}
               disabledSearch={true}

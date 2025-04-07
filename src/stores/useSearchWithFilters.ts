@@ -21,6 +21,14 @@ export interface FiltersInSearch {
   brands?: string[];
 }
 
+type ProductResponse = {
+  items: IProductCategory[];
+  currentItems: number;
+  currentPage: number;
+  totalItems: number;
+  totalPages: number;
+};
+
 export interface ISearchWithFiltersStore {
   isLoading: { [key: string]: boolean };
   setIsLoading: (keyName: string, valueBool: boolean) => void;
@@ -74,7 +82,7 @@ export interface ISearchWithFiltersStore {
 
       categoryId: number | null;
     }>
-  ) => void;
+  ) => Promise<ProductResponse | null>;
   clearAll: (keyName: string) => void;
 }
 
@@ -220,7 +228,7 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
       const finalCategoryId = categoryId || categorId[keyName];
 
       const response = await getProductsSearchWithParams(
-        page,
+        pagination[keyName].currentPage + 1 || page,
         size,
         searchParam,
         finalSortField,
@@ -253,7 +261,11 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
             },
           },
         }));
+
+        return response;
       }
+
+      return null;
     },
     clearAll: (keyName) => {
       set((state) => ({

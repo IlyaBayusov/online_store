@@ -9,7 +9,7 @@ import img_acc from "../../public/main/category/img_acc.webp";
 import img_cloth from "../../public/main/category/img_cloth.jpg";
 import img_shoes from "../../public/main/category/img_shoes.jpg";
 
-export const sizePage = 1;
+export const sizePage = 15;
 
 export const baseURL = "http://localhost:3000";
 
