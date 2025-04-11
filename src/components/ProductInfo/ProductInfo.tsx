@@ -38,6 +38,9 @@ export default function ProductInfo({
 
   const [selectedSize, setSelectedSize] = useState<string>(nowProduct.sizes[0]);
   const [selectedColor, setSelectedColor] = useState<string>(nowProduct.color);
+  const [selectedImage, setSelectedImage] = useState<string>(
+    nowProduct.images[0]
+  );
 
   const [isActiveCart, setIsActiveCart] = useState(false);
   const [isActiveFav, setIsActiveFav] = useState(false);
@@ -171,7 +174,7 @@ export default function ProductInfo({
             </div>
 
             <Image
-              src={nowProduct.images[0]}
+              src={selectedImage}
               width={351}
               height={494}
               alt={nowProduct.name}
@@ -187,6 +190,7 @@ export default function ProductInfo({
                   height={494}
                   alt={nowProduct.name}
                   className="max-w-16 rounded-md"
+                  onClick={() => setSelectedImage(nowProduct.images[index])}
                 />
               ))}
             </div>
