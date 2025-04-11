@@ -200,6 +200,9 @@ export default function ProductInfo({
             </div>
 
             <div className="flex flex-col items-start mt-3">
+              <p className="">Артикул: {nowProduct.id}</p>
+              <p className="">Бренд: {nowProduct.brandName}</p>
+
               <div className="full">
                 <p>Цвет: {selectedColor}</p>
                 <div className="flex items-center gap-2 mt-1">

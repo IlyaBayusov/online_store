@@ -219,6 +219,7 @@ export default function ModalNav() {
                 name={product.name}
                 img={product.image}
                 price={product.price}
+                brandName={product.brandName}
               />
             </Link>
           ))}

@@ -1,9 +1,9 @@
 import Image from "next/image";
 import React from "react";
 
-type Props = { name: string; img: string; price: number };
+type Props = { name: string; img: string; price: number; brandName: string };
 
-export default function ProductsItem({ name, img, price }: Props) {
+export default function ProductsItem({ name, img, price, brandName }: Props) {
   return (
     <div className="flex flex-col justify-center">
       <div className="relative w-full h-[228px] bg-[#F0F0F0] flex justify-center items-center rounded-md">
@@ -18,6 +18,7 @@ export default function ProductsItem({ name, img, price }: Props) {
       </div>
 
       <p className="text-base font-bold text-start">{`${price} РУБ.`}</p>
+      <p className="text-sm text-start">{brandName}</p>
       <p className="text-sm text-start">{name}</p>
     </div>
   );

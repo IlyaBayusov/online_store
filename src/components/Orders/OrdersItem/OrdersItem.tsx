@@ -4,6 +4,8 @@ import Image from "next/image";
 type Props = { order: IOrdersGet };
 
 export default function OrdersItem({ order }: Props) {
+  console.log(order);
+
   return (
     <div className="flex flex-col justify-center">
       <div className="relative">
