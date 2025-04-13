@@ -286,3 +286,14 @@ export const getFiltersByCategory = async (categoryId: number) => {
     console.error("Ошибка получения фильтров по категории: ", error);
   }
 };
+
+export const getUserInfoInProfile = async (userId: number) => {
+  try {
+    const response = await api.get(`/v1/users/${userId}`);
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения инфо о юзере по айди в профиле: ", error);
+  }
+};

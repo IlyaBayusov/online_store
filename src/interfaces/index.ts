@@ -195,3 +195,17 @@ export interface IGetFiltersByCategory {
   sizes: string[];
   colors: string[];
 }
+
+export interface IGetUserInfoInProfile {
+  id: number;
+  firstname: string;
+  lastname: string;
+  username: string;
+  email: string;
+}
+
+export interface IFormDataProfileUserInfo {
+  firstname: string;
+  lastname: string;
+  username: string;
+}

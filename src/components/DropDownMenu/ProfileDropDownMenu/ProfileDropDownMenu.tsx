@@ -5,6 +5,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { CgProfile } from "react-icons/cg";
 import Link from "next/link";
 import { decodeToken } from "@/utils";
+import { profilePage } from "@/constans";
 
 export const ProfileDropDownMenu = () => {
   const [isAuth, setIsAuth] = useState(false);
@@ -20,9 +21,9 @@ export const ProfileDropDownMenu = () => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="" aria-label="Customise options">
+        <Link href={profilePage} className="" aria-label="Customise options">
           <CgProfile className="h-8 w-8 p-1.5" />
-        </button>
+        </Link>
       </DropdownMenu.Trigger>
 
       {!isAuth && (
