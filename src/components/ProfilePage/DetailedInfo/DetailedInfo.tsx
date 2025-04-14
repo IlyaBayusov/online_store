@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import InputInForm from "../InputInForm/InputInForm";
 import { IFormDataProfileUserInfo } from "@/interfaces";
 import { useForm } from "react-hook-form";
 import EditBtnInForm from "../EditBtnInForm/EditBtnInForm";
+import { getUserInfoInProfile } from "@/api";
 
 type Props = {};
 
@@ -16,6 +17,14 @@ export default function DetailedInfo({}: Props) {
   } = useForm<IFormDataProfileUserInfo>({ mode: "onBlur" });
 
   const onSubmit = async (data: IFormDataProfileUserInfo) => {};
+
+  useEffect(() => {
+    const test = async () => {
+      getUserInfoInProfile(1);
+    };
+
+    test();
+  }, []);
 
   return (
     <div className="w-full pb-5 border-b border-white">

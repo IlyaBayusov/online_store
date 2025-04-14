@@ -289,11 +289,21 @@ export const getFiltersByCategory = async (categoryId: number) => {
 
 export const getUserInfoInProfile = async (userId: number) => {
   try {
-    const response = await api.get(`/v1/users/${userId}`);
-    const data = await response.data;
+    if (userId) {
+      const response = await api.get(`/v1/users/${userId}`);
+      const data = await response.data;
 
-    return data;
+      return data;
+    }
+
+    throw "Неверный id";
   } catch (error) {
-    console.error("Ошибка получения инфо о юзере по айди в профиле: ", error);
+    if (typeof error === "string") {
+      console.error(error);
+    } else if (error instanceof Error) {
+      console.error("Ошибка получения инфо о юзере по айди в профиле: ", error);
+    } else {
+      console.error("Неизвестная ошибка");
+    }
   }
 };

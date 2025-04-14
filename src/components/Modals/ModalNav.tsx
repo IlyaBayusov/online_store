@@ -239,7 +239,6 @@ export default function ModalNav() {
 
     setTimeout(() => clearAll(filtersKeyModalNav), 750);
   };
-  console.log(isFetchingRef.current);
 
   return (
     <div

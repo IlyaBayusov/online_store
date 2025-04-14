@@ -1,16 +1,40 @@
 import DetailedInfo from "@/components/ProfilePage/DetailedInfo/DetailedInfo";
 import EditBtnInForm from "@/components/ProfilePage/EditBtnInForm/EditBtnInForm";
+import { IGetUserInfoInProfile } from "@/interfaces";
+import { notFound } from "next/navigation";
 import React from "react";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 
-export default async function Profile({
+export default async function ProfileId({
   params,
 }: {
-  params: { profile: string };
+  params: { profileId: string };
 }) {
-  const { profile } = params;
+  const { profileId } = params;
 
-  console.log(profile);
+  if (!profileId) {
+    console.error("Ошибка получения id юзера");
+    return notFound();
+  }
+
+  const response = await fetch(
+    `http://localhost:8080/api/v1/users/${profileId}`
+  );
+
+  if (!response.ok) {
+    console.error("Ошибка получения данных о пользователе");
+    return notFound();
+  }
+
+  const data: IGetUserInfoInProfile = await response.json();
+
+  const showName = () => {
+    if (data.firstname && data.lastname) {
+      return `${data.firstname} ${data.lastname} (${data.username})`;
+    } else {
+      return `${data.username}`;
+    }
+  };
 
   return (
     <div className="container px-3 pt-3">
@@ -29,13 +53,13 @@ export default async function Profile({
             </div>
 
             <div className="flex flex-col justify-start gap-1 text-base">
-              <p>Name</p>
-              <p>Email@mail.ru</p>
+              <p>{showName()}</p>
+              <p>{data.email}</p>
             </div>
           </div>
         </div>
 
-        <DetailedInfo />
+        <DetailedInfo profileData={data} />
 
         <div className="w-full mt-2">
           <form className="w-full text-base">
@@ -44,7 +68,12 @@ export default async function Profile({
                 <p>Почта</p>
 
                 <div className="w-full flex justify-between items-center">
-                  <input id="email" type="email" />
+                  <input
+                    disabled={true}
+                    id="email"
+                    type="email"
+                    placeholder={data.email}
+                  />
                   <EditBtnInForm />
                 </div>
               </label>
@@ -55,7 +84,12 @@ export default async function Profile({
                 <p>Пароль</p>
 
                 <div className="w-full flex justify-between items-center">
-                  <input id="password" type="password" />
+                  <input
+                    disabled={true}
+                    id="password"
+                    type="password"
+                    placeholder="********"
+                  />
                   <EditBtnInForm />
                 </div>
               </label>
