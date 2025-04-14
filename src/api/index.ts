@@ -307,3 +307,31 @@ export const getUserInfoInProfile = async (userId: number) => {
     }
   }
 };
+
+export const putUserInfoInProfile = async (
+  firstName: string,
+  lastName: string,
+  username: string
+) => {
+  try {
+    if (!decodeToken()?.id) {
+      throw "Не найден id";
+    }
+
+    const response = await api.put(`/v1/users/${decodeToken()?.id}`, {
+      firstName,
+      lastName,
+      username,
+    });
+
+    return response;
+  } catch (error) {
+    if (typeof error === "string") {
+      console.error(error);
+    } else if (error instanceof Error) {
+      console.error("Ошибка изменения инфо о юзере по айди в профиле: ", error);
+    } else {
+      console.error("Неизвестная ошибка");
+    }
+  }
+};

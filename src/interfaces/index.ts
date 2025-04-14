@@ -198,14 +198,14 @@ export interface IGetFiltersByCategory {
 
 export interface IGetUserInfoInProfile {
   id: number;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   username: string;
   email: string;
 }
 
 export interface IFormDataProfileUserInfo {
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   username: string;
 }

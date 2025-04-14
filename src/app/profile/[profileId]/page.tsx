@@ -1,5 +1,4 @@
-import DetailedInfo from "@/components/ProfilePage/DetailedInfo/DetailedInfo";
-import EditBtnInForm from "@/components/ProfilePage/EditBtnInForm/EditBtnInForm";
+import FormDetailedInfoProfile from "@/components/Forms/FormDetailedInfoProfile/FormDetailedInfoProfile";
 import { IGetUserInfoInProfile } from "@/interfaces";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -29,8 +28,8 @@ export default async function ProfileId({
   const data: IGetUserInfoInProfile = await response.json();
 
   const showName = () => {
-    if (data.firstname && data.lastname) {
-      return `${data.firstname} ${data.lastname} (${data.username})`;
+    if (data.firstName && data.lastName) {
+      return `${data.firstName} ${data.lastName} (${data.username})`;
     } else {
       return `${data.username}`;
     }
@@ -59,7 +58,15 @@ export default async function ProfileId({
           </div>
         </div>
 
-        <DetailedInfo profileData={data} />
+        <div className="w-full pb-5 border-b border-white">
+          <div className="flex justify-center mt-3 mb-5">
+            <h2 id="subTitleLine" className="relative uppercase font-medium">
+              Подробная информация
+            </h2>
+          </div>
+
+          <FormDetailedInfoProfile profileData={data} />
+        </div>
 
         <div className="w-full mt-2">
           <form className="w-full text-base">
@@ -74,7 +81,7 @@ export default async function ProfileId({
                     type="email"
                     placeholder={data.email}
                   />
-                  <EditBtnInForm />
+                  {/* <EditBtnInForm cb={} /> */}
                 </div>
               </label>
             </div>
@@ -90,7 +97,7 @@ export default async function ProfileId({
                     type="password"
                     placeholder="********"
                   />
-                  <EditBtnInForm />
+                  {/* <EditBtnInForm type="submit" /> */}
                 </div>
               </label>
             </div>

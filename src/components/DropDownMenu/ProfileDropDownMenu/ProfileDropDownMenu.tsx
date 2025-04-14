@@ -6,9 +6,12 @@ import { CgProfile } from "react-icons/cg";
 import Link from "next/link";
 import { decodeToken } from "@/utils";
 import { profilePage } from "@/constans";
+import { useRouter } from "next/navigation";
 
 export const ProfileDropDownMenu = () => {
   const [isAuth, setIsAuth] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (decodeToken() !== undefined) {
@@ -18,12 +21,24 @@ export const ProfileDropDownMenu = () => {
     }
   }, []);
 
+  const handleClickProfile = () => {
+    const decoded = decodeToken();
+
+    if (decoded?.id) {
+      router.push(`${profilePage}/${decoded?.id}`);
+    }
+  };
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Link href={profilePage} className="" aria-label="Customise options">
+        <button
+          className=""
+          aria-label="Customise options"
+          onClick={handleClickProfile}
+        >
           <CgProfile className="h-8 w-8 p-1.5" />
-        </Link>
+        </button>
       </DropdownMenu.Trigger>
 
       {!isAuth && (
