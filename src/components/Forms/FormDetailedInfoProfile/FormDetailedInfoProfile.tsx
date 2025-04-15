@@ -137,7 +137,7 @@ export default function FormDetailedInfoProfile({ profileData }: Props) {
           Изменить
         </button>
       ) : (
-        <EditBtnInForm type="submit" />
+        <EditBtnInForm type="submit">Готово</EditBtnInForm>
       )}
     </form>
   );

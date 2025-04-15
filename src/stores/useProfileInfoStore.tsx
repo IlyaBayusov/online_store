@@ -11,6 +11,6 @@ export const useProfileInfoStore = create<IProfileInfoStore>((set) => ({
   newProfileData: {} as IGetUserInfoInProfile,
 
   setNewProfileData: (data) => {
-    set({ newProfileData: data });
+    set((state) => ({ newProfileData: { ...state.newProfileData, ...data } }));
   },
 }));

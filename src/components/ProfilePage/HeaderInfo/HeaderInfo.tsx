@@ -2,13 +2,21 @@
 
 import { IGetUserInfoInProfile } from "@/interfaces";
 import { useProfileInfoStore } from "@/stores/useProfileInfoStore";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 
 type Props = { data: IGetUserInfoInProfile };
 
 export default function HeaderInfo({ data }: Props) {
   const newProfileData = useProfileInfoStore((state) => state.newProfileData);
+
+  const [profileData, setProfileData] = useState<IGetUserInfoInProfile>(data);
+
+  useEffect(() => {
+    if (newProfileData) {
+      setProfileData({ ...profileData, ...newProfileData });
+    }
+  }, [newProfileData]);
 
   const showName = (profileData: IGetUserInfoInProfile) => {
     if (profileData.firstName && profileData.lastName) {
@@ -17,8 +25,6 @@ export default function HeaderInfo({ data }: Props) {
       return `${profileData.username}`;
     }
   };
-
-  console.log(newProfileData, data);
 
   return (
     <div className="w-full">
@@ -35,12 +41,8 @@ export default function HeaderInfo({ data }: Props) {
         </div>
 
         <div className="flex flex-col justify-start gap-1 text-base">
-          <p>
-            {showName(
-              Object.keys(newProfileData).length ? newProfileData : data
-            )}
-          </p>
-          <p>{newProfileData.email || data.email}</p>
+          <p>{showName(profileData)}</p>
+          <p>{profileData.email}</p>
         </div>
       </div>
     </div>

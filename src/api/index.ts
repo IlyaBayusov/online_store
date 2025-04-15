@@ -329,3 +329,29 @@ export const putUserInfoInProfile = async (data: IFormDataProfileUserInfo) => {
     }
   }
 };
+
+export const putUserEmailInProfile = async (data: {
+  newEmail: string;
+  code: string;
+}) => {
+  try {
+    if (!decodeToken()?.id) {
+      throw "Не найден id";
+    }
+
+    const response = await api.put(
+      `/v1/users/email/${decodeToken()?.id}`,
+      data
+    );
+
+    return response;
+  } catch (error) {
+    if (typeof error === "string") {
+      console.error(error);
+    } else if (error instanceof Error) {
+      console.error("Ошибка изменения почты юзера по айди в профиле: ", error);
+    } else {
+      console.error("Неизвестная ошибка");
+    }
+  }
+};

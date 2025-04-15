@@ -14,11 +14,17 @@ export const ProfileDropDownMenu = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (decodeToken()?.id !== undefined) {
-      setIsAuth(true);
-    } else {
-      setIsAuth(false);
-    }
+    const handleStorageChange = () => {
+      setIsAuth(Boolean(decodeToken()?.id));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    handleStorageChange();
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   const handleClickProfile = () => {
