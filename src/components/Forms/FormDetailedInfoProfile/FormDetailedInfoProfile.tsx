@@ -1,8 +1,10 @@
 "use client";
 
+import { putUserInfoInProfile } from "@/api";
 import EditBtnInForm from "@/components/ProfilePage/EditBtnInForm/EditBtnInForm";
 import InputInForm from "@/components/ProfilePage/InputInForm/InputInForm";
 import { IFormDataProfileUserInfo, IGetUserInfoInProfile } from "@/interfaces";
+import { useProfileInfoStore } from "@/stores/useProfileInfoStore";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -16,19 +18,48 @@ export default function FormDetailedInfoProfile({ profileData }: Props) {
   } = useForm<IFormDataProfileUserInfo>({ mode: "onBlur" });
 
   const [isActive, setIsActive] = useState(false);
+  const [errorMess, setErrorMess] = useState<string>("");
 
-  const onSubmit = async (data: IFormDataProfileUserInfo) => {};
+  const newProfileData = useProfileInfoStore((state) => state.newProfileData);
+  const setNewProfileData = useProfileInfoStore(
+    (state) => state.setNewProfileData
+  );
+
+  const onSubmit = async (data: IFormDataProfileUserInfo) => {
+    if (!isValid) {
+      setErrorMess("Не все поля заполнены верно");
+      return;
+    }
+
+    try {
+      const newData = await putUserInfoInProfile(data);
+
+      setNewProfileData(newData);
+      setIsActive(false);
+    } catch (error) {
+      console.error("Ошибка при отправки формы изменения данных юзера", error);
+    }
+  };
+
+  const handleClickChange = () => {
+    setIsActive(true);
+  };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex flex-col items-center gap-3 text-base"
+      className="relative w-full flex flex-col items-center gap-3 text-base"
     >
       <div className="w-full flex flex-nowrap justify-center items-center">
-        <label htmlFor="firstname" className="w-full max-w-72">
-          <p>Имя</p>
+        <label htmlFor="firstName" className="relative w-full max-w-72">
+          <span className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 text-nowrap text-red-600 text-xs">
+            {errorMess}
+          </span>
+
+          <p className="flex justify-start">Имя</p>
 
           <InputInForm
+            disabled={!isActive}
             {...register("firstName", {
               required: "Поле обязательно для заполнения",
               minLength: {
@@ -40,16 +71,20 @@ export default function FormDetailedInfoProfile({ profileData }: Props) {
                 message: "Максимум 30 символов",
               },
             })}
-            placeholder={profileData.firstName}
+            placeholder={newProfileData.firstName || profileData.firstName}
           />
+          <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
+            {errors?.firstName && (errors?.firstName?.message || "Ошибка!")}
+          </span>
         </label>
       </div>
 
       <div className="w-full flex flex-nowrap justify-center items-center">
-        <label htmlFor="lastName" className="w-full max-w-72">
+        <label htmlFor="lastName" className="relative w-full max-w-72">
           <p>Фамилия</p>
 
           <InputInForm
+            disabled={!isActive}
             {...register("lastName", {
               required: "Поле обязательно для заполнения",
               minLength: {
@@ -61,16 +96,20 @@ export default function FormDetailedInfoProfile({ profileData }: Props) {
                 message: "Максимум 30 символов",
               },
             })}
-            placeholder={profileData.lastName}
+            placeholder={newProfileData.lastName || profileData.lastName}
           />
+          <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
+            {errors?.lastName && (errors?.lastName?.message || "Ошибка!")}
+          </span>
         </label>
       </div>
 
-      <div className="w-full flex flex-nowrap justify-center items-center">
-        <label htmlFor="username" className="w-full max-w-72">
+      <div className="mb-1 w-full flex flex-nowrap justify-center items-center">
+        <label htmlFor="username" className="relative w-full max-w-72">
           <p>Логин</p>
 
           <InputInForm
+            disabled={!isActive}
             {...register("username", {
               required: "Поле обязательно для заполнения",
               minLength: {
@@ -82,12 +121,24 @@ export default function FormDetailedInfoProfile({ profileData }: Props) {
                 message: "Максимум 30 символов",
               },
             })}
-            placeholder={profileData.username}
+            placeholder={newProfileData.username || profileData.username}
           />
+          <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
+            {errors?.username && (errors?.username?.message || "Ошибка!")}
+          </span>
         </label>
       </div>
 
-      <EditBtnInForm cb={() => setIsActive} />
+      {!isActive ? (
+        <button
+          className="bg-white py-2 px-5 rounded-md mt-1 text-black"
+          onClick={handleClickChange}
+        >
+          Изменить
+        </button>
+      ) : (
+        <EditBtnInForm type="submit" />
+      )}
     </form>
   );
 }

@@ -14,7 +14,7 @@ export const ProfileDropDownMenu = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (decodeToken() !== undefined) {
+    if (decodeToken()?.id !== undefined) {
       setIsAuth(true);
     } else {
       setIsAuth(false);

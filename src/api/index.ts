@@ -2,6 +2,7 @@ import { api } from "@/axios";
 import { sizePage } from "@/constans";
 import {
   IDecodedToken,
+  IFormDataProfileUserInfo,
   IGetFav,
   IOrderPost,
   IOrdersGet,
@@ -308,23 +309,16 @@ export const getUserInfoInProfile = async (userId: number) => {
   }
 };
 
-export const putUserInfoInProfile = async (
-  firstName: string,
-  lastName: string,
-  username: string
-) => {
+export const putUserInfoInProfile = async (data: IFormDataProfileUserInfo) => {
   try {
     if (!decodeToken()?.id) {
       throw "Не найден id";
     }
 
-    const response = await api.put(`/v1/users/${decodeToken()?.id}`, {
-      firstName,
-      lastName,
-      username,
-    });
+    const response = await api.put(`/v1/users/${decodeToken()?.id}`, data);
+    const dataP = await response.data;
 
-    return response;
+    return dataP;
   } catch (error) {
     if (typeof error === "string") {
       console.error(error);
