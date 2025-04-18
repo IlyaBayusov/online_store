@@ -47,7 +47,7 @@ export default function Header() {
                 <RiShoppingBasketLine className="h-8 w-8 p-1.5" />
                 {cart.length !== 0 && (
                   <div className="flex justify-center items-center absolute bottom-0 right-0 z-10 w-4 h-4 bg-white rounded-full text-[11px] text-black font-bold border-2 border-black">
-                    {cart.length}
+                    {cart?.length}
                   </div>
                 )}
               </div>

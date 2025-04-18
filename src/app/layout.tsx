@@ -9,6 +9,7 @@ import ModalNewProductAdmin from "@/components/Modals/ModalNewProductAdmin";
 import ModalDeleteEditNewProduct from "@/components/Modals/ModalDeleteEditNewProduct";
 import PageWrapper from "@/components/PageWrapper";
 import ModalFilters from "@/components/Modals/ModalFilters";
+import { Metadata } from "next";
 
 // const oswald = Oswald({
 //   subsets: ["latin"],
@@ -16,10 +17,10 @@ import ModalFilters from "@/components/Modals/ModalFilters";
 //   display: "swap", // Оптимизация отображения шрифта
 // });
 
-// export const metadata: Metadata = {
-//   title: "Главная",
-//   description: "Главная страница",
-// };
+export const metadata: Metadata = {
+  title: "Главная",
+  description: "Главная страница",
+};
 
 export default function RootLayout({
   children,

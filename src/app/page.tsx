@@ -8,7 +8,6 @@ import EmblaCarousel from "@/components/Carousels/EmblaCarousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { useEffect, useState } from "react";
 import { api } from "@/axios";
-import Head from "next/head";
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -17,6 +16,8 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    console.log("test");
+
     const fetchNewArrivals = async () => {
       try {
         const response = await api.get("/v1/products?size=10");
@@ -34,11 +35,6 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>Главная</title>
-        <meta name="description" content="Главная страница" />
-      </Head>
-
       <div className="w-full">
         <div
           id="mainIntroBlock"

@@ -1,5 +1,6 @@
 import FormDetailedInfoProfile from "@/components/Forms/FormDetailedInfoProfile/FormDetailedInfoProfile";
-import FormEmailPassProfile from "@/components/Forms/FormEmailPassProfile/FormEmailPassProfile";
+import FormNewEmailProfile from "@/components/Forms/FormNewEmailProfile/FormNewEmailProfile";
+import FormNewPassProfile from "@/components/Forms/FormNewPassProfile/FormNewPassProfile";
 import HeaderInfo from "@/components/ProfilePage/HeaderInfo/HeaderInfo";
 import { IGetUserInfoInProfile } from "@/interfaces";
 import { notFound } from "next/navigation";
@@ -28,7 +29,6 @@ export default async function ProfileId({
   }
 
   const data: IGetUserInfoInProfile = await response.json();
-  console.log(data);
 
   return (
     <div className="container px-3 pt-3">
@@ -46,7 +46,10 @@ export default async function ProfileId({
         </div>
 
         <div className="w-full mt-2">
-          <FormEmailPassProfile profileData={data} />
+          <div className="w-full text-base">
+            <FormNewEmailProfile profileData={data} />
+            <FormNewPassProfile profileData={data} />
+          </div>
         </div>
       </div>
     </div>

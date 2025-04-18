@@ -21,13 +21,18 @@ export const CitiesDDM = () => {
 
       setCities(response.items);
 
-      if (Cookies.get("userCityName") && Cookies.get("userCityId")) {
+      const userCityName = Cookies.get("userCityName");
+      const userCityId = Cookies.get("userCityId");
+
+      console.warn(userCityName, userCityId);
+
+      if (typeof userCityName === "string" && typeof userCityId === "string") {
         setCity({
-          city: Cookies.get("userCityName"),
-          id: Number(Cookies.get("userCityId")),
+          city: userCityName,
+          id: Number(userCityId),
         });
       } else {
-        setCity(response[0]);
+        setCity(response.items[0]);
       }
     };
 

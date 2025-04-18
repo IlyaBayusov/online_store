@@ -1,6 +1,7 @@
 "use client";
 
 import { putUserEmailInProfile } from "@/api";
+import { getSendCodeOnEmail } from "@/axios";
 import EditBtnInForm from "@/components/ProfilePage/EditBtnInForm/EditBtnInForm";
 import InputInForm from "@/components/ProfilePage/InputInForm/InputInForm";
 import { IGetUserInfoInProfile } from "@/interfaces";
@@ -10,14 +11,13 @@ import React, { useEffect, useState } from "react";
 
 type Props = { profileData: IGetUserInfoInProfile };
 
-export default function FormEmailPassProfile({ profileData }: Props) {
+export default function FormNewEmailProfile({ profileData }: Props) {
   const newProfileData = useProfileInfoStore((state) => state.newProfileData);
   const setNewProfileData = useProfileInfoStore(
     (state) => state.setNewProfileData
   );
 
   const [isActiveEmail, setIsActiveEmail] = useState<boolean>(false);
-  const [isActivePass, setIsActivePass] = useState<boolean>(false);
 
   const [isActiveCodeBlock, setIsActiveCodeBlock] = useState<boolean>(false);
 
@@ -28,8 +28,6 @@ export default function FormEmailPassProfile({ profileData }: Props) {
   const [sendCodeEmail, setSendCodeEmail] = useState<string>("");
   const [errorMessageEmailCode, setErrorMessageEmailCode] =
     useState<string>("");
-
-  const [errorMessagePass, setErrorMessagePass] = useState<string>("");
 
   useEffect(() => {
     if (newProfileData.email) {
@@ -55,12 +53,13 @@ export default function FormEmailPassProfile({ profileData }: Props) {
         setIsActiveCodeBlock(true);
         setErrorMessageEmail("");
 
-        try {
-          await axios.get(`http://localhost:8080/api/v1/mail?email=${email}`);
-        } catch (error) {
+        const responseSendEmail = await getSendCodeOnEmail(email);
+
+        if (responseSendEmail) {
           setSendCodeEmail("");
-          setErrorMessageEmail("Ошибка отправки, попробуйте снова");
-          console.log("Ошибка отправки запроса на подтверждение кода", error);
+          setErrorMessageEmail(
+            "Ошибка отправки. Отключите VPN и попробуйте снова"
+          );
         }
       }
     } catch (error) {
@@ -125,92 +124,65 @@ export default function FormEmailPassProfile({ profileData }: Props) {
     }
   };
 
-  const onSubmitPass = async () => {};
-
   return (
-    <div className="w-full text-base">
-      <div className="flex flex-col justify-start items-center gap-3">
-        <label htmlFor="email" className="relative w-full">
-          <p>Почта</p>
+    <div className="flex flex-col justify-start items-center gap-3">
+      <label htmlFor="email" className="relative w-full">
+        <p>Почта</p>
 
-          <div className="w-full flex justify-between items-center">
-            <div className="w-full flex justify-between items-center max-w-72">
-              <InputInForm
-                disabled={!isActiveEmail}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                id="email"
-                type="email"
-                placeholder={profileData.email}
-              />
-            </div>
-
-            {!isActiveEmail ? (
-              <EditBtnInForm onClick={() => setIsActiveEmail(true)}>
-                Изменить
-              </EditBtnInForm>
-            ) : (
-              <EditBtnInForm onClick={onSendEmail}>Отправить код</EditBtnInForm>
-            )}
+        <div className="w-full flex justify-between items-center">
+          <div className="w-full flex justify-between items-center max-w-60">
+            <InputInForm
+              disabled={!isActiveEmail}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              id="email"
+              type="email"
+              placeholder={profileData.email}
+            />
           </div>
-          {sendCodeEmail ? (
-            <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-green-500 text-xs">
-              {sendCodeEmail}
-            </span>
+
+          {!isActiveEmail ? (
+            <EditBtnInForm onClick={() => setIsActiveEmail(true)}>
+              Изменить
+            </EditBtnInForm>
           ) : (
-            <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
-              {errorMessageEmail}
-            </span>
+            <EditBtnInForm onClick={onSendEmail}>Отправить код</EditBtnInForm>
           )}
-        </label>
-
-        {isActiveCodeBlock && (
-          <label htmlFor="email" className="relative w-full">
-            <p>Код подтверждения</p>
-
-            <div className="w-full flex justify-between items-center">
-              <div className="w-full flex justify-between items-center max-w-72">
-                <InputInForm
-                  disabled={!isActiveCodeBlock}
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  id="code"
-                  type="number"
-                  placeholder="Введите код"
-                />
-              </div>
-
-              <EditBtnInForm onClick={onSendEmailCode}>Готово</EditBtnInForm>
-            </div>
-            <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
-              {errorMessageEmailCode}
-            </span>
-          </label>
+        </div>
+        {!errorMessageEmail ? (
+          <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-green-500 text-xs">
+            {sendCodeEmail}
+          </span>
+        ) : (
+          <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
+            {errorMessageEmail}
+          </span>
         )}
-      </div>
+      </label>
 
-      <div className="mt-3 flex flex-col">
-        <label htmlFor="password" className="relative w-full">
-          <p>Пароль</p>
+      {isActiveCodeBlock && (
+        <label htmlFor="email" className="relative w-full">
+          <p>Код подтверждения</p>
 
           <div className="w-full flex justify-between items-center">
-            <div className="w-full flex justify-between items-center max-w-72">
+            <div className="w-full flex justify-between items-center max-w-60">
               <InputInForm
-                disabled={!isActivePass}
-                id="password"
-                type="password"
-                placeholder="********"
-                onClick={onSubmitPass}
+                disabled={!isActiveCodeBlock}
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                id="code"
+                type="number"
+                placeholder="Введите код"
               />
             </div>
 
-            <EditBtnInForm>Изменить</EditBtnInForm>
+            <EditBtnInForm onClick={onSendEmailCode}>Готово</EditBtnInForm>
           </div>
           <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
-            {errorMessagePass}
+            {errorMessageEmailCode}
           </span>
         </label>
-      </div>
+      )}
     </div>
   );
 }
