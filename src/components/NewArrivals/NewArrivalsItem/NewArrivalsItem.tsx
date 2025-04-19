@@ -26,6 +26,7 @@ export default function NewArrivalsItem({ arrival }: Props) {
       </div>
 
       <p className="text-base font-bold text-start">{`${arrival.price} РУБ.`}</p>
+      <p className="text-sm text-start">{arrival.brandName}</p>
       <p className="text-sm text-start">{arrival.name}</p>
     </div>
   );

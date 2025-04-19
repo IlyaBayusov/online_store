@@ -18,15 +18,20 @@ export const ProfileDropDownMenu = () => {
 
     if (decoded?.id) {
       setIsAuth(true);
-      router.push(`${profilePage}/${decoded?.id}`);
     } else {
       setIsAuth(false);
     }
   }, []);
 
+  const handleClick = () => {
+    const decoded = decodeToken();
+
+    if (decoded?.id) router.push(`${profilePage}/${decoded?.id}`);
+  };
+
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
+      <DropdownMenu.Trigger asChild onClick={handleClick}>
         <button className="" aria-label="Customise options">
           <CgProfile className="h-8 w-8 p-1.5" />
         </button>
