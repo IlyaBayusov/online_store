@@ -29,6 +29,8 @@ export default function FormNewEmailProfile({ profileData }: Props) {
   const [errorMessageEmailCode, setErrorMessageEmailCode] =
     useState<string>("");
 
+  const [isTimer, setIsTimer] = useState<boolean>(false);
+
   useEffect(() => {
     if (newProfileData.email) {
       setEmail(newProfileData.email);
@@ -55,7 +57,7 @@ export default function FormNewEmailProfile({ profileData }: Props) {
 
         const responseSendEmail = await getSendCodeOnEmail(email);
 
-        if (responseSendEmail) {
+        if (responseSendEmail?.status !== 200) {
           setSendCodeEmail("");
           setErrorMessageEmail(
             "Ошибка отправки. Отключите VPN и попробуйте снова"
@@ -79,7 +81,11 @@ export default function FormNewEmailProfile({ profileData }: Props) {
       return;
     }
 
-    await fetchEmail();
+    if (!isTimer) {
+      await fetchEmail();
+      setIsTimer(true);
+      setTimeout(() => setIsTimer(false), 1000 * 30);
+    }
   };
 
   const onSendEmailCode = async () => {
@@ -146,7 +152,16 @@ export default function FormNewEmailProfile({ profileData }: Props) {
               Изменить
             </EditBtnInForm>
           ) : (
-            <EditBtnInForm onClick={onSendEmail}>Отправить код</EditBtnInForm>
+            <EditBtnInForm
+              disabled={isTimer}
+              onClick={onSendEmail}
+              className={
+                "relative py-1.5 text-nowrap " +
+                (isTimer ? "text-gray-500" : "text-white")
+              }
+            >
+              Отправить код
+            </EditBtnInForm>
           )}
         </div>
         {!errorMessageEmail ? (
@@ -161,7 +176,7 @@ export default function FormNewEmailProfile({ profileData }: Props) {
       </label>
 
       {isActiveCodeBlock && (
-        <label htmlFor="email" className="relative w-full">
+        <label htmlFor="code" className="relative w-full">
           <p>Код подтверждения</p>
 
           <div className="w-full flex justify-between items-center">

@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { CgProfile } from "react-icons/cg";
 import Link from "next/link";
 import { decodeToken } from "@/utils";
-import { profilePage } from "@/constans";
+import { authPage, profilePage, registrPage } from "@/constans";
 import { useRouter } from "next/navigation";
 
 export const ProfileDropDownMenu = () => {
@@ -48,7 +48,7 @@ export const ProfileDropDownMenu = () => {
             <DropdownMenu.Separator className="h-[1px] bg-white bg-opacity-30" />
 
             <div className="flex flex-col items-center">
-              <Link href={"/auth"}>
+              <Link href={authPage}>
                 <DropdownMenu.Item className="group text-sm px-3 pt-1.5">
                   <button className="px-3 py-0.5 rounded-md border border-white border-opacity-30">
                     Войти
@@ -56,7 +56,7 @@ export const ProfileDropDownMenu = () => {
                 </DropdownMenu.Item>
               </Link>
 
-              <Link href={"/registr"}>
+              <Link href={registrPage}>
                 <DropdownMenu.Item className="group text-sm px-3 py-1.5">
                   <button className="px-3 py-0.5 rounded-md border border-white border-opacity-30">
                     Зарегистрироваться
