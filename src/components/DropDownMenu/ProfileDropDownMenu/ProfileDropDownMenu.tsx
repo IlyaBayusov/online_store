@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { CgProfile } from "react-icons/cg";
 import Link from "next/link";
@@ -13,7 +13,7 @@ export const ProfileDropDownMenu = () => {
 
   const router = useRouter();
 
-  const handleClickProfile = () => {
+  useEffect(() => {
     const decoded = decodeToken();
 
     if (decoded?.id) {
@@ -22,17 +22,15 @@ export const ProfileDropDownMenu = () => {
     } else {
       setIsAuth(false);
     }
-  };
+  }, []);
 
   return (
     <DropdownMenu.Root>
-      <button
-        className=""
-        onClick={handleClickProfile}
-        aria-label="Customise options"
-      >
-        <CgProfile className="h-8 w-8 p-1.5" />
-      </button>
+      <DropdownMenu.Trigger asChild>
+        <button className="" aria-label="Customise options">
+          <CgProfile className="h-8 w-8 p-1.5" />
+        </button>
+      </DropdownMenu.Trigger>
 
       {!isAuth && (
         <DropdownMenu.Portal>
