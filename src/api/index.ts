@@ -8,6 +8,7 @@ import {
   IOrdersGet,
   IPostFav,
   IProductInCart,
+  IPutUserPassInProfile,
 } from "@/interfaces";
 import { decodeToken } from "@/utils";
 import qs from "qs";
@@ -350,6 +351,31 @@ export const putUserEmailInProfile = async (data: {
       console.error(error);
     } else if (error instanceof Error) {
       console.error("Ошибка изменения почты юзера по айди в профиле: ", error);
+    } else {
+      console.error("Неизвестная ошибка");
+    }
+  }
+};
+
+export const putUserPassInProfile = async (
+  newPassData: IPutUserPassInProfile
+) => {
+  try {
+    if (!decodeToken()?.id) {
+      throw "Не найден id";
+    }
+
+    const response = await api.put(`/v1/users/change/password`, newPassData);
+
+    return response;
+  } catch (error) {
+    if (typeof error === "string") {
+      console.error(error);
+    } else if (error instanceof Error) {
+      console.error(
+        "Ошибка изменения пароля юзера по почте в профиле: ",
+        error
+      );
     } else {
       console.error("Неизвестная ошибка");
     }

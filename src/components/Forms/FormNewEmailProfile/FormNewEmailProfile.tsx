@@ -94,39 +94,35 @@ export default function FormNewEmailProfile({ profileData }: Props) {
       return;
     }
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/mail/verification",
-        { email, code }
-      );
-      const data: { code: number; message: string } = await response.data;
+    const response = await axios.post(
+      "http://localhost:8080/api/v1/mail/verification",
+      { email, code }
+    );
+    const data: { code: number; message: string } = await response.data;
 
-      switch (data.message) {
-        case "SUCCESS":
-          const response = await putUserEmailInProfile({
-            newEmail: email,
-            code,
-          });
-          if (response?.status === 204) {
-            setSendCodeEmail("Почта изменена");
-            setIsActiveCodeBlock(false);
-            setErrorMessageEmail("");
+    switch (data.message) {
+      case "SUCCESS":
+        const response = await putUserEmailInProfile({
+          newEmail: email,
+          code,
+        });
+        if (response?.status === 204) {
+          setSendCodeEmail("Почта изменена");
+          setIsActiveCodeBlock(false);
+          setErrorMessageEmail("");
 
-            setNewProfileData({ ...newProfileData, email });
+          setNewProfileData({ ...newProfileData, email });
 
-            setIsActiveEmail(false);
-            return;
-          }
-          break;
-        case "EXPIRED":
-          setErrorMessageEmailCode("Код истек, отправьте код на почту");
-          break;
-        case "INVALID":
-          setErrorMessageEmailCode("Неверный код, проверьте его");
-          break;
-      }
-    } catch (error) {
-      console.log("Ошибка отправки запроса с кодом", error);
+          setIsActiveEmail(false);
+          return;
+        }
+        break;
+      case "EXPIRED":
+        setErrorMessageEmailCode("Код истек, отправьте код на почту");
+        break;
+      case "INVALID":
+        setErrorMessageEmailCode("Неверный код, проверьте его");
+        break;
     }
   };
 

@@ -209,3 +209,15 @@ export interface IFormDataProfileUserInfo {
   lastName: string;
   username: string;
 }
+
+export interface IFormNewPassInProfile {
+  newPassword: string;
+  secondNewPassword: string;
+  code: string;
+}
+
+export interface IPutUserPassInProfile {
+  email: string;
+  newPassword: string;
+  code: string;
+}

@@ -1,115 +1,103 @@
 "use client";
 
+import { putUserPassInProfile } from "@/api";
 import { getSendCodeOnEmail } from "@/axios";
 import EditBtnInForm from "@/components/ProfilePage/EditBtnInForm/EditBtnInForm";
 import InputInForm from "@/components/ProfilePage/InputInForm/InputInForm";
-import { IGetUserInfoInProfile } from "@/interfaces";
-import React, { useState } from "react";
+import { IFormNewPassInProfile, IGetUserInfoInProfile } from "@/interfaces";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 type Props = { profileData: IGetUserInfoInProfile };
-
-interface FormNewPass {
-  newPassword: string;
-  secondNewPassword: string;
-  code: string;
-}
 
 export default function FormNewPassProfile({ profileData }: Props) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isValid },
-  } = useForm<FormNewPass>();
+  } = useForm<IFormNewPassInProfile>();
+
+  const newPassword = watch("newPassword");
+  const secondNewPassword = watch("secondNewPassword");
 
   const [isActivePass, setIsActivePass] = useState<boolean>(false);
-
   const [isActiveCodeBlock, setIsActiveCodeBlock] = useState<boolean>(false);
 
-  const [isSendCode, setIsSendCode] = useState<boolean>(false);
+  const [messSendCode, setMessSendCode] = useState<string>("");
   const [errorMessageSendCode, setErrorMessageSendCode] = useState<string>("");
-  const [errorMessageEmailCode, setErrorMessageEmailCode] =
+
+  const [errorMessSecondNewPass, setErrorMessSecondNewPass] =
     useState<string>("");
 
+  const [errorMessageForm, setErrorMessageForm] = useState<string>("");
+
+  const [messChangePass, setMessChangePass] = useState<string>("");
+
+  const [isTimer, setIsTimer] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (newPassword !== secondNewPassword) {
+      setErrorMessSecondNewPass("Пароли не совпадают");
+    } else {
+      setErrorMessSecondNewPass("");
+    }
+  }, [newPassword, secondNewPassword]);
+
   const onGetCode = async () => {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setIsActiveCodeBlock(true);
 
-      setIsActiveCodeBlock(true);
-      setIsSendCode(true);
+    const responseSendCode = await getSendCodeOnEmail(profileData.email);
 
-      const responseSendCode = await getSendCodeOnEmail(profileData.email);
-      console.log(responseSendCode);
-
-      if (responseSendCode) {
-        setErrorMessageSendCode(
-          "Ошибка отправки. Отключите VPN и попробуйте снова"
-        );
-        setIsActiveCodeBlock(false);
-        setIsSendCode(false);
+    if (responseSendCode?.status === 200) {
+      setMessSendCode("Код отправлен");
+      if (!isTimer) {
+        setIsTimer(true);
+        setTimeout(() => setIsTimer(false), 1000 * 30);
       }
-    } catch (error) {
-      console.error("Ошибка отправки код на email", error);
+    } else {
+      setErrorMessageSendCode(
+        "Ошибка отправки. Отключите VPN и попробуйте снова"
+      );
+      setIsActiveCodeBlock(false);
     }
   };
 
-  console.log(123123);
+  const onSubmit = async (data: IFormNewPassInProfile) => {
+    if (!isValid) {
+      setErrorMessageForm("Не все поля заполнены верно");
+      return;
+    }
 
-  // const onSendEmail = async () => {
-  //   if (!email.length) {
-  //     setErrorMessageEmail("Введите почту");
-  //     return;
-  //   }
+    console.log();
 
-  //   await fetchEmail();
-  // };
+    const response = await putUserPassInProfile({
+      email: profileData.email,
+      newPassword: data.newPassword,
+      code: data.code,
+    });
 
-  // const onSendEmailCode = async () => {
-  //   if (!code.length) {
-  //     setErrorMessageEmailCode("Введите код");
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axios.post(
-  //       "http://localhost:8080/api/v1/mail/verification",
-  //       { email, code }
-  //     );
-  //     const data: { code: number; message: string } = await response.data;
-
-  //     switch (data.message) {
-  //       case "SUCCESS":
-  //         //
-  //         break;
-  //       case "EXPIRED":
-  //         setErrorMessageEmailCode("Код истек, отправьте код на почту");
-  //         break;
-  //       case "INVALID":
-  //         setErrorMessageEmailCode("Неверный код, проверьте его");
-  //         break;
-  //     }
-  //   } catch (error) {
-  //     console.log("Ошибка отправки запроса с кодом", error);
-  //   }
-  // };
-
-  const handleClickChangeBtn = () => {};
-
-  const onSubmit = async () => {};
+    if (response?.status === 204) {
+      setIsActivePass(false);
+      setMessChangePass("Пароль изменен");
+    } else {
+      setErrorMessageForm("Ошибка отправки. Отключите VPN и попробуйте снова");
+    }
+  };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mt-3 flex flex-col justify-start items-center gap-3"
+      className="my-3 flex flex-col justify-start items-center gap-3 "
     >
-      <label htmlFor="password" className="relative w-full">
+      <label htmlFor="newPassword" className="relative w-full">
         <p>{isActivePass ? "Новый пароль" : "Пароль"}</p>
 
         <div className="w-full flex justify-between items-center">
           <div className="w-full flex justify-between items-center max-w-60">
             <InputInForm
               disabled={!isActivePass}
-              id="password"
+              id="newPassword"
               type="password"
               placeholder="********"
               {...register("newPassword", {
@@ -124,6 +112,10 @@ export default function FormNewPassProfile({ profileData }: Props) {
                 },
               })}
             />
+
+            <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-green-500 text-xs">
+              {messChangePass}
+            </span>
           </div>
 
           {isActivePass || (
@@ -132,21 +124,21 @@ export default function FormNewPassProfile({ profileData }: Props) {
             </EditBtnInForm>
           )}
         </div>
-        {/* <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
-          {errorMessagePass}
-        </span> */}
+        <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
+          {errors.newPassword?.message}
+        </span>
       </label>
 
       {isActivePass && (
         <>
-          <label htmlFor="secondPassword" className="relative w-full">
+          <label htmlFor="secondNewPassword" className="relative w-full">
             <p>Подтвердите пароль</p>
 
             <div className="w-full flex justify-between items-center">
               <div className="w-full flex justify-between items-center max-w-60">
                 <InputInForm
                   disabled={!isActivePass}
-                  id="secondPassword"
+                  id="secondNewPassword"
                   type="password"
                   placeholder="********"
                   {...register("secondNewPassword", {
@@ -163,12 +155,12 @@ export default function FormNewPassProfile({ profileData }: Props) {
                 />
               </div>
             </div>
-            {/* <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
-              {errorMessagePass}
-            </span> */}
+            <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
+              {errors.secondNewPassword?.message || errorMessSecondNewPass}
+            </span>
           </label>
 
-          <label htmlFor="email" className="relative w-full">
+          <label htmlFor="email" className="relative w-full mb-6">
             <p>Код подтверждения</p>
 
             <div className="w-full flex justify-between items-center">
@@ -192,12 +184,36 @@ export default function FormNewPassProfile({ profileData }: Props) {
                 />
               </div>
 
-              {<EditBtnInForm onClick={onGetCode}>Отправить код</EditBtnInForm>}
+              <EditBtnInForm
+                disabled={isTimer}
+                onClick={onGetCode}
+                className={
+                  "relative py-1.5 text-nowrap " +
+                  (isTimer ? "text-gray-500" : "text-white")
+                }
+              >
+                Отправить код
+              </EditBtnInForm>
             </div>
-            <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
-              {errorMessageSendCode}
-            </span>
+
+            {errorMessageSendCode ? (
+              <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-red-600 text-xs">
+                {errorMessageSendCode}
+              </span>
+            ) : (
+              <span className="absolute -bottom-4 left-0 z-10 text-nowrap text-green-500 text-xs">
+                {messSendCode}
+              </span>
+            )}
           </label>
+
+          <EditBtnInForm type="submit">
+            <span className="absolute -top-4 left-1/2 z-10 -translate-x-1/2 text-nowrap text-red-600 text-xs">
+              {errorMessageForm}
+            </span>
+
+            <span>Готово</span>
+          </EditBtnInForm>
         </>
       )}
     </form>
