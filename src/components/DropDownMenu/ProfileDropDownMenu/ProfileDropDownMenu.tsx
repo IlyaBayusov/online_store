@@ -13,39 +13,26 @@ export const ProfileDropDownMenu = () => {
 
   const router = useRouter();
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setIsAuth(Boolean(decodeToken()?.id));
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    handleStorageChange();
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
   const handleClickProfile = () => {
     const decoded = decodeToken();
 
     if (decoded?.id) {
+      setIsAuth(true);
       router.push(`${profilePage}/${decoded?.id}`);
+    } else {
+      setIsAuth(false);
     }
   };
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
-        <button
-          className=""
-          aria-label="Customise options"
-          onClick={handleClickProfile}
-        >
-          <CgProfile className="h-8 w-8 p-1.5" />
-        </button>
-      </DropdownMenu.Trigger>
+      <button
+        className=""
+        onClick={handleClickProfile}
+        aria-label="Customise options"
+      >
+        <CgProfile className="h-8 w-8 p-1.5" />
+      </button>
 
       {!isAuth && (
         <DropdownMenu.Portal>

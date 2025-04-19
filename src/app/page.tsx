@@ -16,8 +16,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log("test");
-
     const fetchNewArrivals = async () => {
       try {
         const response = await api.get("/v1/products?size=10");

@@ -24,8 +24,6 @@ export const CitiesDDM = () => {
       const userCityName = Cookies.get("userCityName");
       const userCityId = Cookies.get("userCityId");
 
-      console.warn(userCityName, userCityId);
-
       if (typeof userCityName === "string" && typeof userCityId === "string") {
         setCity({
           city: userCityName,
