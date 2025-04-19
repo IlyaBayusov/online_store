@@ -7,7 +7,7 @@ import InputInForm from "@/components/ProfilePage/InputInForm/InputInForm";
 import { IGetUserInfoInProfile } from "@/interfaces";
 import { useProfileInfoStore } from "@/stores/useProfileInfoStore";
 import axios, { AxiosError } from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 type Props = { profileData: IGetUserInfoInProfile };
 
@@ -30,12 +30,6 @@ export default function FormNewEmailProfile({ profileData }: Props) {
     useState<string>("");
 
   const [isTimer, setIsTimer] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (newProfileData.email) {
-      setEmail(newProfileData.email);
-    }
-  }, [newProfileData.email]);
 
   const fetchEmail = async () => {
     setErrorMessageEmail("");

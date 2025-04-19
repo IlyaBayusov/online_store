@@ -16,7 +16,7 @@ export default function FormNewPassProfile({ profileData }: Props) {
     handleSubmit,
     watch,
     formState: { errors, isValid },
-  } = useForm<IFormNewPassInProfile>();
+  } = useForm<IFormNewPassInProfile>({ mode: "onSubmit" });
 
   const newPassword = watch("newPassword");
   const secondNewPassword = watch("secondNewPassword");
@@ -160,7 +160,7 @@ export default function FormNewPassProfile({ profileData }: Props) {
             </span>
           </label>
 
-          <label htmlFor="email" className="relative w-full mb-6">
+          <label htmlFor="email" className="relative w-full mb-1">
             <p>Код подтверждения</p>
 
             <div className="w-full flex justify-between items-center">
@@ -208,7 +208,7 @@ export default function FormNewPassProfile({ profileData }: Props) {
           </label>
 
           <EditBtnInForm type="submit">
-            <span className="absolute -top-4 left-1/2 z-10 -translate-x-1/2 text-nowrap text-red-600 text-xs">
+            <span className="pt-3 absolute -top-4 left-1/2 z-10 -translate-x-1/2 text-nowrap text-red-600 text-xs">
               {errorMessageForm}
             </span>
 
