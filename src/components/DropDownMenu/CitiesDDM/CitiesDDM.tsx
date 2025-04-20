@@ -13,6 +13,8 @@ export const CitiesDDM = () => {
   const [city, setCity] = useState<IGetCity>({} as IGetCity);
   const [cities, setCities] = useState<IGetCity[]>([]);
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
     const fetchGetCities = async () => {
       const response = await getCities();
@@ -21,13 +23,18 @@ export const CitiesDDM = () => {
 
       setCities(response.items);
 
-      const userCityName = Cookies.get("userCityName");
-      const userCityId = Cookies.get("userCityId");
+      const cityId = Cookies.get("city");
+      const cityName = Cookies.get("cityName");
 
-      if (typeof userCityName === "string" && typeof userCityId === "string") {
+      if (
+        typeof cityName === "string" &&
+        cityName !== "NaN" &&
+        cityName !== "undefined" &&
+        Number(cityId)
+      ) {
         setCity({
-          city: userCityName,
-          id: Number(userCityId),
+          city: cityName,
+          id: Number(cityId),
         });
       } else {
         setCity(response.items[0]);
@@ -38,22 +45,30 @@ export const CitiesDDM = () => {
   }, []);
 
   useEffect(() => {
-    if (city.city) {
-      Cookies.set("userCityName", city.city, {
+    setCoockie();
+  }, [city]);
+
+  const setCoockie = () => {
+    if (city.id) {
+      console.log(1);
+
+      Cookies.set("city", String(city.id), {
         expires: 30, // срок действия (в днях)
         path: "/", // доступно на всём сайте
         secure: false, // только HTTPS
         sameSite: "Strict", // предотвращает CSRF-атаки
       });
 
-      Cookies.set("userCityId", String(city.id), {
+      Cookies.set("cityName", city.city, {
         expires: 30, // срок действия (в днях)
         path: "/", // доступно на всём сайте
         secure: false, // только HTTPS
         sameSite: "Strict", // предотвращает CSRF-атаки
       });
     }
-  }, [city]);
+  };
+
+  if (!city) return;
 
   return (
     <DropdownMenu.Root open={isActive} onOpenChange={setIsActive}>

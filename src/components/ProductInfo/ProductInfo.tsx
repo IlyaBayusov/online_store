@@ -15,9 +15,10 @@ import { decodeToken, getCodeColor } from "@/utils";
 import ProductTabs from "../Tabs/ProductTabs";
 import { RiShoppingBasketLine, RiShoppingBasketFill } from "react-icons/ri";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
-import { api } from "@/axios";
+import { api, postAvailability } from "@/axios";
 import { getFav, getProductsCart, postFav } from "@/api";
 import { useCartStore } from "@/stores/useCartStore";
+import Cookies from "js-cookie";
 
 type Props = {
   arrProduct: IProductInfo[];
@@ -97,6 +98,18 @@ export default function ProductInfo({
 
     setActiveBtnFav();
   }, [nowProduct]);
+
+  useEffect(() => {
+    const getDataPostAvailability = async () => {
+      const data = await postAvailability(nowProduct.id, selectedSize);
+
+      console.log(nowProduct.id, selectedSize, data);
+    };
+
+    if (Cookies.get("city")) {
+      getDataPostAvailability();
+    }
+  }, []);
 
   const handleClickCart = async () => {
     try {
