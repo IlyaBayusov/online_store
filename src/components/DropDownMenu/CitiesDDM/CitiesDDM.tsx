@@ -50,8 +50,6 @@ export const CitiesDDM = () => {
 
   const setCoockie = () => {
     if (city.id) {
-      console.log(1);
-
       Cookies.set("city", String(city.id), {
         expires: 30, // срок действия (в днях)
         path: "/", // доступно на всём сайте

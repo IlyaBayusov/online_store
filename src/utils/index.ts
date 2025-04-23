@@ -1,5 +1,5 @@
-import { categoriesList } from "@/constans";
-import { IDecodedToken } from "@/interfaces";
+import { categoriesList, statusAvailStock } from "@/constans";
+import { IDecodedToken, IPostAvailability } from "@/interfaces";
 import { jwtDecode } from "jwt-decode";
 import { notFound } from "next/navigation";
 
@@ -70,4 +70,26 @@ export function getCategoryRu(category: string) {
   if (!categoryRu) return notFound();
 
   return categoryRu;
+}
+
+export function getColorAvailability(arrAvail: IPostAvailability[]) {
+  // надо сделать до отрисовки
+  if (!arrAvail.length) return "#d1d5db";
+
+  const stockIndex = arrAvail.findIndex(
+    (status) => status.status === statusAvailStock
+  );
+
+  if (stockIndex !== -1) {
+    return "#22c55e";
+  } else {
+    switch (arrAvail[0].status) {
+      case "В началии":
+        return "#22c55e";
+      case "Не в началии":
+        return "#dc2626";
+      default:
+        return "#d1d5db";
+    }
+  }
 }

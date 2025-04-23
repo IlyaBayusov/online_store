@@ -4,6 +4,7 @@ import {
   IDecodedToken,
   IGetCategories,
   IGetFav,
+  IPostAvailability,
   IProductInCart,
   IProductInfo,
 } from "@/interfaces/index";
@@ -11,7 +12,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { decodeToken, getCodeColor } from "@/utils";
+import { decodeToken, getCodeColor, getColorAvailability } from "@/utils";
 import ProductTabs from "../Tabs/ProductTabs";
 import { RiShoppingBasketLine, RiShoppingBasketFill } from "react-icons/ri";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
@@ -19,6 +20,7 @@ import { api, postAvailability } from "@/axios";
 import { getFav, getProductsCart, postFav } from "@/api";
 import { useCartStore } from "@/stores/useCartStore";
 import Cookies from "js-cookie";
+import { statusAvailCall, statusAvailStock } from "@/constans";
 
 type Props = {
   arrProduct: IProductInfo[];
@@ -48,6 +50,8 @@ export default function ProductInfo({
 
   const [nowCartItem, setNowCartItem] = useState<IProductInCart>();
   const [nowFavItem, setNowFavItem] = useState<IGetFav>();
+
+  const [avail, setAvail] = useState<IPostAvailability[]>([]);
 
   const params = useParams();
 
@@ -101,9 +105,15 @@ export default function ProductInfo({
 
   useEffect(() => {
     const getDataPostAvailability = async () => {
-      const data = await postAvailability(nowProduct.id, selectedSize);
+      const data: IPostAvailability[] = await postAvailability(
+        nowProduct.id,
+        selectedSize
+      );
+      console.log("наличие: ", data);
 
-      console.log(nowProduct.id, selectedSize, data);
+      if (!data) return;
+
+      setAvail(data);
     };
 
     if (Cookies.get("city")) {
@@ -163,6 +173,19 @@ export default function ProductInfo({
     }
   };
 
+  const getFirstStock = () => {
+    if (!avail.length) return statusAvailCall;
+
+    const availIndex = avail.findIndex(
+      (status) => status.status === statusAvailStock
+    );
+    if (availIndex !== -1) {
+      return avail[availIndex].status;
+    } else {
+      return avail[0].status;
+    }
+  };
+
   return (
     <div className="container px-3">
       <div className="flex flex-col items-center">
@@ -217,6 +240,15 @@ export default function ProductInfo({
             </div>
 
             <div className="flex flex-col items-start mt-3">
+              <div className="flex items-center flex-nowrap gap-2">
+                <div
+                  className="h-3 w-3 rounded-full"
+                  style={{ backgroundColor: `${getColorAvailability(avail)}` }}
+                ></div>
+
+                <p className="">{getFirstStock()}</p>
+              </div>
+
               <p className="">Артикул: {nowProduct.id}</p>
               <p className="">Бренд: {nowProduct.brandName}</p>
 
@@ -257,11 +289,11 @@ export default function ProductInfo({
                       key={index}
                       className={
                         "py-2 px-5 rounded-md text-base " +
-                        (Number(size) == selectedSize
+                        (Number(size) == Number(selectedSize)
                           ? "bg-[#895D5D] text-white"
                           : "bg-white text-black")
                       }
-                      onClick={() => setSelectedSize(Number(size))}
+                      onClick={() => setSelectedSize(size)}
                     >
                       {size}
                     </button>

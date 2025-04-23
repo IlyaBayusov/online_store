@@ -221,3 +221,10 @@ export interface IPutUserPassInProfile {
   newPassword: string;
   code: string;
 }
+
+export interface IPostAvailability {
+  location: string;
+  status: string;
+  openTime: string;
+  closedTime: string;
+}

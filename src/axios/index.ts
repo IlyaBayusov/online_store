@@ -136,17 +136,3 @@ export const postAvailability = async (productId: number, size: string) => {
     console.error("Ошибка получения по id города инфы о наличии", error);
   }
 };
-
-// export const postAvailability = async (productId: number, size: string) => {
-//   try {
-//     const response = await api.post(`/v1/cities/availability`, {
-//       productId,
-//       size,
-//     });
-//     const data = await response.data;
-
-//     return data;
-//   } catch (error) {
-//     console.error("Ошибка получения по id города инфы о наличии", error);
-//   }
-// };

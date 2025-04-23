@@ -36,6 +36,10 @@ export const modalFilters = "modalFilters";
 export const filtersKeyProductsPage = "filtersKeyProductsPage";
 export const filtersKeyModalNav = "filtersKeyModalNav";
 
+export const statusAvailStock = "В наличии";
+export const statusAvailOutOfStock = "Не в наличии";
+export const statusAvailCall = "Уточните у продавца";
+
 export const messageCount = "Нет на складе";
 
 export const minMaxValueInputFilter = 100000;
