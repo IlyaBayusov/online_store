@@ -74,8 +74,8 @@ export default function FormByRegistr({ setSubmit }: Props) {
   }, [email]);
 
   const onSubmit = async (data: IFormDataRegistr) => {
-    if (!isValid) {
-      setError("Некоторые поля заполнены неверно.");
+    if (!isValid || errorMessageUsername || errorMessageEmail) {
+      setError("Некоторые поля заполнены неверно");
       return;
     }
     console.log(data);
@@ -95,14 +95,15 @@ export default function FormByRegistr({ setSubmit }: Props) {
 
   return (
     <div className="px-px flex flex-col justify-center items-center w-full max-w-72">
-      <h1 className="mb-3 text-lg font-bold uppercase text-center mt-3">
-        Регистрация
+      <h1 className="relative mb-3 text-lg font-bold uppercase text-center mt-3">
+        <span>Регистрация</span>
+
+        {error && (
+          <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 z-10 normal-case text-nowrap text-red-600 text-xs">
+            {error}
+          </span>
+        )}
       </h1>
-      {error && (
-        <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-10 text-nowrap text-red-600 text-xs">
-          {error}
-        </span>
-      )}
 
       <form
         onSubmit={handleSubmit(onSubmit)}
