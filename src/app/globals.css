@@ -66,6 +66,7 @@ select {
 
 .container {
   margin: 0 auto;
+  overflow-x: hidden;
 }
 
 #headerTitle {
@@ -210,5 +211,14 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .hide-scrollbar-y::-webkit-scrollbar {
+  display: none; /* Для Chrome, Safari и Edge */
+}
+
+.hide-scrollbar-x {
+  overflow-x: scroll;
+  scrollbar-width: none; /* Для Firefox */
+}
+
+.hide-scrollbar-x::-webkit-scrollbar {
   display: none; /* Для Chrome, Safari и Edge */
 }

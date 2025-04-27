@@ -111,12 +111,18 @@ export interface IGetCategories {
   id: number;
   name: string;
   imageUrl: StaticImageData;
-  subcategories: IGetSubCategories[];
 }
 
 export interface IGetSubCategories {
   id: number;
   name: string;
+  imageUrl: StaticImageData;
+}
+
+export interface IGetSubCategoryId {
+  id: number;
+  name: string;
+  mainCategory: string;
   imageUrl: StaticImageData;
 }
 

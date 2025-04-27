@@ -1,6 +1,6 @@
 "use client";
 
-import { getSubCategories } from "@/api";
+import { getSubCategoryId } from "@/axios";
 import ProductsList from "@/components/Products/ProductsList/ProductsList";
 import { filtersKeyProductsPage } from "@/constans";
 import { IGetSubCategories } from "@/interfaces";
@@ -29,23 +29,16 @@ export default function Products() {
 
   useEffect(() => {
     const getCategoriesArr = async () => {
-      const response = await getSubCategories();
-      const categoriesArr: IGetSubCategories[] = await response.items;
+      const response = await getSubCategoryId(params.products);
 
-      const categoryId = categoriesArr
-        .map((item: IGetSubCategories) => item.id)
-        .find((item: number) => String(item) === params.products);
-
-      if (!categoryId) {
+      if (!response) {
         return notFound();
-      } else {
-        setCategorId(filtersKeyProductsPage, categoryId);
-        setCategory(
-          categoriesArr[
-            categoriesArr.findIndex((item) => item.id === categoryId)
-          ]
-        );
       }
+
+      const data = response.data;
+
+      setCategorId(filtersKeyProductsPage, Number(data.name));
+      setCategory(data);
     };
 
     getCategoriesArr();

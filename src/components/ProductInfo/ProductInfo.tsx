@@ -2,8 +2,8 @@
 
 import {
   IDecodedToken,
-  IGetCategories,
   IGetFav,
+  IGetSubCategoryId,
   IPostAvailability,
   IProductInCart,
   IProductInfo,
@@ -25,7 +25,7 @@ import { statusAvailCall, statusAvailStock } from "@/constans";
 type Props = {
   arrProduct: IProductInfo[];
   productIdInArray: number;
-  category: IGetCategories;
+  category: IGetSubCategoryId;
 };
 
 export default function ProductInfo({
@@ -37,7 +37,6 @@ export default function ProductInfo({
   const [nowProduct, setNowProduct] = useState<IProductInfo>(
     arrProduct[productIdInArray]
   );
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [selectedSize, setSelectedSize] = useState<string>(nowProduct.sizes[0]);
   const [selectedColor, setSelectedColor] = useState<string>(nowProduct.color);
@@ -109,7 +108,6 @@ export default function ProductInfo({
         nowProduct.id,
         selectedSize
       );
-      console.log("наличие: ", data);
 
       if (!data) return;
 
@@ -189,7 +187,7 @@ export default function ProductInfo({
   return (
     <div className="container px-3">
       <div className="flex flex-col items-center">
-        <div className="flex flex-col items-center gap-3">
+        <div className="w-full flex flex-col items-center gap-3">
           {/* 1 блок */}
           <div className="flex flex-col items-center gap-3 mt-3 text-base">
             <div className="w-full">
@@ -243,7 +241,11 @@ export default function ProductInfo({
               <div className="flex items-center flex-nowrap gap-2">
                 <div
                   className="h-3 w-3 rounded-full"
-                  style={{ backgroundColor: `${getColorAvailability(avail)}` }}
+                  style={{
+                    backgroundColor: `${
+                      getColorAvailability(avail).statusColor
+                    }`,
+                  }}
                 ></div>
 
                 <p className="">{getFirstStock()}</p>
@@ -335,8 +337,9 @@ export default function ProductInfo({
 
           {/* 4 блок */}
           <ProductTabs
-            category={nowProduct.categoryName}
+            category={category.mainCategory}
             description={nowProduct.description}
+            avails={avail}
           />
         </div>
       </div>

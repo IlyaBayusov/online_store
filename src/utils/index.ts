@@ -72,24 +72,41 @@ export function getCategoryRu(category: string) {
   return categoryRu;
 }
 
-export function getColorAvailability(arrAvail: IPostAvailability[]) {
-  // надо сделать до отрисовки
-  if (!arrAvail.length) return "#d1d5db";
+interface IFCGetColorAvailability {
+  availId: number | undefined;
+  statusColor: string;
+}
+
+export function getColorAvailability(
+  arrAvail: IPostAvailability[]
+): IFCGetColorAvailability {
+  if (!arrAvail.length) return { availId: undefined, statusColor: "#d1d5db" };
 
   const stockIndex = arrAvail.findIndex(
-    (status) => status.status === statusAvailStock
+    (avail) => avail.status === statusAvailStock
   );
 
   if (stockIndex !== -1) {
-    return "#22c55e";
+    return { availId: stockIndex, statusColor: "#22c55e" };
   } else {
     switch (arrAvail[0].status) {
-      case "В началии":
-        return "#22c55e";
-      case "Не в началии":
-        return "#dc2626";
+      case "В наличии":
+        return { availId: 0, statusColor: "#22c55e" };
+      case "Не в наличии":
+        return { availId: 0, statusColor: "#dc2626" };
       default:
-        return "#d1d5db";
+        return { availId: 0, statusColor: "#d1d5db" };
     }
   }
 }
+
+export const getSwithcColorAvailability = (avail: IPostAvailability) => {
+  switch (avail.status) {
+    case "В наличии":
+      return "#22c55e";
+    case "Не в наличии":
+      return "#dc2626";
+    default:
+      return "#d1d5db";
+  }
+};

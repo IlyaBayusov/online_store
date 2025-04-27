@@ -136,3 +136,29 @@ export const postAvailability = async (productId: number, size: string) => {
     console.error("Ошибка получения по id города инфы о наличии", error);
   }
 };
+
+export const getSubCategoryId = async (subCategoryId: string) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/api/v1/subcategories/${Number(subCategoryId)}`
+    );
+
+    return response;
+  } catch (error) {
+    console.log("Ошибка отправки запроса на проверку категории", error);
+  }
+};
+
+export const fetchProducts = async (productId: string) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/api/v1/products/${productId}`
+    );
+
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения продукта: ", error?.status);
+  }
+};
