@@ -50,6 +50,7 @@ export interface IProductInCart {
 
 export interface IByProductsForm {
   userId: number;
+  promocode: string;
   totalPrice: number;
   customerName: string;
   phone: string;
@@ -233,4 +234,9 @@ export interface IPostAvailability {
   status: string;
   openTime: string;
   closedTime: string;
+}
+
+export interface IErrorObj {
+  code: number;
+  message: string;
 }

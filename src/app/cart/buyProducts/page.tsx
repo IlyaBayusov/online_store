@@ -1,14 +1,22 @@
 "use client";
 
 import { getProductsCart, postByProducts } from "@/api";
+import { postPromo } from "@/axios";
 import FormByProducts from "@/components/Forms/FormByProducts/FormByProducts";
-import { modalSuccessOrder } from "@/constans";
+import { authPage, modalSuccessOrder } from "@/constans";
 import { IOrderPost, IProductInCart } from "@/interfaces";
 import { useFormStore } from "@/stores/useFormStore";
 import { useModalStore } from "@/stores/useModalStore";
 import { decodeToken } from "@/utils";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+
+interface IPromo {
+  message: string;
+  discount?: number;
+  code?: number;
+}
 
 export default function BuyProducts() {
   const [productsCart, setProductsCart] = useState<
@@ -17,9 +25,16 @@ export default function BuyProducts() {
   const [sumPrice, setSumPrice] = useState(0);
   const [error, setError] = useState("");
 
+  const [promoInput, setPromoInput] = useState<string>("");
+
+  const [promo, setPromo] = useState<IPromo>({} as IPromo);
+  const [promoErrMess, setPromoErrMess] = useState<string>("");
+
   const { data, isValid } = useFormStore();
 
   const { openModal } = useModalStore();
+
+  const router = useRouter();
 
   useEffect(() => {
     const getData = async () => {
@@ -39,6 +54,79 @@ export default function BuyProducts() {
     getData();
   }, []);
 
+  const handleClickPromo = async () => {
+    const data: IPromo = await postPromo(promoInput);
+
+    if (!data.message) {
+      setPromoErrMess("Ошибка отправки");
+      return;
+    }
+
+    switch (data.message) {
+      case "SUCCESS":
+        if (!data.discount) {
+          setPromoErrMess("Промокод не найден");
+          getSumWithDiscount();
+          break;
+        }
+
+        setPromo(data);
+        getSumWithDiscount(data.discount);
+        setPromoErrMess("Промокод применен");
+        break;
+      case "USED":
+        setPromo({} as IPromo);
+        setPromoErrMess("Уже использовался");
+        getSumWithDiscount();
+        break;
+      case "IMPOSSIBLE":
+        setPromo({} as IPromo);
+        setPromoErrMess("Промокод недоступен");
+        getSumWithDiscount();
+        break;
+
+      default:
+        setPromo({} as IPromo);
+        getSumWithDiscount();
+        setPromoErrMess("Промокод не найден");
+        break;
+    }
+  };
+
+  const getSumWithDiscount = (discount: number = 0) => {
+    if (!productsCart || productsCart.length === 0) {
+      setSumPrice(0);
+      return;
+    }
+
+    const sum = productsCart.reduce((acc, item) => acc + item.price, 0);
+
+    if (discount) {
+      const discountedSum = Math.round(sum * (1 - discount / 100));
+
+      setSumPrice(discountedSum);
+    } else {
+      setSumPrice(sum);
+    }
+  };
+
+  const showSumWithDiscountInBtn = (
+    productsCount: number,
+    resultSum: number,
+    discount: number = 0
+  ) => {
+    if (!discount || !resultSum) {
+      return <p>{`${productsCount} шт., ${resultSum} руб.`}</p>;
+    }
+
+    return (
+      <p>
+        {`${productsCount} шт., ${resultSum} руб.`}
+        <span className="ml-2 px-2 py-0.5 rounded-md bg-green-500 text-white">{`- ${discount}%`}</span>
+      </p>
+    );
+  };
+
   const handleSubmit = async () => {
     if (!isValid) {
       setError("Некоторые поля заполнены неверно");
@@ -52,14 +140,25 @@ export default function BuyProducts() {
     }
 
     setError("");
+    setPromoErrMess("");
 
     const decoded = decodeToken();
+
+    if (!decoded || !decoded.id) {
+      router.push(authPage);
+      localStorage.removeItem("accessToken");
+
+      setError("Ошибка оформления заказа");
+
+      return;
+    }
 
     const newOrder: IOrderPost = {
       orderDetailsRequest: {
         ...data,
         totalPrice: sumPrice,
         userId: decoded.id,
+        promocode: promoInput,
       },
       orderItemRequest: productsCart,
     };
@@ -113,12 +212,41 @@ export default function BuyProducts() {
             </p>
 
             <FormByProducts />
+
+            <div className="mt-3 mb-2 flex flex-col justify-center items-center w-full text-base">
+              <div className="relative w-full flex justify-between items-center">
+                <input
+                  id="promo"
+                  type="text"
+                  value={promoInput}
+                  onChange={(e) => setPromoInput(e.target.value)}
+                  placeholder="Промокод"
+                  className="py-2 px-6 rounded-md text-white bg-transparent border border-[#6F00FF]"
+                />
+
+                <button
+                  className="px-4 py-1 rounded-md text-white"
+                  onClick={handleClickPromo}
+                >
+                  Применить
+                </button>
+
+                <span
+                  className={
+                    "absolute -bottom-4 left-0 z-10 text-nowrap text-xs " +
+                    (promo.discount ? "text-green-600" : "text-red-600")
+                  }
+                >
+                  {promoErrMess}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="fixed bottom-0 left-0 z-10 w-full px-2 bg-black pt-2 pb-3 rounded-t-2xl">
-        {error && <p className="text-red-700">{error}</p>}
+        {error && <p className="pb-2 text-red-600">{error}</p>}
 
         <button
           className="flex justify-between items-center px-3 py-2 text-base w-full bg-orange-600 rounded-xl"
@@ -126,7 +254,11 @@ export default function BuyProducts() {
         >
           <p>Заказать</p>
 
-          <p>{`${productsCart?.length} шт., ${sumPrice} руб.`}</p>
+          {showSumWithDiscountInBtn(
+            productsCart?.length || 0,
+            sumPrice,
+            promo.discount
+          )}
         </button>
       </div>
     </>

@@ -1,3 +1,4 @@
+import { decodeToken } from "@/utils";
 import axios from "axios";
 
 // Типизация для refreshSubscribers
@@ -160,5 +161,27 @@ export const fetchProducts = async (productId: string) => {
     return data;
   } catch (error) {
     console.error("Ошибка получения продукта: ", error?.status);
+  }
+};
+
+export const postPromo = async (promoCode: string) => {
+  if (!decodeToken()?.id) return;
+
+  try {
+    const response = await axios.post(
+      `http://localhost:8080/api/v1/promocodes/use`,
+      {
+        userId: decodeToken()?.id,
+        promoCode,
+      }
+    );
+
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения скидки по промокоду: ", error);
+
+    return error?.response?.data;
   }
 };
