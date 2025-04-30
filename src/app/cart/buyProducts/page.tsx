@@ -158,7 +158,7 @@ export default function BuyProducts() {
         ...data,
         totalPrice: sumPrice,
         userId: decoded.id,
-        promocode: promoInput,
+        promocode: promoInput || null,
       },
       orderItemRequest: productsCart,
     };

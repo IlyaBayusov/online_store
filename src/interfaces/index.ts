@@ -50,7 +50,7 @@ export interface IProductInCart {
 
 export interface IByProductsForm {
   userId: number;
-  promocode: string;
+  promocode: string | null;
   totalPrice: number;
   customerName: string;
   phone: string;
