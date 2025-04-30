@@ -7,7 +7,7 @@ import NewArrivalsList from "@/components/NewArrivals/NewArrivalsList/NewArrival
 import EmblaCarousel from "@/components/Carousels/EmblaCarousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { useEffect, useState } from "react";
-import { api } from "@/axios";
+import { getNewArrivals } from "@/axios";
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -17,14 +17,11 @@ export default function Home() {
 
   useEffect(() => {
     const fetchNewArrivals = async () => {
-      try {
-        const response = await api.get("/v1/products?size=10");
-        const data = await response.data;
+      const data = await getNewArrivals();
 
-        setNewArrivals(data);
+      if (data.items) {
+        setNewArrivals(data.items);
         setIsLoading(false);
-      } catch (error) {
-        console.error("главная страница: ", error);
       }
     };
 

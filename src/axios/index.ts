@@ -185,3 +185,17 @@ export const postPromo = async (promoCode: string) => {
     return error?.response?.data;
   }
 };
+
+export const getNewArrivals = async () => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/api/v1/products/search?size=10&sortField=id,desc`
+    );
+
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения новых поступлений: ", error);
+  }
+};
