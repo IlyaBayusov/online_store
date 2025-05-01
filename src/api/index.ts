@@ -13,14 +13,25 @@ import {
 import { decodeToken } from "@/utils";
 import qs from "qs";
 
-export const getProductsCart = async () => {
+export const getProductsCart = async (
+  page?: number,
+  size?: number,
+  sortParam?: string
+) => {
   try {
     const decodedToken: IDecodedToken | undefined = decodeToken();
 
     if (!decodedToken) return;
 
-    const response = await api.get(`/v1/cart/${decodedToken.id}`);
+    const response = await api.get(`/v1/cart/${decodedToken.id}`, {
+      params: {
+        ...(page !== undefined && { page }),
+        ...(size !== undefined && { size }),
+        ...(sortParam && { sortParam }),
+      },
+    });
     const data = await response.data;
+    console.log(data);
 
     return data;
   } catch (error) {
@@ -71,7 +82,8 @@ export const getOrders = async () => {
     if (!decodedToken) return;
 
     const response = await api.get(`/v1/orders/${decodedToken.id}`);
-    const data: IOrdersGet[] = await response.data;
+
+    const data = await response.data;
 
     return data;
   } catch (error) {
@@ -219,6 +231,7 @@ export const getSubCategories = async () => {
   try {
     const response = await api.get(`/v1/subcategories`);
     const data = await response.data;
+    console.log(response);
 
     return data;
   } catch (error) {

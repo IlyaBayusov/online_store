@@ -9,14 +9,30 @@ import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 export default memo(function Cart() {
+  const isFetchingRef = useRef(false);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const [hasMore, setHasMore] = useState<boolean>(true);
+
   const [products, setProducts] = useState<IProductInCart[]>([]);
   const [sum, setSum] = useState<number>(0);
 
   const cart = useCartStore((state) => state.cart);
+  const pagination = useCartStore((state) => state.pagination);
   const getProductsInCart = useCartStore((state) => state.getProductsInCart);
+  const getProductsCartLoading = useCartStore(
+    (state) => state.getProductsCartLoading
+  );
 
   const modalsProps = useModalStore((state) => state.modalsProps);
 
@@ -43,6 +59,34 @@ export default memo(function Cart() {
     setSum(totalSum);
   }, [cart]);
 
+  const handleScroll = useCallback(async () => {
+    const scrollElement = scrollContainerRef.current;
+
+    if (!scrollElement || !hasMore || isFetchingRef.current) return;
+
+    if (pagination.currentPage === pagination.totalPages - 1) {
+      setHasMore(false);
+    }
+
+    const { scrollTop, scrollHeight, clientHeight } = scrollElement;
+
+    if (scrollTop + clientHeight >= scrollHeight - 200) {
+      isFetchingRef.current = true;
+      console.log("Достигли низа, подгружаем ещё...");
+
+      const prevScrollTop = scrollTop;
+
+      await getProductsCartLoading({
+        page: pagination.currentPage + 1,
+      });
+
+      requestAnimationFrame(() => {
+        scrollElement.scrollTop = prevScrollTop;
+        isFetchingRef.current = false;
+      });
+    }
+  }, []);
+
   const getProducts = async () => {
     const response = await getProductsCart();
 
@@ -67,7 +111,11 @@ export default memo(function Cart() {
         <meta name="description" content="Главная страница" />
       </Head>
 
-      <div className="container px-3">
+      <div
+        className="container px-3"
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+      >
         <div className="flex flex-col justify-center items-center w-full">
           <div className="mt-3 w-full bg-black rounded-t-2xl rounded-b-md">
             <h1 className="py-2 px-3 text-xl uppercase">Корзина</h1>

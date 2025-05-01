@@ -5,6 +5,7 @@ import CategoryItem from "../CategoryItem/CategoryItem";
 import Link from "next/link";
 import { getSubCategories } from "@/api";
 import { IGetSubCategories } from "@/interfaces";
+import Loader from "@/components/Loader/Loader";
 
 export default function CategoryList() {
   const [subCategories, setSubCategories] = useState<IGetSubCategories[]>([]);
@@ -23,21 +24,21 @@ export default function CategoryList() {
   }, []);
 
   return (
-    <div className="container px-3">
-      <div className="my-3 w-full grid grid-cols-2 grid-rows-2 gap-3">
-        {subCategories.length ? (
-          subCategories.map((subCategory) => (
+    <div className="container px-3 pb-3">
+      {subCategories.length ? (
+        <div className="mt-3 w-full grid grid-cols-2 grid-rows-2 gap-3">
+          {subCategories.map((subCategory) => (
             <Link key={subCategory.id} href={String(subCategory.id)}>
               <CategoryItem
                 name={subCategory.name}
                 img={subCategory.imageUrl}
               />
             </Link>
-          ))
-        ) : (
-          <h1>Loading...</h1>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 }

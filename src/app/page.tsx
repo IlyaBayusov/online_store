@@ -8,6 +8,7 @@ import EmblaCarousel from "@/components/Carousels/EmblaCarousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { useEffect, useState } from "react";
 import { getNewArrivals } from "@/axios";
+import Loader from "@/components/Loader/Loader";
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -63,7 +64,7 @@ export default function Home() {
         </div>
 
         {isLoading ? (
-          <h1>Loading...</h1>
+          <Loader />
         ) : !newArrivals.length ? (
           <h1>Список пуст</h1>
         ) : (
