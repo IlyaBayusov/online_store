@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="ru" className="hide-scrollbar-y">
       <body className="hide-scrollbar-y">
-        <div className="relative wrapper flex flex-col">
+        <div className="relative wrapper flex flex-col h-full">
           <PageWrapper>
             <main className="flex-grow">{children}</main>
           </PageWrapper>

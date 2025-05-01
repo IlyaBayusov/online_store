@@ -14,7 +14,7 @@ export default function Footer() {
     <>
       {showFooter && (
         <footer className="bg-black py-3 mt-3 w-full">
-          <div className="container px-2">
+          <div className="container px-3 overflow-hidden">
             <div className="flex justify-center items-center gap-5">
               <a href="#">
                 <FaVk />

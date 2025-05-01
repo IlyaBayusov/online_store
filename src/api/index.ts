@@ -21,15 +21,22 @@ export const getProductsCart = async (
 
     if (!decodedToken) return;
 
+    const defaultParams = {
+      page: 0,
+      size: sizePage,
+      sortParam: "id,desc",
+    };
+
+    console.log(page, size, sortParam);
+
     const response = await api.get(`/v1/cart/${decodedToken.id}`, {
       params: {
-        ...(page !== undefined && { page }),
-        ...(size !== undefined && { size }),
-        ...(sortParam && { sortParam }),
+        page: page ?? defaultParams.page,
+        size: size ?? defaultParams.size,
+        sortParam: sortParam ?? defaultParams.sortParam,
       },
     });
     const data = await response.data;
-    console.log(data);
 
     return data;
   } catch (error) {

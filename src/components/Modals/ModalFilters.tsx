@@ -166,7 +166,7 @@ export default function ModalFilters() {
                   ))}
                 </>
 
-                <div className="w-full max-w-sm flex items-center">
+                <div className="mt-3 w-full max-w-sm flex items-center">
                   <input
                     type="number"
                     placeholder="от"

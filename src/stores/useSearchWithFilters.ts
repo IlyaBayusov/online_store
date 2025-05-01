@@ -154,19 +154,6 @@ export const useSearchWithFilters = create<ISearchWithFiltersStore>(
       const { categorId } = get();
       const finalCategoryId = categoryId || categorId[keyName];
 
-      // console.log(
-      //   page,
-      //   size,
-      //   finalSortField,
-      //   searchParam,
-      //   sizes,
-      //   colors,
-      //   minPrice,
-      //   maxPrice,
-      //   brands,
-      //   finalCategoryId
-      // );
-
       const response = await getProductsSearchWithParams(
         page,
         size,

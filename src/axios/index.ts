@@ -49,13 +49,13 @@ api.interceptors.response.use(
 
     // console.log("Ошибка: статус = ", statusCode, "ошибка: ", error);
 
-    if (error.response.data.message && error.response.data.code) {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+    // if (error.response.data.message && error.response.data.code) {
+    //   localStorage.removeItem("accessToken");
+    //   localStorage.removeItem("refreshToken");
 
-      console.log("Ошибка при обновлении токена, перенаправляем на /auth");
-      window.location.replace("/auth");
-    }
+    //   console.log("Ошибка при обновлении токена, перенаправляем на /auth");
+    //   window.location.replace("/auth");
+    // }
 
     if (statusCode === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
