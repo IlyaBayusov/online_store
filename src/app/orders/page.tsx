@@ -23,17 +23,31 @@ export default function Orders() {
     getOrdersList();
   }, []);
 
-  if (orders === null) return <Loader />;
+  const showElems = () => {
+    if (orders === undefined) return <Loader />;
 
-  if (!orders) {
-    return (
-      <span className="mt-3 text-base leading-none text-[#B3B3B3]">
-        Заказов нет
-      </span>
-    );
-  } else {
-    return orders.map((order) => (
-      <OrderItem key={order.orderId} order={order} />
-    ));
-  }
+    if (!orders) {
+      return (
+        <div className="w-full text-center mt-3 text-base leading-none text-[#B3B3B3]">
+          Список пуст
+        </div>
+      );
+    } else {
+      return orders.map((order) => (
+        <OrderItem key={order.orderId} order={order} />
+      ));
+    }
+  };
+
+  return (
+    <div className="container px-3">
+      <div className="flex justify-center mt-3 mb-5">
+        <h2 id="subTitleLine" className="relative uppercase font-medium">
+          Заказы
+        </h2>
+      </div>
+
+      {showElems()}
+    </div>
+  );
 }

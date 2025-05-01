@@ -3,9 +3,7 @@ import { sizePage } from "@/constans";
 import {
   IDecodedToken,
   IFormDataProfileUserInfo,
-  IGetFav,
   IOrderPost,
-  IOrdersGet,
   IPostFav,
   IProductInCart,
   IPutUserPassInProfile,
@@ -108,7 +106,7 @@ export const getFav = async () => {
     if (!decodedToken) return;
 
     const response = await api.get(`/v1/favorites/${decodedToken.id}`);
-    const data: IGetFav[] = await response.data;
+    const data = await response.data;
 
     return data;
   } catch (error) {
@@ -231,7 +229,6 @@ export const getSubCategories = async () => {
   try {
     const response = await api.get(`/v1/subcategories`);
     const data = await response.data;
-    console.log(response);
 
     return data;
   } catch (error) {
