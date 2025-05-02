@@ -36,9 +36,8 @@ export const getProductsCart = async (
         sortParam: sortParam ?? defaultParams.sortParam,
       },
     });
-    const data = await response.data;
 
-    return data;
+    return response;
   } catch (error) {
     console.error("Ошибка получения товаров из корзины: ", error);
   }

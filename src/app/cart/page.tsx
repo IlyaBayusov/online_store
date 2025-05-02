@@ -3,32 +3,21 @@
 import { getProductsCart } from "@/api";
 import CartList from "@/components/Cart/CartList/CartList";
 import { modalCartDeleteProduct } from "@/constans";
-import { IProductInCart } from "@/interfaces";
+import { IPagination, IProductInCart } from "@/interfaces";
 import { useByProductsStore } from "@/stores/useByProducts";
 import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
 import { useRouter } from "next/navigation";
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 
-export default memo(function Cart() {
-  const isFetchingRef = useRef(false);
-
+export default function Cart() {
   const [products, setProducts] = useState<IProductInCart[]>([]);
+  const [pagination, setPagination] = useState<IPagination>({} as IPagination);
+
   const [sum, setSum] = useState<number>(0);
 
   const cart = useCartStore((state) => state.cart);
-  const pagination = useCartStore((state) => state.pagination);
   const getProductsInCart = useCartStore((state) => state.getProductsInCart);
-  const getProductsCartLoading = useCartStore(
-    (state) => state.getProductsCartLoading
-  );
 
   const modalsProps = useModalStore((state) => state.modalsProps);
 
@@ -55,70 +44,32 @@ export default memo(function Cart() {
     setSum(totalSum);
   }, [cart]);
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  console.log("render");
-
-  const handleScroll = useCallback(
-    async (e: Event) => {
-      if (isFetchingRef.current) return;
-
-      const target = e.target as Document;
-      const scrollTop = target.documentElement.scrollTop;
-      const innerHeight = window.innerHeight;
-      const scrollHeight = target.documentElement.scrollHeight;
-
-      if (pagination.currentPage >= pagination.totalPages - 1) {
-        return;
-      }
-
-      if (scrollHeight - (scrollTop + innerHeight) < 100) {
-        isFetchingRef.current = true;
-        console.log("Достигли низа, подгружаем ещё...");
-
-        const data = await getProductsCartLoading({
-          page: pagination.currentPage + 1,
-        });
-
-        if (data) {
-          setProducts((prev) => {
-            const existingIds = new Set(prev.map((p) => p.productId));
-            const newUnique = data.filter(
-              (item) => !existingIds.has(item.productId)
-            );
-            return [...prev, ...newUnique];
-          });
-        }
-
-        isFetchingRef.current = false;
-      }
-    },
-    [pagination]
-  );
-  console.log(products);
-
   const getProducts = async () => {
     const response = await getProductsCart();
 
     if (response) {
-      const data = await response.items;
+      const data = await response.data;
 
-      setProducts(data);
+      setProducts(data.items);
+      setPagination(() => {
+        return {
+          currentItems: data.currentItems,
+          currentPage: data.currentPage,
+          totalItems: data.totalItems,
+          totalPages: data.totalPages,
+        };
+      });
+
+      return data;
     }
+
+    return;
   };
 
   const handleBuy = () => {
     updateProducts(products);
     router.push("/cart/buyProducts");
   };
-
-  const cartList = useMemo(() => <CartList products={products} />, [products]);
 
   return (
     <div className="container px-3">
@@ -128,7 +79,7 @@ export default memo(function Cart() {
         </div>
 
         {products.length ? (
-          cartList
+          <CartList firstProducts={products} firstPagination={pagination} />
         ) : (
           <span className="mt-3 text-base leading-none text-[#B3B3B3]">
             Корзина пуста
@@ -156,4 +107,4 @@ export default memo(function Cart() {
       )}
     </div>
   );
-});
+}
