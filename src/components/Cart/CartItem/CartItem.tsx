@@ -1,6 +1,6 @@
 "use client";
 
-import { postCount, putProductCart } from "@/api";
+import { getCountAndPriceProductsCart, postCount, putProductCart } from "@/api";
 import { messageCount, modalCartDeleteProduct } from "@/constans";
 import { IProductInCart } from "@/interfaces";
 import { useCartStore } from "@/stores/useCartStore";
@@ -20,11 +20,11 @@ export default memo(function CartItem({ product }: Props) {
   const [isDisabledPlus, setIsDisabledPlus] = useState(false);
   const [isDisabledMinus, setIsDisabledMinus] = useState(false);
 
-  const { updateQuantity } = useCartStore();
+  const { updateQuantity, getCount, getPrice } = useCartStore();
   const { openModal, addModalProps } = useModalStore();
 
   useEffect(() => {
-    const getCount = async () => {
+    const getCountItem = async () => {
       const dataCount = await postCount(product.productId, product.size);
 
       if (dataCount) {
@@ -44,7 +44,7 @@ export default memo(function CartItem({ product }: Props) {
       setTitleCount("");
     };
 
-    getCount();
+    getCountItem();
   }, []);
 
   useEffect(() => {
@@ -73,7 +73,15 @@ export default memo(function CartItem({ product }: Props) {
     const response = await putProductCart(product, quant);
     const data = await response?.data;
 
-    if (data) {
+    const dataCart: {
+      countOfProducts: number;
+      totalPrice: number;
+    } = await getCountAndPriceProductsCart();
+
+    if (data && dataCart) {
+      getCount(dataCart.countOfProducts);
+      getPrice(dataCart.totalPrice);
+
       return data.quantity;
     }
   };

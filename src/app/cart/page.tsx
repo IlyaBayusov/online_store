@@ -1,6 +1,6 @@
 "use client";
 
-import { getProductsCart } from "@/api";
+import { getCountAndPriceProductsCart, getProductsCart } from "@/api";
 import CartList from "@/components/Cart/CartList/CartList";
 import { modalCartDeleteProduct } from "@/constans";
 import { IPagination, IProductInCart } from "@/interfaces";
@@ -14,10 +14,13 @@ export default function Cart() {
   const [products, setProducts] = useState<IProductInCart[]>([]);
   const [pagination, setPagination] = useState<IPagination>({} as IPagination);
 
-  const [sum, setSum] = useState<number>(0);
+  // const [sum, setSum] = useState<number>(0);
 
-  const cart = useCartStore((state) => state.cart);
+  const count = useCartStore((state) => state.count);
+  const price = useCartStore((state) => state.price);
   const getProductsInCart = useCartStore((state) => state.getProductsInCart);
+  const getCount = useCartStore((state) => state.getCount);
+  const getPrice = useCartStore((state) => state.getPrice);
 
   const modalsProps = useModalStore((state) => state.modalsProps);
 
@@ -26,8 +29,24 @@ export default function Cart() {
   const router = useRouter();
 
   useEffect(() => {
-    getProducts();
-    getProductsInCart();
+    const fc = async () => {
+      const data: {
+        countOfProducts: number;
+        totalPrice: number;
+      } = await getCountAndPriceProductsCart();
+
+      if (data) {
+        // setSum(data.totalPrice);
+
+        getCount(data.countOfProducts);
+        getPrice(data.totalPrice);
+      }
+
+      getProducts();
+      getProductsInCart();
+    };
+
+    fc();
   }, []);
 
   useEffect(() => {
@@ -36,13 +55,13 @@ export default function Cart() {
     }
   }, [modalsProps]);
 
-  useEffect(() => {
-    const totalSum = cart.reduce(
-      (acc, product) => acc + product.price * product.quantity,
-      0
-    );
-    setSum(totalSum);
-  }, [cart]);
+  // useEffect(() => {
+  //   const totalSum = cart.reduce(
+  //     (acc, product) => acc + product.price * product.quantity,
+  //     0
+  //   );
+  //   setSum(totalSum);
+  // }, [cart]);
 
   const getProducts = async () => {
     const response = await getProductsCart();
@@ -93,7 +112,7 @@ export default function Cart() {
           onClick={handleBuy}
         >
           <span className="text-base leading-none">К оформлению</span>
-          <span className="text-base leading-none">{`${products.length} шт., ${sum} руб.`}</span>
+          <span className="text-base leading-none">{`${count} шт., ${price} руб.`}</span>
         </button>
       ) : (
         <button

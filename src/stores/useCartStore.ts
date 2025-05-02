@@ -5,6 +5,11 @@ import { create } from "zustand";
 export interface ICartStore {
   cart: IProductInCart[];
   pagination: IPagination;
+  count: number;
+  price: number;
+
+  getCount: (count: number) => void;
+  getPrice: (price: number) => void;
 
   getProductsInCart: () => Promise<void>;
 
@@ -14,13 +19,25 @@ export interface ICartStore {
 export const useCartStore = create<ICartStore>((set) => ({
   cart: [],
   pagination: {} as IPagination,
+  count: 0,
+  price: 0,
+
+  getCount: (count) => {
+    set({ count: count });
+  },
+
+  getPrice: (price) => {
+    set({ price: price });
+  },
 
   getProductsInCart: async () => {
+    //переделать для динамической пагинации
     const response = await getProductsCart();
 
     if (response) {
-      const data = await response.data;
-      const products = await data.items;
+      const data = response.data;
+
+      const products = data.items;
 
       set((state) => ({
         cart: products ? [...products] : [...state.cart],
@@ -36,10 +53,11 @@ export const useCartStore = create<ICartStore>((set) => ({
     }
   },
 
-  updateQuantity: (productId: number, quantity: number) =>
+  updateQuantity: (productId: number, quantity: number) => {
     set((state) => ({
       cart: state.cart.map((item: IProductInCart) =>
         item.productId === productId ? { ...item, quantity } : item
       ),
-    })),
+    }));
+  },
 }));

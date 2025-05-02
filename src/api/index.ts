@@ -41,6 +41,22 @@ export const getProductsCart = async (
   }
 };
 
+export const getCountAndPriceProductsCart = async () => {
+  try {
+    const decodedToken: IDecodedToken | undefined = decodeToken();
+
+    if (!decodedToken) return;
+
+    const response = await api.get(`/v1/cart/count/${decodedToken.id}`);
+
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка получения товаров из корзины: ", error);
+  }
+};
+
 export const postByProducts = async (order: IOrderPost) => {
   try {
     const response = await api.post(`/v1/orders`, order);

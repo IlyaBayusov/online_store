@@ -10,15 +10,27 @@ import { MdOutlineShoppingBag, MdFavorite } from "react-icons/md";
 import { ProfileDropDownMenu } from "./DropDownMenu/ProfileDropDownMenu/ProfileDropDownMenu";
 import { CitiesDDM } from "./DropDownMenu/CitiesDDM/CitiesDDM";
 import { useCartStore } from "@/stores/useCartStore";
+import { getCountAndPriceProductsCart } from "@/api";
 
 export default function Header() {
   const { openModal } = useModalStore();
 
-  const cart = useCartStore((state) => state.cart);
-  const getProductsInCart = useCartStore((state) => state.getProductsInCart);
+  const count = useCartStore((state) => state.count);
+  const getCount = useCartStore((state) => state.getCount);
 
   useEffect(() => {
-    getProductsInCart();
+    const fc = async () => {
+      const data: {
+        countOfProducts: number;
+        totalPrice: number;
+      } = await getCountAndPriceProductsCart();
+
+      if (data) {
+        getCount(data.countOfProducts);
+      }
+    };
+
+    fc();
   }, []);
 
   return (
@@ -45,9 +57,9 @@ export default function Header() {
             <Link href="/cart">
               <div className="relative">
                 <RiShoppingBasketLine className="h-8 w-8 p-1.5" />
-                {cart.length !== 0 && (
+                {count !== 0 && (
                   <div className="flex justify-center items-center absolute bottom-0 right-0 z-10 w-4 h-4 bg-white rounded-full text-[11px] text-black font-bold border-2 border-black">
-                    {cart?.length}
+                    {count}
                   </div>
                 )}
               </div>
