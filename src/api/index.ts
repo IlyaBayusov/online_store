@@ -27,8 +27,6 @@ export const getProductsCart = async (
       sortParam: "id,desc",
     };
 
-    console.log(page, size, sortParam);
-
     const response = await api.get(`/v1/cart/${decodedToken.id}`, {
       params: {
         page: page ?? defaultParams.page,
@@ -105,16 +103,33 @@ export const postFav = async (fav: IPostFav) => {
   }
 };
 
-export const getFav = async () => {
+export const getFav = async (
+  page?: number,
+  size?: number,
+  sortParam?: string
+) => {
   try {
     const decodedToken: IDecodedToken = decodeToken();
 
     if (!decodedToken) return;
 
-    const response = await api.get(`/v1/favorites/${decodedToken.id}`);
-    const data = await response.data;
+    const defaultParams = {
+      page: 0,
+      size: sizePage,
+      sortParam: "id,desc",
+    };
 
-    return data;
+    console.log(page, size, sortParam);
+
+    const response = await api.get(`/v1/favorites/${decodedToken.id}`, {
+      params: {
+        page: page ?? defaultParams.page,
+        size: size ?? defaultParams.size,
+        sortParam: sortParam ?? defaultParams.sortParam,
+      },
+    });
+
+    return response;
   } catch (error) {
     console.error("Ошибка получения избранных: ", error);
   }

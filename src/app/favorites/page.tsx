@@ -3,18 +3,29 @@
 import { getFav } from "@/api";
 import FavList from "@/components/Fav/FavList/FavList";
 import Loader from "@/components/Loader/Loader";
-import { IFavsGet } from "@/interfaces";
+import { IFavsGet, IPagination } from "@/interfaces";
 import React, { useEffect, useState } from "react";
 
 export default function Favorites() {
   const [favs, setFavs] = useState<IFavsGet[] | undefined | null>();
+  const [pagination, setPagination] = useState<IPagination>({} as IPagination);
 
   useEffect(() => {
     const getFavsList = async () => {
-      const data = await getFav();
+      const response = await getFav();
 
-      if (data) {
+      if (response) {
+        const data = await response.data;
+
         setFavs(data.items);
+        setPagination(() => {
+          return {
+            currentItems: data.currentItems,
+            currentPage: data.currentPage,
+            totalItems: data.totalItems,
+            totalPages: data.totalPages,
+          };
+        });
       } else {
         setFavs(null);
       }
@@ -22,6 +33,8 @@ export default function Favorites() {
 
     getFavsList();
   }, []);
+
+  console.log(favs);
 
   const showElems = () => {
     if (favs === undefined) return <Loader />;
@@ -33,7 +46,7 @@ export default function Favorites() {
         </div>
       );
     } else {
-      return <FavList favs={favs} />;
+      return <FavList firstFavs={favs} firstPagination={pagination} />;
     }
   };
 
