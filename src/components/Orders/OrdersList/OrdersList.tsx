@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 import OrdersItem from "../OrdersItem/OrdersItem";
 
-type Props = { products: IOrdersGet[] };
+type Props = { z: IOrdersGet[] };
 
 export default function OrdersList({ products }: Props) {
   return (

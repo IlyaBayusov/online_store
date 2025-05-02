@@ -77,17 +77,31 @@ export const postCount = async (productId: number, size: string) => {
   }
 };
 
-export const getOrders = async () => {
+export const getOrders = async (
+  page?: number,
+  size?: number,
+  sortParam?: string
+) => {
   try {
     const decodedToken: IDecodedToken = decodeToken();
 
     if (!decodedToken) return;
 
-    const response = await api.get(`/v1/orders/${decodedToken.id}`);
+    const defaultParams = {
+      page: 0,
+      size: sizePage,
+      sortParam: "id,desc",
+    };
 
-    const data = await response.data;
+    const response = await api.get(`/v1/orders/${decodedToken.id}`, {
+      params: {
+        page: page ?? defaultParams.page,
+        size: size ?? defaultParams.size,
+        sortParam: sortParam ?? defaultParams.sortParam,
+      },
+    });
 
-    return data;
+    return response;
   } catch (error) {
     console.error("Ошибка получения товаров из корзины: ", error);
   }

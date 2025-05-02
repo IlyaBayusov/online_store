@@ -2,19 +2,30 @@
 
 import { getOrders } from "@/api";
 import Loader from "@/components/Loader/Loader";
-import OrderItem from "@/components/Orders/OrderItem/OrderItem";
-import { IOrdersList } from "@/interfaces";
+import OrderList from "@/components/Orders/OrderList/OrderList";
+import { IOrdersList, IPagination } from "@/interfaces";
 import React, { useEffect, useState } from "react";
 
 export default function Orders() {
   const [orders, setOrders] = useState<IOrdersList[] | undefined | null>();
+  const [pagination, setPagination] = useState<IPagination>({} as IPagination);
 
   useEffect(() => {
     const getOrdersList = async () => {
-      const data = await getOrders();
+      const response = await getOrders();
 
-      if (data) {
+      if (response) {
+        const data = await response.data;
+
         setOrders(data.items);
+        setPagination(() => {
+          return {
+            currentItems: data.currentItems,
+            currentPage: data.currentPage,
+            totalItems: data.totalItems,
+            totalPages: data.totalPages,
+          };
+        });
       } else {
         setOrders(null);
       }
@@ -23,19 +34,19 @@ export default function Orders() {
     getOrdersList();
   }, []);
 
+  console.log(orders);
+
   const showElems = () => {
     if (orders === undefined) return <Loader />;
 
-    if (!orders) {
+    if (!orders?.length) {
       return (
         <div className="w-full text-center mt-3 text-base leading-none text-[#B3B3B3]">
           Список пуст
         </div>
       );
     } else {
-      return orders.map((order) => (
-        <OrderItem key={order.orderId} order={order} />
-      ));
+      return <OrderList firstOrders={orders} firstPagination={pagination} />;
     }
   };
 

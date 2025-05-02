@@ -39,7 +39,7 @@ export default function Favorites() {
   const showElems = () => {
     if (favs === undefined) return <Loader />;
 
-    if (!favs) {
+    if (!favs?.length) {
       return (
         <div className="text-center mt-3 text-base leading-none text-[#B3B3B3]">
           Список пуст
