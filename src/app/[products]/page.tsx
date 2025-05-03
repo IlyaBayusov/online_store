@@ -37,7 +37,7 @@ export default function Products() {
 
       const data = response.data;
 
-      setCategorId(filtersKeyProductsPage, Number(data.name));
+      setCategorId(filtersKeyProductsPage, data.id);
       setCategory(data);
     };
 
