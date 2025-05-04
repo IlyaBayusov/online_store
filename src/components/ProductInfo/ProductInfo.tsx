@@ -2,10 +2,10 @@
 
 import {
   IDecodedToken,
-  IGetFav,
   IGetSubCategoryId,
   IPostAvailability,
-  IProductInCart,
+  IPostCartExistProduct,
+  IPostProductInFavs,
   IProductInfo,
 } from "@/interfaces/index";
 import Image from "next/image";
@@ -17,7 +17,12 @@ import ProductTabs from "../Tabs/ProductTabs";
 import { RiShoppingBasketLine, RiShoppingBasketFill } from "react-icons/ri";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { api, postAvailability } from "@/axios";
-import { getFav, getProductsCart, postFav } from "@/api";
+import {
+  getProductsCart,
+  postCartExistProduct,
+  postFav,
+  postProductsInFavs,
+} from "@/api";
 import { useCartStore } from "@/stores/useCartStore";
 import Cookies from "js-cookie";
 import { statusAvailCall, statusAvailStock } from "@/constans";
@@ -47,32 +52,29 @@ export default function ProductInfo({
   const [isActiveCart, setIsActiveCart] = useState(false);
   const [isActiveFav, setIsActiveFav] = useState(false);
 
-  const [nowCartItem, setNowCartItem] = useState<IProductInCart>();
-  const [nowFavItem, setNowFavItem] = useState<IGetFav>();
+  const [nowCartItem, setNowCartItem] = useState<IPostCartExistProduct>();
+  const [nowFavItem, setNowFavItem] = useState<IPostProductInFavs>();
 
   const [avail, setAvail] = useState<IPostAvailability[]>([]);
 
   const params = useParams();
 
-  const { getProductsInCart } = useCartStore();
+  const { getProductsInCart, deleteProductInCart } = useCartStore();
 
   useEffect(() => {
     const setActiveBtnCart = async () => {
-      try {
-        const response = await getProductsCart();
+      const data: IPostCartExistProduct = await postCartExistProduct(
+        nowProduct.id,
+        selectedSize
+      );
 
-        if (response) {
-          const data: IProductInCart[] = await response.items;
+      if (!data) return;
 
-          data.map((item) => {
-            if (item.productId === nowProduct.id) {
-              setIsActiveCart(true);
-              setNowCartItem(item);
-            }
-          });
-        }
-      } catch (error) {
-        console.error("Ошибка запроса получения корзины", error);
+      if (data.productId === nowProduct.id) {
+        setIsActiveCart(true);
+        setNowCartItem(data);
+      } else {
+        setIsActiveCart(false);
       }
     };
 
@@ -81,21 +83,19 @@ export default function ProductInfo({
 
   useEffect(() => {
     const setActiveBtnFav = async () => {
-      try {
-        const response = await getFav();
+      const data: {
+        favoriteId: number;
+      } = await postProductsInFavs(nowProduct.id);
 
-        if (response) {
-          const data: IGetFav[] = await response.items;
+      if (!data) return;
 
-          data.map((item) => {
-            if (item.productId === nowProduct.id) {
-              setIsActiveFav(true);
-              setNowFavItem(item);
-            }
-          });
-        }
-      } catch (error) {
-        console.error("Ошибка запроса получения избранных", error);
+      console.log(data, nowFavItem?.favoriteId);
+
+      if (data.favoriteId) {
+        setIsActiveFav(true);
+        setNowFavItem(data);
+      } else {
+        setIsActiveFav(false);
       }
     };
 
@@ -119,6 +119,25 @@ export default function ProductInfo({
     }
   }, []);
 
+  const getProducts = async () => {
+    const response = await getProductsCart();
+
+    if (response) {
+      const data = await response.data;
+
+      getProductsInCart(data.items, {
+        currentItems: data.currentItems,
+        currentPage: data.currentPage,
+        totalItems: data.totalItems,
+        totalPages: data.totalPages,
+      });
+
+      return data;
+    }
+
+    return;
+  };
+
   const handleClickCart = async () => {
     try {
       const decodedToken: IDecodedToken = decodeToken();
@@ -127,7 +146,8 @@ export default function ProductInfo({
         setIsActiveCart(false);
         //удаление из корзины
         await api.delete(`/v1/cart/${nowCartItem.cartItemId}`);
-        getProductsInCart();
+        deleteProductInCart(nowCartItem.cartItemId);
+        await getProducts();
       } else {
         setIsActiveCart(true);
         //добавление в корзину
@@ -139,7 +159,7 @@ export default function ProductInfo({
         });
         const data = await response.data;
         setNowCartItem(data);
-        getProductsInCart();
+        await getProducts();
       }
     } catch (error) {
       console.error("Ошибка запроса добавления/удаления в корзину: ", error);

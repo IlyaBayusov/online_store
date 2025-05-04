@@ -82,6 +82,25 @@ export const putProductCart = async (
   }
 };
 
+export const postCartExistProduct = async (productId: number, size: string) => {
+  try {
+    const decodedToken: IDecodedToken | undefined = decodeToken();
+
+    if (!decodedToken) return;
+
+    const response = await api.post(`/v1/cart/exist/${decodedToken.id}`, {
+      productId: productId,
+      size: size,
+    });
+
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка наличия товара в корзине: ", error);
+  }
+};
+
 export const postCount = async (productId: number, size: string) => {
   try {
     const response = await api.post(`/v1/products/count`, { productId, size });
@@ -160,6 +179,24 @@ export const getFav = async (
     });
 
     return response;
+  } catch (error) {
+    console.error("Ошибка получения избранных: ", error);
+  }
+};
+
+export const postProductsInFavs = async (productId: number) => {
+  try {
+    const decodedToken: IDecodedToken = decodeToken();
+
+    if (!decodedToken) return;
+
+    const response = await api.post(`/v1/favorites/exist/${decodedToken.id}`, {
+      productId: productId,
+    });
+
+    const data = await response.data;
+
+    return data;
   } catch (error) {
     console.error("Ошибка получения избранных: ", error);
   }

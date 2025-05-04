@@ -34,8 +34,6 @@ export default function Favorites() {
     getFavsList();
   }, []);
 
-  console.log(favs);
-
   const showElems = () => {
     if (favs === undefined) return <Loader />;
 

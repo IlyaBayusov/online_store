@@ -48,6 +48,11 @@ export interface IProductInCart {
   quantity: number;
 }
 
+export interface IPostCartExistProduct {
+  cartItemId: number;
+  productId: number;
+}
+
 export interface IByProductsForm {
   userId: number;
   promocode: string | null;
@@ -138,6 +143,10 @@ export interface IGetFav {
   categoryName: string;
   productName: string;
   image: string;
+}
+
+export interface IPostProductInFavs {
+  favoriteId: number;
 }
 
 export interface IPostNewProduct {
