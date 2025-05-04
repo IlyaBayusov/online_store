@@ -1,5 +1,3 @@
-"use client";
-
 import ProductsAdmin from "@/components/AdminPage/ProductsAdmin/ProductsAdmin";
 import React from "react";
 

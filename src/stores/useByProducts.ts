@@ -10,5 +10,8 @@ export interface IByProductsStore {
 export const useByProductsStore = create<IByProductsStore>((set) => ({
   products: [],
 
-  updateProducts: (products: IProductInCart[]) => set({ products }),
+  updateProducts: (products: IProductInCart[]) =>
+    set({
+      products: products,
+    }),
 }));

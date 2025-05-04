@@ -1,10 +1,11 @@
 "use client";
 
-import { getProductsCart, postByProducts } from "@/api";
+import { postByProducts } from "@/api";
 import { postPromo } from "@/axios";
 import FormByProducts from "@/components/Forms/FormByProducts/FormByProducts";
-import { authPage, modalSuccessOrder } from "@/constans";
+import { authPage, cartPage, modalSuccessOrder } from "@/constans";
 import { IOrderPost, IProductInCart, IPromo } from "@/interfaces";
+import { useByProductsStore } from "@/stores/useByProducts";
 import { useFormStore } from "@/stores/useFormStore";
 import { useModalStore } from "@/stores/useModalStore";
 import { decodeToken } from "@/utils";
@@ -13,9 +14,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function BuyProducts() {
-  const [productsCart, setProductsCart] = useState<
-    IProductInCart[] | undefined
-  >();
   const [sumPrice, setSumPrice] = useState(0);
   const [error, setError] = useState("");
 
@@ -27,28 +25,19 @@ export default function BuyProducts() {
   const { data, isValid } = useFormStore();
 
   const { openModal } = useModalStore();
+  const { products } = useByProductsStore();
 
   const router = useRouter();
 
   useEffect(() => {
-    const getData = async () => {
-      const response = await getProductsCart();
+    const sum = products.reduce(
+      (sum: number, product: IProductInCart) =>
+        sum + product.price * product.quantity,
+      0
+    );
 
-      if (response) {
-        const data = await response.data;
-
-        setProductsCart(data.items);
-
-        const sum = data.items.reduce(
-          (sum: number, item: IProductInCart) => sum + item.price,
-          0
-        );
-        setSumPrice(sum);
-      }
-    };
-
-    getData();
-  }, []);
+    setSumPrice(sum);
+  }, [products]);
 
   const handleClickPromo = async () => {
     const data: IPromo = await postPromo(promoInput);
@@ -90,12 +79,12 @@ export default function BuyProducts() {
   };
 
   const getSumWithDiscount = (discount: number = 0) => {
-    if (!productsCart || productsCart.length === 0) {
+    if (!products || products.length === 0) {
       setSumPrice(0);
       return;
     }
 
-    const sum = productsCart.reduce((acc, item) => acc + item.price, 0);
+    const sum = products.reduce((acc, item) => acc + item.price, 0);
 
     if (discount) {
       const discountedSum = Math.round(sum * (1 - discount / 100));
@@ -128,7 +117,7 @@ export default function BuyProducts() {
       setError("Некоторые поля заполнены неверно");
       return;
     }
-    if (productsCart === undefined) {
+    if (products === undefined) {
       setError(
         "Ошибка отправки данных, в пост запросе пустой объект orderItemRequest"
       );
@@ -156,7 +145,7 @@ export default function BuyProducts() {
         userId: decoded.id,
         promocode: promoInput || null,
       },
-      orderItemRequest: productsCart,
+      orderItemRequest: products,
     };
 
     console.log("Ответ ушел, новый заказ: ", newOrder);
@@ -169,6 +158,8 @@ export default function BuyProducts() {
       openModal(modalSuccessOrder);
     }
   };
+
+  if (!products.length) return router.push(cartPage);
 
   return (
     <>
@@ -189,7 +180,7 @@ export default function BuyProducts() {
 
             <div className="mt-3 w-full overflow-auto">
               <div className="flex w-max gap-2">
-                {productsCart?.map((item) => (
+                {products.map((item) => (
                   <div key={item.cartItemId} className="max-w-16">
                     <Image
                       src={item.image}
@@ -253,7 +244,7 @@ export default function BuyProducts() {
           <p>Заказать</p>
 
           {showSumWithDiscountInBtn(
-            productsCart?.length || 0,
+            products.length || 0,
             sumPrice,
             promo.discount
           )}

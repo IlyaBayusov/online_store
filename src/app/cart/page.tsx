@@ -2,6 +2,7 @@
 
 import { getCountAndPriceProductsCart, getProductsCart } from "@/api";
 import CartList from "@/components/Cart/CartList/CartList";
+import Loader from "@/components/Loader/Loader";
 import { modalCartDeleteProduct } from "@/constans";
 import { IPagination, IProductInCart } from "@/interfaces";
 import { useByProductsStore } from "@/stores/useByProducts";
@@ -13,6 +14,8 @@ import React, { useEffect, useState } from "react";
 export default function Cart() {
   const [products, setProducts] = useState<IProductInCart[]>([]);
   const [pagination, setPagination] = useState<IPagination>({} as IPagination);
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const cart = useCartStore((state) => state.cart);
   const count = useCartStore((state) => state.count);
@@ -57,6 +60,8 @@ export default function Cart() {
     if (response) {
       const data = await response.data;
 
+      setIsLoading(false);
+
       setProducts(data.items);
       setPagination(() => {
         return {
@@ -86,6 +91,8 @@ export default function Cart() {
   };
 
   const showElems = () => {
+    if (isLoading) return <Loader />;
+
     return cart.length ? (
       <CartList
         products={products}

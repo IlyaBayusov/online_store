@@ -3,10 +3,12 @@
 import { getCountAndPriceProductsCart, postCount, putProductCart } from "@/api";
 import { messageCount, modalCartDeleteProduct } from "@/constans";
 import { IProductInCart } from "@/interfaces";
+import { useByProductsStore } from "@/stores/useByProducts";
 import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { memo, useEffect, useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -20,8 +22,11 @@ export default memo(function CartItem({ product }: Props) {
   const [isDisabledPlus, setIsDisabledPlus] = useState(false);
   const [isDisabledMinus, setIsDisabledMinus] = useState(false);
 
+  const router = useRouter();
+
   const { updateQuantity, getCount, getPrice } = useCartStore();
   const { openModal, addModalProps } = useModalStore();
+  const updateProducts = useByProductsStore((state) => state.updateProducts);
 
   useEffect(() => {
     const getCountItem = async () => {
@@ -129,6 +134,11 @@ export default memo(function CartItem({ product }: Props) {
     openModal(modalCartDeleteProduct);
   };
 
+  const handleClickBuyProduct = () => {
+    updateProducts([product]);
+    router.push("/cart/buyProducts");
+  };
+
   return (
     <div
       key={product.productId}
@@ -192,7 +202,10 @@ export default memo(function CartItem({ product }: Props) {
       <div className="flex justify-between items-center w-full border-t border-[#B3B3B3] pt-2">
         <p className="text-base">{`${product.price} руб.`}</p>
 
-        <button className="py-1 px-3 text-sm text-orange-400 border border-orange-400 rounded-md">
+        <button
+          className="py-1 px-3 text-sm text-orange-400 border border-orange-400 rounded-md"
+          onClick={handleClickBuyProduct}
+        >
           Купить
         </button>
       </div>
