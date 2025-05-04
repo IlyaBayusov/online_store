@@ -1,18 +1,22 @@
 "use client";
 
+import { getCountAndPriceProductsCart } from "@/api";
 import { api } from "@/axios";
 import { modalCartDeleteProduct } from "@/constans";
 import { useCartStore } from "@/stores/useCartStore";
 import { useModalStore } from "@/stores/useModalStore";
+
 import React from "react";
 import { IoClose } from "react-icons/io5";
 
 export default function ModalCartDeleteProduct() {
   const { modals, closeModal, modalsProps, addModalProps } = useModalStore();
-  const getProductsInCart = useCartStore((state) => state.getProductsInCart);
+  const { getCount, deleteProductInCart } = useCartStore();
 
   const handleDeleteProduct = async () => {
     try {
+      if (!modalsProps[modalCartDeleteProduct]) return;
+
       const response = await api.delete(
         `/v1/cart/${modalsProps[modalCartDeleteProduct].cartItemId}`
       );
@@ -22,7 +26,16 @@ export default function ModalCartDeleteProduct() {
         isDeleted: true,
       });
 
-      getProductsInCart();
+      const data: {
+        countOfProducts: number;
+        totalPrice: number;
+      } = await getCountAndPriceProductsCart();
+
+      if (data) {
+        getCount(data.countOfProducts);
+      }
+
+      deleteProductInCart(modalsProps[modalCartDeleteProduct].cartItemId);
 
       closeModal(modalCartDeleteProduct);
       console.log("Товар удален из корзины: ", response);

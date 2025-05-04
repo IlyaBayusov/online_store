@@ -14,8 +14,7 @@ export default function Cart() {
   const [products, setProducts] = useState<IProductInCart[]>([]);
   const [pagination, setPagination] = useState<IPagination>({} as IPagination);
 
-  // const [sum, setSum] = useState<number>(0);
-
+  const cart = useCartStore((state) => state.cart);
   const count = useCartStore((state) => state.count);
   const price = useCartStore((state) => state.price);
   const getProductsInCart = useCartStore((state) => state.getProductsInCart);
@@ -36,14 +35,11 @@ export default function Cart() {
       } = await getCountAndPriceProductsCart();
 
       if (data) {
-        // setSum(data.totalPrice);
-
         getCount(data.countOfProducts);
         getPrice(data.totalPrice);
       }
 
       getProducts();
-      getProductsInCart();
     };
 
     fc();
@@ -54,14 +50,6 @@ export default function Cart() {
       getProducts();
     }
   }, [modalsProps]);
-
-  // useEffect(() => {
-  //   const totalSum = cart.reduce(
-  //     (acc, product) => acc + product.price * product.quantity,
-  //     0
-  //   );
-  //   setSum(totalSum);
-  // }, [cart]);
 
   const getProducts = async () => {
     const response = await getProductsCart();
@@ -79,6 +67,13 @@ export default function Cart() {
         };
       });
 
+      getProductsInCart(data.items, {
+        currentItems: data.currentItems,
+        currentPage: data.currentPage,
+        totalItems: data.totalItems,
+        totalPages: data.totalPages,
+      });
+
       return data;
     }
 
@@ -90,6 +85,21 @@ export default function Cart() {
     router.push("/cart/buyProducts");
   };
 
+  const showElems = () => {
+    return cart.length ? (
+      <CartList
+        products={products}
+        cbSetProducts={setProducts}
+        pagination={pagination}
+        cbSetPagination={setPagination}
+      />
+    ) : (
+      <span className="mt-3 text-base leading-none text-[#B3B3B3]">
+        Корзина пуста
+      </span>
+    );
+  };
+
   return (
     <div className="container px-3">
       <div className="flex flex-col justify-center items-center w-full">
@@ -97,13 +107,7 @@ export default function Cart() {
           <h1 className="py-2 px-3 text-xl uppercase">Корзина</h1>
         </div>
 
-        {products.length ? (
-          <CartList firstProducts={products} firstPagination={pagination} />
-        ) : (
-          <span className="mt-3 text-base leading-none text-[#B3B3B3]">
-            Корзина пуста
-          </span>
-        )}
+        {showElems()}
       </div>
 
       {products.length ? (

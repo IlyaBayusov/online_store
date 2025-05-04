@@ -18,7 +18,7 @@ import { RiShoppingBasketLine, RiShoppingBasketFill } from "react-icons/ri";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { api, postAvailability } from "@/axios";
 import {
-  getProductsCart,
+  getCountAndPriceProductsCart,
   postCartExistProduct,
   postFav,
   postProductsInFavs,
@@ -59,7 +59,7 @@ export default function ProductInfo({
 
   const params = useParams();
 
-  const { getProductsInCart, deleteProductInCart } = useCartStore();
+  const { getCount, deleteProductInCart } = useCartStore();
 
   useEffect(() => {
     const setActiveBtnCart = async () => {
@@ -89,8 +89,6 @@ export default function ProductInfo({
 
       if (!data) return;
 
-      console.log(data, nowFavItem?.favoriteId);
-
       if (data.favoriteId) {
         setIsActiveFav(true);
         setNowFavItem(data);
@@ -119,25 +117,6 @@ export default function ProductInfo({
     }
   }, []);
 
-  const getProducts = async () => {
-    const response = await getProductsCart();
-
-    if (response) {
-      const data = await response.data;
-
-      getProductsInCart(data.items, {
-        currentItems: data.currentItems,
-        currentPage: data.currentPage,
-        totalItems: data.totalItems,
-        totalPages: data.totalPages,
-      });
-
-      return data;
-    }
-
-    return;
-  };
-
   const handleClickCart = async () => {
     try {
       const decodedToken: IDecodedToken = decodeToken();
@@ -147,7 +126,6 @@ export default function ProductInfo({
         //удаление из корзины
         await api.delete(`/v1/cart/${nowCartItem.cartItemId}`);
         deleteProductInCart(nowCartItem.cartItemId);
-        await getProducts();
       } else {
         setIsActiveCart(true);
         //добавление в корзину
@@ -159,7 +137,15 @@ export default function ProductInfo({
         });
         const data = await response.data;
         setNowCartItem(data);
-        await getProducts();
+      }
+
+      const data: {
+        countOfProducts: number;
+        totalPrice: number;
+      } = await getCountAndPriceProductsCart();
+
+      if (data) {
+        getCount(data.countOfProducts);
       }
     } catch (error) {
       console.error("Ошибка запроса добавления/удаления в корзину: ", error);

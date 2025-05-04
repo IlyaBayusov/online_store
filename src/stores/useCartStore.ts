@@ -1,4 +1,3 @@
-import { getProductsCart } from "@/api";
 import { IPagination, IProductInCart } from "@/interfaces";
 import { create } from "zustand";
 
@@ -11,12 +10,17 @@ export interface ICartStore {
   getCount: (count: number) => void;
   getPrice: (price: number) => void;
 
-  getProductsInCart: () => Promise<void>;
+  getProductsInCart: (
+    products: IProductInCart[],
+    pagination: IPagination
+  ) => Promise<void>;
+
+  deleteProductInCart: (cartItemId: number) => void;
 
   updateQuantity: (productId: number, quantity: number) => void;
 }
 
-export const useCartStore = create<ICartStore>((set) => ({
+export const useCartStore = create<ICartStore>((set, get) => ({
   cart: [],
   pagination: {} as IPagination,
   count: 0,
@@ -30,30 +34,26 @@ export const useCartStore = create<ICartStore>((set) => ({
     set({ price: price });
   },
 
-  getProductsInCart: async () => {
-    //переделать для динамической пагинации
-    const response = await getProductsCart();
-
-    if (response) {
-      const data = response.data;
-
-      const products = data.items;
-
-      set((state) => ({
-        cart: products ? [...products] : [...state.cart],
-      }));
-      set({
-        pagination: {
-          currentItems: data.currentItems,
-          currentPage: data.currentPage,
-          totalItems: data.totalItems,
-          totalPages: data.totalPages,
-        },
-      });
-    }
+  getProductsInCart: async (products, pagination) => {
+    set(() => ({
+      cart: products,
+    }));
+    set({
+      pagination: pagination,
+    });
   },
 
-  updateQuantity: (productId: number, quantity: number) => {
+  deleteProductInCart: (cartItemId) => {
+    const { cart } = get();
+
+    const newCart = cart.filter((item) => item.cartItemId !== cartItemId);
+
+    set(() => ({
+      cart: newCart,
+    }));
+  },
+
+  updateQuantity: (productId, quantity) => {
     set((state) => ({
       cart: state.cart.map((item: IProductInCart) =>
         item.productId === productId ? { ...item, quantity } : item

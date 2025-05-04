@@ -1,22 +1,37 @@
 "use client";
 
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CartItem from "../CartItem/CartItem";
 import { IPagination, IProductInCart } from "@/interfaces";
 import { getProductsCart } from "@/api";
+import { useModalStore } from "@/stores/useModalStore";
+import { modalCartDeleteProduct } from "@/constans";
+import { useCartStore } from "@/stores/useCartStore";
 
 type Props = {
-  firstProducts: IProductInCart[];
-  firstPagination: IPagination;
+  products: IProductInCart[];
+  cbSetProducts: (newProducts: IProductInCart[]) => void;
+
+  pagination: IPagination;
+  cbSetPagination: (newPagination: IPagination) => void;
 };
 
-export default memo(function CartList({
-  firstProducts,
-  firstPagination,
+export default function CartList({
+  products,
+  cbSetProducts,
+  pagination,
+  cbSetPagination,
 }: Props) {
   const [isFetching, setIsFetching] = useState<boolean>(false);
-  const [products, setProducts] = useState<IProductInCart[]>(firstProducts);
-  const [pagination, setPagination] = useState<IPagination>(firstPagination);
+
+  const modalsProps = useModalStore((state) => state.modalsProps);
+  const getProductsInCart = useCartStore((state) => state.getProductsInCart);
+
+  useEffect(() => {
+    if (modalsProps[modalCartDeleteProduct]?.isDeleted) {
+      window.addEventListener("scroll", handleScroll);
+    }
+  }, [modalsProps]);
 
   useEffect(() => {
     const getProductsLoading = async () => {
@@ -32,16 +47,13 @@ export default memo(function CartList({
       if (response) {
         const data = await response.data;
 
-        setProducts((prev) => {
-          return [...prev, ...data.items];
-        });
-        setPagination(() => {
-          return {
-            currentItems: data.currentItems,
-            currentPage: data.currentPage,
-            totalItems: data.totalItems,
-            totalPages: data.totalPages,
-          };
+        cbSetProducts([...products, ...data.items]);
+        getProductsInCart([...products, ...data.items], pagination);
+        cbSetPagination({
+          currentItems: data.currentItems,
+          currentPage: data.currentPage,
+          totalItems: data.totalItems,
+          totalPages: data.totalPages,
         });
       }
 
@@ -90,4 +102,4 @@ export default memo(function CartList({
       {cartList}
     </div>
   );
-});
+}
