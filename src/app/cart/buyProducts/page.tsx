@@ -4,19 +4,13 @@ import { getProductsCart, postByProducts } from "@/api";
 import { postPromo } from "@/axios";
 import FormByProducts from "@/components/Forms/FormByProducts/FormByProducts";
 import { authPage, modalSuccessOrder } from "@/constans";
-import { IOrderPost, IProductInCart } from "@/interfaces";
+import { IOrderPost, IProductInCart, IPromo } from "@/interfaces";
 import { useFormStore } from "@/stores/useFormStore";
 import { useModalStore } from "@/stores/useModalStore";
 import { decodeToken } from "@/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
-interface IPromo {
-  message: string;
-  discount?: number;
-  code?: number;
-}
 
 export default function BuyProducts() {
   const [productsCart, setProductsCart] = useState<
@@ -41,9 +35,11 @@ export default function BuyProducts() {
       const response = await getProductsCart();
 
       if (response) {
-        setProductsCart(response.items);
+        const data = await response.data;
 
-        const sum = response.items.reduce(
+        setProductsCart(data.items);
+
+        const sum = data.items.reduce(
           (sum: number, item: IProductInCart) => sum + item.price,
           0
         );
@@ -177,12 +173,12 @@ export default function BuyProducts() {
   return (
     <>
       <div className="container px-3">
-        <div className="flex flex-col justify-center items-center w-full">
+        <div className="w-full flex flex-col justify-center items-center">
           <div className="mt-3 w-full bg-black rounded-t-2xl rounded-b-md">
             <h1 className="py-2 px-3 text-xl uppercase">Оформление заказа</h1>
           </div>
 
-          <div className="mt-3 p-3 w-full bg-black mb-3 rounded-md">
+          <div className="mt-3 p-3 w-full bg-black mb-3 rounded-md overflow-hidden">
             <p className="text-[#B3B3B3] uppercase text-sm">Доставка</p>
 
             <div className="flex flex-col mt-3">
@@ -191,18 +187,20 @@ export default function BuyProducts() {
               <p className="text-sm text-green-500">Доставка 0 руб.</p>
             </div>
 
-            <div className="mt-3 flex gap-2">
-              {productsCart?.map((item) => (
-                <div key={item.cartItemId} className="max-w-16">
-                  <Image
-                    src={item.image}
-                    alt={item.productName}
-                    width={350}
-                    height={500}
-                    className="rounded-md"
-                  />
-                </div>
-              ))}
+            <div className="mt-3 w-full overflow-auto">
+              <div className="flex w-max gap-2">
+                {productsCart?.map((item) => (
+                  <div key={item.cartItemId} className="max-w-16">
+                    <Image
+                      src={item.image}
+                      alt={item.productName}
+                      width={350}
+                      height={500}
+                      className="rounded-md"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 

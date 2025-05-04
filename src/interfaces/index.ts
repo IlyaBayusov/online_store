@@ -249,3 +249,9 @@ export interface IErrorObj {
   code: number;
   message: string;
 }
+
+export interface IPromo {
+  message: string;
+  discount?: number;
+  code?: number;
+}
