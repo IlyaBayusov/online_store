@@ -39,7 +39,7 @@ export default function ProductsAdmin() {
 
   return (
     <div className="flex flex-col w-full px-3 bg-white">
-      <div className="flex justify-center items-center gap-1">
+      <div className="mt-3 flex justify-center items-center gap-1">
         <button className="px-2 py-1 border rounded-md">
           <MdOutlineKeyboardDoubleArrowLeft className="h-5 w-5 p-px text-gray-400" />
         </button>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React, { useLayoutEffect, useState } from "react";
 import {
-  IoIosNotifications,
+  // IoIosNotifications,
   IoMdArrowBack,
   IoIosOptions,
 } from "react-icons/io";
@@ -12,6 +12,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import { useModalStore } from "@/stores/useModalStore";
 import { modalNewProductAdmin } from "@/constans";
 import { usePathname } from "next/navigation";
+import { decodeToken } from "@/utils";
 
 export default function HeaderAdmin() {
   const [pageName, setPageName] = useState<string>("Товары");
@@ -33,9 +34,9 @@ export default function HeaderAdmin() {
             Перейти на главную
           </Link>
 
-          <div>
+          {/* <div>
             <IoIosNotifications className="h-5 w-5" />
-          </div>
+          </div> */}
         </div>
 
         <div className="flex justify-between items-center px-3 bg-white w-full border-b">
@@ -44,18 +45,22 @@ export default function HeaderAdmin() {
               <FaUsers className="h-5 w-5 text-black text-opacity-80" />
             </Link>
 
-            <Link
-              href="/adminMenu/orders"
-              className="text-base text-black text-opacity-80 py-2"
-            >
-              Заказы
-            </Link>
-            <Link
-              href="/adminMenu"
-              className="text-base text-black text-opacity-80 py-2"
-            >
-              Товары
-            </Link>
+            {decodeToken()?.roles === "MANAGER" && (
+              <>
+                <Link
+                  href="/adminMenu/orders"
+                  className="text-base text-black text-opacity-80 py-2"
+                >
+                  Заказы
+                </Link>
+                <Link
+                  href="/adminMenu"
+                  className="text-base text-black text-opacity-80 py-2"
+                >
+                  Товары
+                </Link>
+              </>
+            )}
           </div>
 
           <div className="flex items-center gap-1">
@@ -70,28 +75,30 @@ export default function HeaderAdmin() {
           </div>
         </div>
 
-        <div className="flex justify-between items-center px-3 bg-white w-full">
-          <div className="flex items-center gap-1">
-            <button className="py-0.5 px-2">
-              <IoMdArrowBack className="h-5 w-5 text-green-600" />
-            </button>
+        {decodeToken()?.roles === "MANAGER" && (
+          <div className="flex justify-between items-center px-3 bg-white w-full">
+            <div className="flex items-center gap-1">
+              <button className="py-0.5 px-2">
+                <IoMdArrowBack className="h-5 w-5 text-green-600" />
+              </button>
 
-            <h1 className="text-black py-2">{pageName}</h1>
+              <h1 className="text-black py-2">{pageName}</h1>
+            </div>
+
+            <div className="flex items-center gap-1">
+              <button className="py-1 px-2">
+                <IoIosOptions className="h-5 w-5 p-px text-green-600" />
+              </button>
+
+              <button
+                className="py-1 px-2 bg-green-600 rounded-md"
+                onClick={() => openModal(modalNewProductAdmin)}
+              >
+                <FaPlus className="h-5 w-5 p-px text-white" />
+              </button>
+            </div>
           </div>
-
-          <div className="flex items-center gap-1">
-            <button className="py-1 px-2">
-              <IoIosOptions className="h-5 w-5 p-px text-green-600" />
-            </button>
-
-            <button
-              className="py-1 px-2 bg-green-600 rounded-md"
-              onClick={() => openModal(modalNewProductAdmin)}
-            >
-              <FaPlus className="h-5 w-5 p-px text-white" />
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

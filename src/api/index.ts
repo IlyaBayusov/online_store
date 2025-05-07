@@ -3,7 +3,9 @@ import { sizePage } from "@/constans";
 import {
   IDecodedToken,
   IFormDataProfileUserInfo,
+  IGetUsersAdmin,
   IOrderPost,
+  IPagination,
   IPostFav,
   IProductInCart,
   IPutUserPassInProfile,
@@ -258,10 +260,23 @@ export const postEnableProductAdmin = async (
 
 export const getUsersAdmin = async () => {
   try {
-    const response = await api.get(`/v1/users`);
+    const response = await api.get(`/v1/users/admin`);
+    if (!response) return;
+
     const data = await response.data;
 
-    return data;
+    const users: IGetUsersAdmin[] = data.items;
+    const pagination: IPagination = {
+      currentItems: data.currentItems,
+      currentPage: data.currentPage,
+      totalItems: data.totalItems,
+      totalPages: data.totalPages,
+    };
+
+    return {
+      users: users,
+      pagination: pagination,
+    };
   } catch (error) {
     console.error("Ошибка получения пользователей в админке: ", error);
   }

@@ -1,9 +1,11 @@
-import { categoriesList, statusAvailStock } from "@/constans";
+import { authPage, categoriesList, statusAvailStock } from "@/constans";
 import { IDecodedToken, IPostAvailability } from "@/interfaces";
 import { jwtDecode } from "jwt-decode";
 import { notFound } from "next/navigation";
 
 export const decodeToken = () => {
+  if (typeof window === "undefined") return;
+
   const token = localStorage.getItem("accessToken");
 
   if (!token) {
@@ -13,6 +15,15 @@ export const decodeToken = () => {
   }
 
   const decoded: IDecodedToken = jwtDecode(token);
+
+  if (!decoded.id || !decoded.roles) {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    window.location.href = authPage;
+
+    return;
+  }
 
   return decoded;
 };

@@ -165,13 +165,15 @@ export interface ISizeAndQuantity {
   quantity: number;
 }
 
-export interface IGetUserAdmin {
+export interface IGetUsersAdmin {
   id: number;
   firstName: string;
   lastName: string;
-  username: string;
   email: string;
+  username: string;
   role: string;
+  createdAt: string;
+  lastLogin: string;
 }
 
 export interface IFormDataRegistr {

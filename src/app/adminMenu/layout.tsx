@@ -1,5 +1,5 @@
 import React from "react";
-import HeaderAdmin from "@/components/AdminPage/HeaderAdmin/HeaderAdmin";
+import HeaderAdmin from "@/components/AdminPage/HeaderAdmin";
 
 const AdminMenuLayout = ({ children }: { children: React.ReactNode }) => {
   return (
