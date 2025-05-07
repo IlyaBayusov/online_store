@@ -122,12 +122,16 @@ export default function ProductInfo({
       const decodedToken: IDecodedToken = decodeToken();
 
       if (isActiveCart && nowCartItem) {
-        setIsActiveCart(false);
         //удаление из корзины
-        await api.delete(`/v1/cart/${nowCartItem.cartItemId}`);
-        deleteProductInCart(nowCartItem.cartItemId);
+        const response = await api.delete(`/v1/cart/${nowCartItem.cartItemId}`);
+
+        if (response) {
+          setIsActiveCart(false);
+          deleteProductInCart(nowCartItem.cartItemId);
+        } else {
+          setIsActiveCart(true);
+        }
       } else {
-        setIsActiveCart(true);
         //добавление в корзину
         const response = await api.post("/v1/cart", {
           userId: decodedToken.id,
@@ -136,7 +140,13 @@ export default function ProductInfo({
           size: selectedSize,
         });
         const data = await response.data;
-        setNowCartItem(data);
+
+        if (data) {
+          setIsActiveCart(true);
+          setNowCartItem(data);
+        } else {
+          setIsActiveCart(false);
+        }
       }
 
       const data: {
@@ -157,20 +167,28 @@ export default function ProductInfo({
       const decodedToken: IDecodedToken = decodeToken();
 
       if (isActiveFav && nowFavItem) {
-        setIsActiveFav(false);
         //удаление из избранных
-        await api.delete(`/v1/favorites/${nowFavItem.favoriteId}`);
+        const response = await api.delete(
+          `/v1/favorites/${nowFavItem.favoriteId}`
+        );
+
+        if (response) {
+          setIsActiveFav(false);
+        } else {
+          setIsActiveFav(true);
+        }
       } else {
-        setIsActiveFav(true);
         //добавление в избранные
-        await postFav({
+        const response = await postFav({
           userId: decodedToken.id,
           productId: nowProduct.id,
         });
-        console.log({
-          userId: decodedToken.id,
-          productId: nowProduct.id,
-        });
+
+        if (response) {
+          setIsActiveFav(true);
+        } else {
+          setIsActiveFav(false);
+        }
       }
     } catch (error) {
       console.error("Ошибка запроса добавления/удаления в избранных: ", error);
